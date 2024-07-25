@@ -1,0 +1,17 @@
+disabled_rules: # правила, которые будут отключены
+  - trailing_whitespace
+  - force_cast
+
+opt_in_rules: # правила, которые будут включены
+  - empty_count
+  - explicit_init
+
+included: # файлы, которые будут проверяться
+  - Tracker
+
+excluded: # файлы и директории, которые будут исключены из проверки
+  - Carthage
+  - Pods
+
+line_length: 120 # максимальная длина строки
+
