@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */; };
 		3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */; };
-		3238825F2C52AB0B00EE11A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825E2C52AB0B00EE11A3 /* ViewController.swift */; };
 		323882622C52AB0B00EE11A3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 323882612C52AB0B00EE11A3 /* Base */; };
 		323882652C52AB0B00EE11A3 /* Tracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 323882632C52AB0B00EE11A3 /* Tracker.xcdatamodeld */; };
 		323882672C52AB0F00EE11A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 323882662C52AB0F00EE11A3 /* Assets.xcassets */; };
@@ -17,6 +16,10 @@
 		323882752C52AB0F00EE11A3 /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323882742C52AB0F00EE11A3 /* TrackerTests.swift */; };
 		3238827F2C52AB0F00EE11A3 /* TrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238827E2C52AB0F00EE11A3 /* TrackerUITests.swift */; };
 		323882812C52AB0F00EE11A3 /* TrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323882802C52AB0F00EE11A3 /* TrackerUITestsLaunchTests.swift */; };
+		32A45B652C53D549002A97F5 /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45B642C53D549002A97F5 /* LaunchScreenViewController.swift */; };
+		32A45B682C53D9A6002A97F5 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45B672C53D9A6002A97F5 /* TabBarController.swift */; };
+		32A45B6B2C53DA2E002A97F5 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45B6A2C53DA2E002A97F5 /* TrackersViewController.swift */; };
+		32A45B6E2C53DAA2002A97F5 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45B6D2C53DAA2002A97F5 /* StatisticsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +43,6 @@
 		323882572C52AB0B00EE11A3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		3238825E2C52AB0B00EE11A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		323882612C52AB0B00EE11A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		323882642C52AB0B00EE11A3 /* Tracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tracker.xcdatamodel; sourceTree = "<group>"; };
 		323882662C52AB0F00EE11A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,6 +53,10 @@
 		3238827A2C52AB0F00EE11A3 /* TrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238827E2C52AB0F00EE11A3 /* TrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerUITests.swift; sourceTree = "<group>"; };
 		323882802C52AB0F00EE11A3 /* TrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		32A45B642C53D549002A97F5 /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
+		32A45B672C53D9A6002A97F5 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		32A45B6A2C53DA2E002A97F5 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
+		32A45B6D2C53DAA2002A97F5 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,9 +107,12 @@
 		323882592C52AB0B00EE11A3 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				32A45B6C2C53DA6A002A97F5 /* Statistics */,
+				32A45B692C53DA0B002A97F5 /* Trackers */,
+				32A45B662C53D97C002A97F5 /* TabBar */,
+				32A45B632C53D51C002A97F5 /* LaunchScreen */,
 				3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */,
 				3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */,
-				3238825E2C52AB0B00EE11A3 /* ViewController.swift */,
 				323882602C52AB0B00EE11A3 /* Main.storyboard */,
 				323882662C52AB0F00EE11A3 /* Assets.xcassets */,
 				323882682C52AB0F00EE11A3 /* LaunchScreen.storyboard */,
@@ -128,6 +137,38 @@
 				323882802C52AB0F00EE11A3 /* TrackerUITestsLaunchTests.swift */,
 			);
 			path = TrackerUITests;
+			sourceTree = "<group>";
+		};
+		32A45B632C53D51C002A97F5 /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				32A45B642C53D549002A97F5 /* LaunchScreenViewController.swift */,
+			);
+			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
+		32A45B662C53D97C002A97F5 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				32A45B672C53D9A6002A97F5 /* TabBarController.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		32A45B692C53DA0B002A97F5 /* Trackers */ = {
+			isa = PBXGroup;
+			children = (
+				32A45B6A2C53DA2E002A97F5 /* TrackersViewController.swift */,
+			);
+			path = Trackers;
+			sourceTree = "<group>";
+		};
+		32A45B6C2C53DA6A002A97F5 /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				32A45B6D2C53DAA2002A97F5 /* StatisticsViewController.swift */,
+			);
+			path = Statistics;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,8 +326,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				323882652C52AB0B00EE11A3 /* Tracker.xcdatamodeld in Sources */,
-				3238825F2C52AB0B00EE11A3 /* ViewController.swift in Sources */,
+				32A45B6B2C53DA2E002A97F5 /* TrackersViewController.swift in Sources */,
+				32A45B6E2C53DAA2002A97F5 /* StatisticsViewController.swift in Sources */,
 				3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */,
+				32A45B652C53D549002A97F5 /* LaunchScreenViewController.swift in Sources */,
+				32A45B682C53D9A6002A97F5 /* TabBarController.swift in Sources */,
 				3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
