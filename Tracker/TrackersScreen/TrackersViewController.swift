@@ -10,6 +10,10 @@ import UIKit
 
 // Пример первого контроллера
 class TrackersViewController: UIViewController {
+    var categories: [TrackerCategory] = []
+    var completedTrackers: [TrackerRecord] = []
+    var currentDate: Date?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -81,7 +85,8 @@ class TrackersViewController: UIViewController {
     }
     
     @objc private func addTracker() {
-        // Действие при нажатии на кнопку добавления
+        let createNewTrackerVC = CreateNewTrackerViewController()
+        present(createNewTrackerVC, animated: true)
     }
     
     @objc private func dateButtonTapped() {
