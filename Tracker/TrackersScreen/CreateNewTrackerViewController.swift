@@ -52,12 +52,17 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     private func setupHabitButton() {
-        self.habitButton = self.setupButton(with: habitButtonText)
+        let habitButton = self.setupButton(with: habitButtonText)
+        habitButton.addTarget(self, action: #selector(habitButtonTapped(_:)), for: .touchUpInside)
+        
+        self.habitButton = habitButton
     }
     
     private func setupEventButton() {
+        let eventButton = self.setupButton(with: eventButtonText)
+        eventButton.addTarget(self, action: #selector(eventButtonTapped(_:)), for: .touchUpInside)
         
-        self.eventButton = self.setupButton(with: eventButtonText)
+        self.eventButton  = eventButton
     }
     
     private func setupStackView() {
@@ -89,4 +94,12 @@ final class CreateNewTrackerViewController: UIViewController {
         ])
     }
     
+    @objc private func habitButtonTapped(_ sender: UIButton) {
+        let createNewHabitVC = CreateNewHabitViewController()
+        present(createNewHabitVC, animated: true)
+    }
+    
+    @objc private func eventButtonTapped(_ sender: UIButton) {
+        
+    }
 }
