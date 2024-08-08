@@ -57,7 +57,7 @@ final class ScheduleScreenViewController: UIViewController {
         tableView.layer.cornerRadius = 16
         tableView.clipsToBounds = true
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-
+        
         
         tableContainerView.addSubview(tableView)
         tableContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -92,6 +92,28 @@ final class ScheduleScreenViewController: UIViewController {
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
+    
+    @objc func switchChanged(_ sender: UISwitch) {
+        let weekday = daysOfWeek[sender.tag]
+        
+        if sender.isOn {
+            selectedWeekdays.insert(weekday)
+        } else {
+            selectedWeekdays.remove(weekday)
+        }
+    }
+    
+    @objc func doneButtonTapped() {
+        let tracker = Tracker(
+            title: "Example Tracker",
+            color: "Red",
+            emoji: "🔥",
+            schedule: Array(selectedWeekdays)
+        )
+        
+        // Пример сохранения или использования объекта Tracker
+        print("Tracker saved with schedule: \(tracker.schedule)")
+    }
 }
 
 extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSource {
@@ -118,15 +140,5 @@ extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
-    
-    @objc func switchChanged(_ sender: UISwitch) {
-            let weekday = daysOfWeek[sender.tag]
-            
-            if sender.isOn {
-                selectedWeekdays.insert(weekday)
-            } else {
-                selectedWeekdays.remove(weekday)
-            }
-        }
 }
 
