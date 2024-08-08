@@ -10,16 +10,18 @@ import UIKit
 
 // Пример первого контроллера
 class TrackersViewController: UIViewController {
-    var categories: [TrackerCategory] = []
-    var completedTrackers: [TrackerRecord] = []
-    var currentDate: Date?
+    private var categories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
+    private var currentDate: Date?
+    
+    private let emptyStateViewString = "Что будем отслеживать?"
+    private let navBarTitleString = "Трекеры"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
         setupNavigationBar()
-        setupTitle()
         setupSearchBar()
         setupEmptyStateView()
     }
@@ -28,14 +30,16 @@ class TrackersViewController: UIViewController {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTracker))
         navigationItem.leftBarButtonItem = addButton
         
-        let dateButton = UIButton(type: .system)
-        dateButton.setTitle(currentDateString(), for: .normal)
-        dateButton.addTarget(self, action: #selector(dateButtonTapped), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: dateButton)
-    }
-    
-    private func setupTitle() {
-        //TO DO: сверстать заголовок
+        navigationItem.title = navBarTitleString
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        
+        let datePickerButton = UIBarButtonItem(customView: datePicker)
+        
+        navigationItem.rightBarButtonItem = datePickerButton
     }
     
     private func setupSearchBar() {
@@ -57,15 +61,16 @@ class TrackersViewController: UIViewController {
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyStateView)
         
-        let imageView = UIImageView(image: UIImage(systemName: "star.circle"))
+        let imageView = UIImageView(image: UIImage(named: "EmptyTrackersIcon"))
         imageView.tintColor = .gray
         imageView.alpha = 0.5
         imageView.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.addSubview(imageView)
         
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
-        label.textColor = .gray
+        label.text = emptyStateViewString
+        label.font = UIFont(name: "SF Pro", size: 12)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.addSubview(label)
         
@@ -75,8 +80,8 @@ class TrackersViewController: UIViewController {
             
             imageView.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
             imageView.topAnchor.constraint(equalTo: emptyStateView.topAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 50),
-            imageView.heightAnchor.constraint(equalToConstant: 50),
+            imageView.widthAnchor.constraint(equalToConstant: 80),
+            imageView.heightAnchor.constraint(equalToConstant: 80),
             
             label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             label.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
@@ -89,14 +94,8 @@ class TrackersViewController: UIViewController {
         present(createNewTrackerVC, animated: true)
     }
     
-    @objc private func dateButtonTapped() {
-        // Действие при нажатии на кнопку даты
-    }
-    
-    private func currentDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        return formatter.string(from: Date())
+    @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
+
     }
 }
 
