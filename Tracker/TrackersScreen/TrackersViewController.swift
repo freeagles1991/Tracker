@@ -45,6 +45,8 @@ class TrackersViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         
+        categories.append(TrackerCategory(title: "Default", trackers: self.trackers))
+        
         setupNavigationBar()
         setupSearchBar()
         setupEmptyStateView()
@@ -123,6 +125,8 @@ class TrackersViewController: UIViewController {
     private func setupCollectionView() {
         // Регистрируем ячейку для использования в коллекции
         collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: "TrackerCell")
+        ///Регистрируем заголовок
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
@@ -158,18 +162,29 @@ class TrackersViewController: UIViewController {
 extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDataSource
 
+    ///Количество категорий
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return categories.count
+    }
     /// Количество элементов в секции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return trackers.count
+        return categories[section].trackers.count
     }
     
     /// Настраиваем ячейку
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
-        let tracker = trackers[indexPath.item]
+        let tracker = categories[indexPath.section].trackers[indexPath.item]
         cell.configure(with: tracker)
         return cell
     }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! HeaderView
+        headerView.label.text = categories[indexPath.section].title
+        return headerView
+    }
+
     
     // MARK: - UICollectionViewDelegateFlowLayout
     
@@ -177,6 +192,11 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 167, height: 148)
     }
+    ///Настраиваем размер layout для заголовка секции
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 50)
+    }
+
 }
 
 
