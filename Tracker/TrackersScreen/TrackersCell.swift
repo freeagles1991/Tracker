@@ -43,6 +43,8 @@ class TrackerCell: UICollectionViewCell {
 
         colorPanelView.layer.cornerRadius = 16
         colorPanelView.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.backgroundColor = .gray
 
         titleBlockView.addSubview(colorPanelView)
         titleBlockView.addSubview(emojiLabel)

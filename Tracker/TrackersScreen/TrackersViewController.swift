@@ -14,6 +14,7 @@ class TrackersViewController: UIViewController {
     var trackers: [Tracker] = [
         Tracker(title: "Workout", color: "#FF5733", emoji: "💪", schedule: [.monday, .wednesday, .friday]),
         Tracker(title: "Read", color: "#33FF57", emoji: "📚", schedule: [.tuesday, .thursday]),
+        Tracker(title: "Workout", color: "#FF5733", emoji: "💪", schedule: [.monday, .wednesday, .friday])
     ]
     private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
@@ -196,7 +197,18 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 50)
     }
-
+    ///Отступы для секции
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+    }
+    ///Горизонтальное расстояние между ячейками
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    ///Вертикальные отсутпы между ячейками
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
 }
 
 
