@@ -20,15 +20,15 @@ class TrackersViewController: UIViewController {
     private var currentDate: Date?
     
     private var emptyStateView = UIView()
-    
-    private let emptyStateViewString = "Что будем отслеживать?"
-    private let navBarTitleString = "Трекеры"
-    
-    var collectionView: UICollectionView = {
+    private var searchBar = UISearchBar()
+    private var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
+    
+    private let emptyStateViewString = "Что будем отслеживать?"
+    private let navBarTitleString = "Трекеры"
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -81,6 +81,8 @@ class TrackersViewController: UIViewController {
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+        
+        self.searchBar = searchBar
     }
     
     private func setupEmptyStateView() {
@@ -126,7 +128,7 @@ class TrackersViewController: UIViewController {
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor)
