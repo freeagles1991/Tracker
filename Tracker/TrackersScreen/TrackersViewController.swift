@@ -10,20 +10,47 @@ import UIKit
 
 // Пример первого контроллера
 class TrackersViewController: UIViewController {
+    ///Здесь заглушка для ячеек
+    var trackers: [Tracker] = [
+        Tracker(title: "Workout", color: "#FF5733", emoji: "💪", schedule: [.monday, .wednesday, .friday]),
+        Tracker(title: "Read", color: "#33FF57", emoji: "📚", schedule: [.tuesday, .thursday]),
+    ]
     private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date?
     
+    private var emptyStateView = UIView()
+    
     private let emptyStateViewString = "Что будем отслеживать?"
     private let navBarTitleString = "Трекеры"
+    
+    var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return collectionView
+    }()
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
         setupNavigationBar()
         setupSearchBar()
         setupEmptyStateView()
+        setupCollectionView()
+        
+        updateUI()
     }
     
     private func setupNavigationBar() {
@@ -87,6 +114,33 @@ class TrackersViewController: UIViewController {
             label.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
             label.bottomAnchor.constraint(equalTo: emptyStateView.bottomAnchor)
         ])
+        
+        self.emptyStateView = emptyStateView
+    }
+    
+    private func setupCollectionView() {
+        // Регистрируем ячейку для использования в коллекции
+        collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: "TrackerCell")
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor)
+        ])
+    }
+    
+    private func updateUI() {
+        if trackers.isEmpty {
+            emptyStateView.isHidden = false
+            collectionView.isHidden = true
+        } else {
+            emptyStateView.isHidden = true
+            collectionView.isHidden = false
+        }
     }
     
     @objc private func addTracker() {
@@ -96,6 +150,30 @@ class TrackersViewController: UIViewController {
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
 
+    }
+}
+
+extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    // MARK: - UICollectionViewDataSource
+
+    /// Количество элементов в секции
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return trackers.count
+    }
+    
+    /// Настраиваем ячейку
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
+        let tracker = trackers[indexPath.item]
+        cell.configure(with: tracker)
+        return cell
+    }
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    
+    /// Настраиваем размер ячейки
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 167, height: 148)
     }
 }
 

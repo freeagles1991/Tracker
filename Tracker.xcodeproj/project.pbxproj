@@ -26,6 +26,7 @@
 		32A45BB72C5FE326002A97F5 /* CreateNewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45BB62C5FE326002A97F5 /* CreateNewTrackerViewController.swift */; };
 		32BABEFC2C60DAAC00E176E2 /* CreateNewHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFB2C60DAAC00E176E2 /* CreateNewHabitViewController.swift */; };
 		32BABEFE2C61501A00E176E2 /* ScheduleScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFD2C61501A00E176E2 /* ScheduleScreenViewController.swift */; };
+		32BABF002C65194600E176E2 /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFF2C65194600E176E2 /* TrackersCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		32A45BB62C5FE326002A97F5 /* CreateNewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewTrackerViewController.swift; sourceTree = "<group>"; };
 		32BABEFB2C60DAAC00E176E2 /* CreateNewHabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewHabitViewController.swift; sourceTree = "<group>"; };
 		32BABEFD2C61501A00E176E2 /* ScheduleScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreenViewController.swift; sourceTree = "<group>"; };
+		32BABEFF2C65194600E176E2 /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +177,7 @@
 				32A45BB62C5FE326002A97F5 /* CreateNewTrackerViewController.swift */,
 				32BABEFB2C60DAAC00E176E2 /* CreateNewHabitViewController.swift */,
 				32BABEFD2C61501A00E176E2 /* ScheduleScreenViewController.swift */,
+				32BABEFF2C65194600E176E2 /* TrackersCell.swift */,
 			);
 			path = TrackersScreen;
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				32A45B6B2C53DA2E002A97F5 /* TrackersViewController.swift in Sources */,
 				32A45B6E2C53DAA2002A97F5 /* StatisticsViewController.swift in Sources */,
 				32A45BB52C5EACDC002A97F5 /* TrackerRecord.swift in Sources */,
+				32BABF002C65194600E176E2 /* TrackersCell.swift in Sources */,
 				3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */,
 				32A45B652C53D549002A97F5 /* LaunchScreenViewController.swift in Sources */,
 				32A45B682C53D9A6002A97F5 /* TabBarController.swift in Sources */,
