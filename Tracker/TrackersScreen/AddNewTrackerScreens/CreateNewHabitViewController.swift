@@ -97,6 +97,7 @@ final class CreateNewHabitViewController: UIViewController {
     private func setupCategoryButton() {
         let categoryButton = setupButton(with: categoryButtonString)
         categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        categoryButton.addTarget(self, action: #selector(categoryButtonTapped(_:)), for: .touchUpInside)
         
         self.categoryButton = categoryButton
     }
@@ -148,4 +149,12 @@ final class CreateNewHabitViewController: UIViewController {
         let scheduleScreenVC = ScheduleScreenViewController()
         present(scheduleScreenVC, animated: true)
     }
+    
+    @objc private func categoryButtonTapped(_ sender: UIButton) {
+        let chooseCategoryVC = ChooseCategoryViewController()
+        present(chooseCategoryVC, animated: true)
+    }
+    
 }
+
+
