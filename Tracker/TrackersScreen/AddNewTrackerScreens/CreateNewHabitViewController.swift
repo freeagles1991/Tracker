@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 
 final class CreateNewHabitViewController: UIViewController {
+    private let chooseCategoryVC = ChooseCategoryViewController()
+    private var category: TrackerCategory?
+    private var newTracker: Tracker?
+    
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая привычка"
     
@@ -30,6 +34,9 @@ final class CreateNewHabitViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        chooseCategoryVC.delegate = self
+        
         setupScreenTitle()
         setupTextField()
         setupCategoryButton()
@@ -79,7 +86,11 @@ final class CreateNewHabitViewController: UIViewController {
         button.contentHorizontalAlignment = .left
         button.backgroundColor = UIColor(named: "lightGrey")
         button.layer.cornerRadius = 16
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40) // Увеличиваем правый отступ для изображения
+
+        // Настройка для многострочного текста
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.lineBreakMode = .byWordWrapping
         
         let arrowImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
         arrowImageView.tintColor = .gray
@@ -93,6 +104,7 @@ final class CreateNewHabitViewController: UIViewController {
         
         return button
     }
+
     
     private func setupCategoryButton() {
         let categoryButton = setupButton(with: categoryButtonString)
@@ -118,18 +130,15 @@ final class CreateNewHabitViewController: UIViewController {
     }()
     
     private func setupStackView() {
-        // Создание StackView для кнопок
         let stackView = UIStackView(arrangedSubviews: [categoryButton, separator, scheduleButton])
         stackView.axis = .vertical
         stackView.spacing = 0
         stackView.alignment = .fill
         stackView.distribution = .fill
         
-        // Добавление StackView на view
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
         
-        // Установка constraints для StackView
         NSLayoutConstraint.activate([
             // Центрирование StackView по горизонтали
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -138,21 +147,47 @@ final class CreateNewHabitViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
-        // Установка constraints для кнопок
+        
         NSLayoutConstraint.activate([
             categoryButton.heightAnchor.constraint(equalToConstant: 75),
             scheduleButton.heightAnchor.constraint(equalToConstant: 75)
         ])
     }
     
-    @objc private func scheduleButtonTapped(_ sender: UIButton) {
-        let scheduleScreenVC = ScheduleScreenViewController()
-        present(scheduleScreenVC, animated: true)
+    func updateCategory(category: TrackerCategory) {
+        self.category = category
+        updateCategoryButton(with: category.title)
+    }
+    
+    private func updateCategoryButton(with categoryTitle: String) {
+        let attributedString = NSMutableAttributedString(string: categoryButtonString, attributes: [
+            .font: UIFont.systemFont(ofSize: 17),
+            .foregroundColor: UIColor.black
+        ])
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 2 // Задаем нужный межстрочный интервал
+        
+        let additionalText = "\n\(categoryTitle)"
+        print(categoryTitle)
+        let additionalAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 17),
+            .foregroundColor: UIColor.darkGray,
+            .paragraphStyle: paragraphStyle
+        ]
+        
+        attributedString.append(NSAttributedString(string: additionalText, attributes: additionalAttributes))
+        
+        categoryButton.setAttributedTitle(attributedString, for: .normal)
     }
     
     @objc private func categoryButtonTapped(_ sender: UIButton) {
-        let chooseCategoryVC = ChooseCategoryViewController()
         present(chooseCategoryVC, animated: true)
+    }
+    
+    @objc private func scheduleButtonTapped(_ sender: UIButton) {
+        let scheduleScreenVC = ScheduleScreenViewController()
+        present(scheduleScreenVC, animated: true)
     }
     
 }

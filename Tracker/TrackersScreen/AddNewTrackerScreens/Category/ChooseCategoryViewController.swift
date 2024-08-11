@@ -10,6 +10,9 @@ import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
     private let trackersDataService = TrackerDataService.shared
+    let createNewCategoryVC = CreateNewCategoryViewController()
+    
+    weak var delegate: CreateNewHabitViewController?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Категория"
@@ -19,9 +22,13 @@ final class ChooseCategoryViewController: UIViewController {
     private var addCategoryButton = UIButton()
     private let addCategoryButtonString: String = "Добавить категорию"
     
+    private var isSelectedArray = [Bool](repeating: false, count: 7)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        createNewCategoryVC.delegate = self
         
         setupScreenTitle()
         setupTableView()
@@ -80,15 +87,12 @@ final class ChooseCategoryViewController: UIViewController {
     }
     
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
-        let createNewCategoryVC = CreateNewCategoryViewController()
-        createNewCategoryVC.delegate = self
         present(createNewCategoryVC, animated: true)
     }
 }
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(trackersDataService.categories.count)
         return trackersDataService.categories.count
     }
     
@@ -99,6 +103,13 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "lightGrey")
         
+        // Добавление иконки галочки, если ячейка выбрана
+        if isSelectedArray[indexPath.row] {
+            cell.accessoryView = UIImageView(image: UIImage(systemName: "checkmark"))
+        } else {
+            cell.accessoryView = nil
+        }
+        
         return cell
     }
     
@@ -106,8 +117,22 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         return 75
     }
     
+    // Метод, вызываемый при тапе на ячейку таблицы
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let choosenCategory = trackersDataService.categories[indexPath.row]
+        print("Выбрана категория: \(choosenCategory.title)")
+        
+        // Переключаем состояние выбора
+        isSelectedArray[indexPath.row].toggle()
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+        
+        //Делегируем на экран создания трекера
+        delegate?.updateCategory(category: choosenCategory)
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
     func updateTableView() {
         tableView.reloadData()
-        print(trackersDataService.categories.count)
     }
 }

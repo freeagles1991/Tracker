@@ -21,6 +21,7 @@ final class CreateNewTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
         setupScreenTitle()
         setupHabitButton()
         setupEventButton()
