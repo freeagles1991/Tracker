@@ -76,5 +76,10 @@ class TrackerDataService {
         }
         categories = updatedCategories
     }
+    
+    func removeAllCategoriesExceptFirst() {
+        guard categories.count > 1 else { return } // Если есть только одна категория, ничего не делаем
+        categories = [categories[0]] // Оставляем только первую категорию
+    }
 }
 

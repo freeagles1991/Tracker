@@ -9,6 +9,7 @@ import UIKit
 
 final class CreateNewCategoryViewController: UIViewController {
     private let trackersDataService = TrackerDataService.shared
+    weak var delegate: ChooseCategoryViewController?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая категория"
@@ -99,11 +100,11 @@ final class CreateNewCategoryViewController: UIViewController {
             return
         }
         
-        // Создаем новую категорию
         let newCategory = TrackerCategory(title: categoryName, trackers: [])
         
         // Действия по сохранению новой категории, например:
         trackersDataService.categories.append(newCategory)
+        delegate?.updateTableView()
         
         // Закрываем экран после сохранения
         dismiss(animated: true, completion: nil)

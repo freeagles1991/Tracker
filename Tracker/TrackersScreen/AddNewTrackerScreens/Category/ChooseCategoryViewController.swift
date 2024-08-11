@@ -9,11 +9,7 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    private var trackers = [
-        Tracker(title: "", color: "", emoji: "", schedule: [.friday])
-        ]
-    private var trackerCategory: TrackerCategory?
-    private var categoryList: [TrackerCategory] = []
+    private let trackersDataService = TrackerDataService.shared
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Категория"
@@ -26,10 +22,6 @@ final class ChooseCategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        trackerCategory = TrackerCategory(title: "Test", trackers: trackers)
-        guard let trackerCategory = trackerCategory else { return }
-        categoryList.append(trackerCategory)
         
         setupScreenTitle()
         setupTableView()
@@ -89,19 +81,22 @@ final class ChooseCategoryViewController: UIViewController {
     
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
         let createNewCategoryVC = CreateNewCategoryViewController()
+        createNewCategoryVC.delegate = self
         present(createNewCategoryVC, animated: true)
     }
 }
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryList.count
+        print(trackersDataService.categories.count)
+        return trackersDataService.categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = categoryList[indexPath.row].title
+        cell.textLabel?.text = trackersDataService.categories[indexPath.row].title
+        cell.layer.cornerRadius = 16
+        cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "lightGrey")
         
         return cell
@@ -109,5 +104,10 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
+    }
+    
+    func updateTableView() {
+        tableView.reloadData()
+        print(trackersDataService.categories.count)
     }
 }

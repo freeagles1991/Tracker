@@ -10,6 +10,8 @@ import UIKit
 
 // Пример первого контроллера
 class TrackersViewController: UIViewController {
+    private let trackersDataService = TrackerDataService.shared
+    
     ///Здесь заглушка для ячеек
     var trackers: [Tracker] = [
         Tracker(title: "Workout", color: "#FF5733", emoji: "💪", schedule: [.monday, .wednesday, .friday]),
