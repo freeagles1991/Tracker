@@ -27,6 +27,13 @@ final class CreateNewHabitViewController: UIViewController {
     private var scheduleButton = UIButton()
     private let scheduleButtonString: String = "Расписание"
     
+    private let separator: UIView = {
+        let view = UIView()
+        view.backgroundColor = .darkGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private var cancelButton = UIButton()
     private let cancelButtonString: String = "Отменить"
     
@@ -42,9 +49,8 @@ final class CreateNewHabitViewController: UIViewController {
         
         setupScreenTitle()
         setupTextField()
-        setupCategoryButton()
-        setupScheduleButton()
-        setupStackView()
+        setupParametresStackView()
+        setupScreenControlsStackView()
     }
     
     private func setupScreenTitle() {
@@ -82,15 +88,16 @@ final class CreateNewHabitViewController: UIViewController {
         self.textField = textField
     }
     
-    private func setupButton(with text: String) -> UIButton {
+    private func setupParametersBaseButton(with text: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SF Pro", size: 17)
         button.contentHorizontalAlignment = .left
         button.backgroundColor = UIColor(named: "lightGrey")
         button.layer.cornerRadius = 16
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40) // Увеличиваем правый отступ для изображения
-
+        
         // Настройка для многострочного текста
         button.titleLabel?.numberOfLines = 0
         button.titleLabel?.lineBreakMode = .byWordWrapping
@@ -102,59 +109,20 @@ final class CreateNewHabitViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             arrowImageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
-            arrowImageView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16)
+            arrowImageView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16),
+            
+            button.heightAnchor.constraint(equalToConstant: 75)
         ])
         
         return button
     }
-
     
     private func setupCategoryButton() {
-        let categoryButton = setupButton(with: categoryButtonString)
+        let categoryButton = setupParametersBaseButton(with: categoryButtonString)
         categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         categoryButton.addTarget(self, action: #selector(categoryButtonTapped(_:)), for: .touchUpInside)
         
         self.categoryButton = categoryButton
-    }
-    
-    private func setupScheduleButton() {
-        let scheduleButton = setupButton(with: scheduleButtonString)
-        scheduleButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        scheduleButton.addTarget(self, action: #selector(scheduleButtonTapped(_:)), for: .touchUpInside)
-        
-        self.scheduleButton = scheduleButton
-    }
-    
-    let separator: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0.8, alpha: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private func setupStackView() {
-        let stackView = UIStackView(arrangedSubviews: [categoryButton, separator, scheduleButton])
-        stackView.axis = .vertical
-        stackView.spacing = 0
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            // Центрирование StackView по горизонтали
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            // Центрирование StackView по вертикали
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
-        
-        NSLayoutConstraint.activate([
-            categoryButton.heightAnchor.constraint(equalToConstant: 75),
-            scheduleButton.heightAnchor.constraint(equalToConstant: 75)
-        ])
     }
     
     private func updateCategoryButton(with categoryTitle: String) {
@@ -179,6 +147,14 @@ final class CreateNewHabitViewController: UIViewController {
         categoryButton.setAttributedTitle(attributedString, for: .normal)
     }
     
+    private func setupScheduleButton() {
+        let scheduleButton = setupParametersBaseButton(with: scheduleButtonString)
+        scheduleButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        scheduleButton.addTarget(self, action: #selector(scheduleButtonTapped(_:)), for: .touchUpInside)
+        
+        self.scheduleButton = scheduleButton
+    }
+    
     private func updateSheduleButton(with selectedWeekdaysString: String) {
         let attributedString = NSMutableAttributedString(string: scheduleButtonString, attributes: [
             .font: UIFont.systemFont(ofSize: 17),
@@ -201,6 +177,80 @@ final class CreateNewHabitViewController: UIViewController {
         scheduleButton.setAttributedTitle(attributedString, for: .normal)
     }
     
+    private func setupParametresStackView() {
+        setupCategoryButton()
+        setupScheduleButton()
+        
+        let stackView = UIStackView(arrangedSubviews: [categoryButton, separator, scheduleButton])
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    private func setupBaseButton(with text: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(text, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SF Pro", size: 16)
+        button.backgroundColor = .black
+        button.contentHorizontalAlignment = .center
+        button.layer.cornerRadius = 16
+        
+        button.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        return button
+    }
+    
+    private func setupCreateButton() {
+        let createButton = setupBaseButton(with: createButtonString)
+        createButton.addTarget(self, action: #selector(createButtonTapped(_:)), for: .touchUpInside)
+        
+        self.createButton = createButton
+    }
+    
+    private func setupCancelButton() {
+        let cancelButton = setupBaseButton(with: cancelButtonString)
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
+        cancelButton.backgroundColor = .white
+        cancelButton.setTitleColor(.red, for: .normal)
+        cancelButton.layer.borderWidth = 1
+        cancelButton.layer.borderColor = UIColor.red.cgColor
+        
+        self.cancelButton = cancelButton
+    }
+    
+    private func setupScreenControlsStackView() {
+        setupCreateButton()
+        setupCancelButton()
+        
+        let stackView = UIStackView(arrangedSubviews: [cancelButton, createButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
+    }
+    
     private func convertWeekdaysToString(_ selectedWeekdays: Set<Weekday>) -> String {
         let abbreviations: [Weekday: String] = [
             .monday: "Пн",
@@ -211,9 +261,7 @@ final class CreateNewHabitViewController: UIViewController {
             .saturday: "Сб",
             .sunday: "Вс"
         ]
-
         let abbreviationsArray = selectedWeekdays.compactMap { abbreviations[$0] }
-
         return abbreviationsArray.joined(separator: ", ")
     }
     
@@ -237,6 +285,14 @@ final class CreateNewHabitViewController: UIViewController {
         present(scheduleScreenVC, animated: true)
     }
     
+    @objc private func createButtonTapped(_ sender: UIButton) {
+        //Создание трекера с выбранными параметрами
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func cancelButtonTapped(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 
