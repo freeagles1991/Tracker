@@ -9,13 +9,15 @@ import Foundation
 import UIKit
 
 final class ScheduleScreenViewController: UIViewController {
+    weak var delegate: CreateNewHabitViewController?
+    
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая привычка"
     
     private let tableView = UITableView()
-    let tableContainerView = UIView() // Контейнер для таблицы
+    private let tableContainerView = UIView()
     private let daysOfWeek = Weekday.allCases
-    var selectedWeekdays = Set<Weekday>()
+    private var selectedWeekdays = Set<Weekday>()
     private var switchStates = [Bool](repeating: false, count: 7)
     
     private let doneButton = UIButton()
@@ -79,6 +81,7 @@ final class ScheduleScreenViewController: UIViewController {
         doneButton.setTitleColor(.white, for: .normal)
         doneButton.layer.cornerRadius = 8
         doneButton.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.addTarget(self, action: #selector(doneButtonTapped(_:)), for: .touchUpInside)
         
         view.addSubview(doneButton)
         
@@ -100,16 +103,9 @@ final class ScheduleScreenViewController: UIViewController {
         }
     }
     
-    @objc func doneButtonTapped() {
-        let tracker = Tracker(
-            title: "Example Tracker",
-            color: "Red",
-            emoji: "🔥",
-            schedule: Array(selectedWeekdays)
-        )
-        
-        // Пример сохранения или использования объекта Tracker
-        print("Tracker saved with schedule: \(tracker.schedule)")
+    @objc func doneButtonTapped(_ sender: UIButton) {
+        delegate?.updateSelectedWeekdays(selectedWeekdays)
+        dismiss(animated: true, completion: nil)
     }
 }
 

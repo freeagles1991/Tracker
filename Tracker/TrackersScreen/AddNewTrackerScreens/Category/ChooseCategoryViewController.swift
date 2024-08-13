@@ -127,7 +127,7 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         tableView.reloadRows(at: [indexPath], with: .automatic)
         
         //Делегируем на экран создания трекера
-        delegate?.updateCategory(category: choosenCategory)
+        delegate?.updateCategory(choosenCategory)
         
         dismiss(animated: true, completion: nil)
     }

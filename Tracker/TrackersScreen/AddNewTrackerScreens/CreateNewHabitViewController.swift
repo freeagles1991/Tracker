@@ -10,8 +10,10 @@ import UIKit
 
 final class CreateNewHabitViewController: UIViewController {
     private let chooseCategoryVC = ChooseCategoryViewController()
+    private let scheduleScreenVC = ScheduleScreenViewController()
     private var category: TrackerCategory?
     private var newTracker: Tracker?
+    private var selectedWeekdays = Set<Weekday>()
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая привычка"
@@ -36,6 +38,7 @@ final class CreateNewHabitViewController: UIViewController {
         view.backgroundColor = .white
         
         chooseCategoryVC.delegate = self
+        scheduleScreenVC.delegate = self
         
         setupScreenTitle()
         setupTextField()
@@ -154,11 +157,6 @@ final class CreateNewHabitViewController: UIViewController {
         ])
     }
     
-    func updateCategory(category: TrackerCategory) {
-        self.category = category
-        updateCategoryButton(with: category.title)
-    }
-    
     private func updateCategoryButton(with categoryTitle: String) {
         let attributedString = NSMutableAttributedString(string: categoryButtonString, attributes: [
             .font: UIFont.systemFont(ofSize: 17),
@@ -181,12 +179,61 @@ final class CreateNewHabitViewController: UIViewController {
         categoryButton.setAttributedTitle(attributedString, for: .normal)
     }
     
+    private func updateSheduleButton(with selectedWeekdaysString: String) {
+        let attributedString = NSMutableAttributedString(string: scheduleButtonString, attributes: [
+            .font: UIFont.systemFont(ofSize: 17),
+            .foregroundColor: UIColor.black
+        ])
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 2 // Задаем нужный межстрочный интервал
+        
+        let additionalText = "\n\(selectedWeekdaysString)"
+        print(selectedWeekdaysString)
+        let additionalAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 17),
+            .foregroundColor: UIColor.darkGray,
+            .paragraphStyle: paragraphStyle
+        ]
+        
+        attributedString.append(NSAttributedString(string: additionalText, attributes: additionalAttributes))
+        
+        scheduleButton.setAttributedTitle(attributedString, for: .normal)
+    }
+    
+    private func convertWeekdaysToString(_ selectedWeekdays: Set<Weekday>) -> String {
+        let abbreviations: [Weekday: String] = [
+            .monday: "Пн",
+            .tuesday: "Вт",
+            .wednesday: "Ср",
+            .thursday: "Чт",
+            .friday: "Пт",
+            .saturday: "Сб",
+            .sunday: "Вс"
+        ]
+
+        let abbreviationsArray = selectedWeekdays.compactMap { abbreviations[$0] }
+
+        return abbreviationsArray.joined(separator: ", ")
+    }
+    
+    func updateCategory(_ category: TrackerCategory) {
+        self.category = category
+        updateCategoryButton(with: category.title)
+    }
+    
+    func updateSelectedWeekdays(_ selectedWeekdays: Set<Weekday>) {
+        self.selectedWeekdays = selectedWeekdays
+        print("Выбранные дни - \(selectedWeekdays) - сохранены")
+        let selectedWeekdaysString = self.convertWeekdaysToString(selectedWeekdays)
+        updateSheduleButton(with: selectedWeekdaysString)
+    }
+    
     @objc private func categoryButtonTapped(_ sender: UIButton) {
         present(chooseCategoryVC, animated: true)
     }
     
     @objc private func scheduleButtonTapped(_ sender: UIButton) {
-        let scheduleScreenVC = ScheduleScreenViewController()
         present(scheduleScreenVC, animated: true)
     }
     
