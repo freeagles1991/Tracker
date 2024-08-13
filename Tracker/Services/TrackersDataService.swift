@@ -54,7 +54,7 @@ class TrackerDataService {
     
     // MARK: - Добавление/Удаление трекеров и категорий
     
-    func addTracker(_ tracker: Tracker, to categoryTitle: String) {
+    func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
         var updatedCategories = categories
         if let index = updatedCategories.firstIndex(where: { $0.title == categoryTitle }) {
             updatedCategories[index].trackers.append(tracker)

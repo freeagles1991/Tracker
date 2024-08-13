@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 final class CreateNewTrackerViewController: UIViewController {
+    private let createNewHabitVC = CreateNewHabitViewController()
+    
     private var screenTitle: UILabel?
     private let screenTitleString = "Создание трекера"
     
@@ -21,6 +23,8 @@ final class CreateNewTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        createNewHabitVC.delegate = self
         
         setupScreenTitle()
         setupHabitButton()
@@ -96,7 +100,6 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
-        let createNewHabitVC = CreateNewHabitViewController()
         present(createNewHabitVC, animated: true)
     }
     

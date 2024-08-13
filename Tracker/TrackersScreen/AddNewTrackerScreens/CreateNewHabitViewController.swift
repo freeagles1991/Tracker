@@ -9,17 +9,22 @@ import Foundation
 import UIKit
 
 final class CreateNewHabitViewController: UIViewController {
+    private let trackersDataService = TrackerDataService.shared
     private let chooseCategoryVC = ChooseCategoryViewController()
     private let scheduleScreenVC = ScheduleScreenViewController()
-    private var category: TrackerCategory?
-    private var newTracker: Tracker?
+    var delegate: CreateNewTrackerViewController?
+    
+    private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
+    private var newTracker: Tracker?
+    private let defaultEmoji: String = "💪"
+    private let defaultColor: String = "#FF5733"
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая привычка"
     
-    private var textField = UITextField()
-    private let textFieldString: String = "Введите название трекера"
+    private var trackerNameTextField = UITextField()
+    private let trackerNameTextFieldString: String = "Введите название трекера"
     
     private var categoryButton = UIButton()
     private let categoryButtonString: String = "Категория"
@@ -94,7 +99,7 @@ final class CreateNewHabitViewController: UIViewController {
             textField.heightAnchor.constraint(equalToConstant: 75)
         ])
         
-        self.textField = textField
+        self.trackerNameTextField = textField
     }
     
     private func setupParametersBaseButton(with text: String) -> UIButton {
@@ -201,7 +206,7 @@ final class CreateNewHabitViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24),
+            stackView.topAnchor.constraint(equalTo: trackerNameTextField.bottomAnchor, constant: 24),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
@@ -275,7 +280,7 @@ final class CreateNewHabitViewController: UIViewController {
     }
     
     func updateCategory(_ category: TrackerCategory) {
-        self.category = category
+        self.selectedCategory = category
         updateCategoryButton(with: category.title)
     }
     
@@ -284,6 +289,19 @@ final class CreateNewHabitViewController: UIViewController {
         print("Выбранные дни - \(selectedWeekdays) - сохранены")
         let selectedWeekdaysString = self.convertWeekdaysToString(selectedWeekdays)
         updateSheduleButton(with: selectedWeekdaysString)
+    }
+    
+    func createNewTracker() {
+        guard let trackerName = trackerNameTextField.text, !trackerName.isEmpty else {
+            // Обработайте случай, если поле ввода пустое
+            print("Название трекера не может быть пустым.")
+            return
+        }
+        let selectedWeekdaysArray = Array(selectedWeekdays)
+        let newTracker = Tracker(title: trackerName, color: defaultColor, emoji: defaultEmoji, schedule: selectedWeekdaysArray)
+        guard let selectedCategory = selectedCategory else { return }
+        trackersDataService.addTracker(newTracker, toCategory: selectedCategory.title)
+        print("Новый трекер \(newTracker.title) успешно добавлен в категорию \(selectedCategory.title)")
     }
     
     @objc private func categoryButtonTapped(_ sender: UIButton) {
@@ -295,8 +313,11 @@ final class CreateNewHabitViewController: UIViewController {
     }
     
     @objc private func createButtonTapped(_ sender: UIButton) {
-        //Создание трекера с выбранными параметрами
-        dismiss(animated: true, completion: nil)
+        createNewTracker()
+        delegate?.dismiss(animated: true) { [ weak self ] in
+            print("Delegate dismissed")
+            self?.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc private func cancelButtonTapped(_ sender: UIButton) {
