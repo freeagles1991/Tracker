@@ -71,12 +71,21 @@ final class CreateNewHabitViewController: UIViewController {
     private func setupTextField() {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
+        textField.font = UIFont(name: "SF Pro", size: 16)
         textField.borderStyle = .none
         textField.layer.cornerRadius = 16
         textField.layer.masksToBounds = true
         textField.backgroundColor = UIColor(white: 0.95, alpha: 1)
         textField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(textField)
+        
+        // Отступы слева и справа
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        textField.rightView = paddingView
+        textField.rightViewMode = .always
+        
         
         NSLayoutConstraint.activate([
             textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
@@ -192,9 +201,9 @@ final class CreateNewHabitViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            stackView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     
