@@ -14,7 +14,7 @@ class TrackersViewController: UIViewController {
     private let createNewTrackerVC = CreateNewTrackerViewController()
 
     private var completedTrackers: [TrackerRecord] = []
-    private var currentDate: Date?
+    private var selectedDate: Date?
     var filteredCategories: [TrackerCategory] = []
     
     private var emptyStateView = UIView()
@@ -197,12 +197,18 @@ class TrackersViewController: UIViewController {
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        let selectedDate = sender.date
+        self.selectedDate = sender.date
+        guard let selectedDate = selectedDate else { return }
         updateTrackers(for: selectedDate)
     }
     
     func updateCollectionView() {
         collectionView.reloadData()
+    }
+    
+    func getDateFromUIDatePicker() -> Date? {
+        guard let selectedDate = selectedDate else { return nil }
+        return selectedDate
     }
 }
 
@@ -223,6 +229,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
         let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
         cell.configure(with: tracker)
+        cell.trackersVC = self
         return cell
     }
 

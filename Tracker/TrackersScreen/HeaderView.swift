@@ -11,7 +11,7 @@ import UIKit
 class HeaderView: UICollectionReusableView {
     let label: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "SF Pro", size: 19)
+        label.font = UIFont(name: "SF Pro", size: 100)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -20,8 +20,6 @@ class HeaderView: UICollectionReusableView {
     // Инициализатор
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        label.backgroundColor = .gray
         
         addSubview(label)
         

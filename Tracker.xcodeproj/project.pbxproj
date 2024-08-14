@@ -31,6 +31,7 @@
 		32BABF042C6766E400E176E2 /* ChooseCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF032C6766E400E176E2 /* ChooseCategoryViewController.swift */; };
 		32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */; };
 		32BABF0B2C67788E00E176E2 /* TrackersDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0A2C67788E00E176E2 /* TrackersDataService.swift */; };
+		32BABF0E2C6D11D200E176E2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0D2C6D11D200E176E2 /* UIColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		32BABF032C6766E400E176E2 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
 		32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewCategoryViewController.swift; sourceTree = "<group>"; };
 		32BABF0A2C67788E00E176E2 /* TrackersDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataService.swift; sourceTree = "<group>"; };
+		32BABF0D2C6D11D200E176E2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 		323882592C52AB0B00EE11A3 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				32BABF0C2C6D11BC00E176E2 /* Extensions */,
 				32BABF092C67786800E176E2 /* Services */,
 				32A45BAF2C5EA9B2002A97F5 /* Models */,
 				32A45B6C2C53DA6A002A97F5 /* StatisticsScreen */,
@@ -234,6 +237,14 @@
 				32BABF0A2C67788E00E176E2 /* TrackersDataService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		32BABF0C2C6D11BC00E176E2 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				32BABF0D2C6D11D200E176E2 /* UIColor.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -398,6 +409,7 @@
 				32A45BB12C5EA9C6002A97F5 /* Tracker.swift in Sources */,
 				323882652C52AB0B00EE11A3 /* Tracker.xcdatamodeld in Sources */,
 				32A45B6B2C53DA2E002A97F5 /* TrackersViewController.swift in Sources */,
+				32BABF0E2C6D11D200E176E2 /* UIColor.swift in Sources */,
 				32A45B6E2C53DAA2002A97F5 /* StatisticsViewController.swift in Sources */,
 				32BABF042C6766E400E176E2 /* ChooseCategoryViewController.swift in Sources */,
 				32A45BB52C5EACDC002A97F5 /* TrackerRecord.swift in Sources */,

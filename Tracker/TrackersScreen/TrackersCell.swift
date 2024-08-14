@@ -9,12 +9,16 @@ import Foundation
 import UIKit
 
 class TrackerCell: UICollectionViewCell {
+    weak var trackersVC: TrackersViewController?
+    
     // Элементы ячейки
     private let emojiLabel = UILabel()
     private let titleLabel = UILabel()
     private let colorPanelView = UIView()
-    private let durationLabel = UILabel()
+    private var durationCountInt: Int = 1
+    private var durationLabel = UILabel()
     private let completeButton = UIButton()
+    private var isTrackerComplete = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,8 +47,6 @@ class TrackerCell: UICollectionViewCell {
 
         colorPanelView.layer.cornerRadius = 16
         colorPanelView.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentView.backgroundColor = .gray
 
         titleBlockView.addSubview(colorPanelView)
         titleBlockView.addSubview(emojiLabel)
@@ -79,6 +81,7 @@ class TrackerCell: UICollectionViewCell {
         
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         completeButton.setImage(UIImage(named: "PlusButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        completeButton.addTarget(self, action: #selector(completeButtonTapped(_:)), for: .touchUpInside)
         
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -107,6 +110,33 @@ class TrackerCell: UICollectionViewCell {
             durationLabel.topAnchor.constraint(equalTo: bottomBlockView.topAnchor, constant: 16)
         ])
     }
+    
+    @objc private func completeButtonTapped(_ sender: UIButton){
+        self.isTrackerComplete = !isTrackerComplete
+        guard let selectedDate = trackersVC?.getDateFromUIDatePicker() else { return }
+        let currentDate = Date()
+        if selectedDate > currentDate {
+            print("Выбрана дата позднее текущей")
+        } else {
+            if isTrackerComplete{
+                completeButton.setImage(UIImage(named: "DoneButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+                encreaseDurationLabel()
+            } else {
+                completeButton.setImage(UIImage(named: "PlusButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+                decreaseDurationLabel()
+            }
+        }
+    }
+    
+    private func encreaseDurationLabel(){
+        durationCountInt += 1
+        durationLabel.text = "\(durationCountInt) дней"
+    }
+    
+    private func decreaseDurationLabel(){
+        durationCountInt -= 1
+        durationLabel.text = "\(durationCountInt) дней"
+    }
 
     // Метод для настройки ячейки
     func configure(with tracker: Tracker) {
@@ -124,22 +154,4 @@ class TrackerCell: UICollectionViewCell {
     }
 }
 
-extension UIColor {
-    // Метод для преобразования hex строки в UIColor
-    convenience init?(hexString: String) {
-        var hex = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
-        hex = hex.replacingOccurrences(of: "#", with: "")
-
-        guard hex.count == 6 else { return nil }
-
-        var rgbValue: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&rgbValue)
-
-        let red = CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0
-        let green = CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0
-        let blue = CGFloat(rgbValue & 0x0000FF) / 255.0
-
-        self.init(red: red, green: green, blue: blue, alpha: 1.0)
-    }
-}
 
