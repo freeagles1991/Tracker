@@ -15,6 +15,7 @@ class TrackersViewController: UIViewController {
 
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date?
+    var filteredCategories: [TrackerCategory] = []
     
     private var emptyStateView = UIView()
     private var searchBar = UISearchBar()
@@ -136,7 +137,7 @@ class TrackersViewController: UIViewController {
     }
     
     private func updateUI() {
-        if trackersDataService.categories.isEmpty {
+        if filteredCategories.isEmpty {
             emptyStateView.isHidden = false
             collectionView.isHidden = true
         } else {
@@ -145,12 +146,59 @@ class TrackersViewController: UIViewController {
         }
     }
     
+    // Функция для получения Weekday из выбранной даты
+    private func getWeekday(from date: Date) -> Weekday? {
+        let calendar = Calendar.current
+        let weekdayNumber = calendar.component(.weekday, from: date)
+        
+        switch weekdayNumber {
+        case 1: return .sunday
+        case 2: return .monday
+        case 3: return .tuesday
+        case 4: return .wednesday
+        case 5: return .thursday
+        case 6: return .friday
+        case 7: return .saturday
+        default: return nil
+        }
+    }
+    
+    // Функция для фильтрации трекеров по дню недели
+    private func filterTrackers(for weekday: Weekday, from categories: [TrackerCategory]) -> [TrackerCategory] {
+        var filteredCategories: [TrackerCategory] = []
+        
+        for category in categories {
+            let filteredTrackers = category.trackers.filter { tracker in
+                return tracker.schedule.contains(weekday)
+            }
+            
+            // Если в категории остались трекеры, добавляем ее в отфильтрованный список
+            if !filteredTrackers.isEmpty {
+                let filteredCategory = TrackerCategory(title: category.title, trackers: filteredTrackers)
+                filteredCategories.append(filteredCategory)
+            }
+        }
+        
+        return filteredCategories
+    }
+    
+    // Функция для обновления данных в CollectionView
+    private func updateTrackers(for date: Date) {
+        if let selectedWeekday = getWeekday(from: date) {
+            filteredCategories = filterTrackers(for: selectedWeekday, from: trackersDataService.categories)
+            updateUI()
+            collectionView.reloadData()
+        }
+    }
+
+    
     @objc private func addTracker() {
         present(createNewTrackerVC, animated: true)
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-
+        let selectedDate = sender.date
+        updateTrackers(for: selectedDate)
     }
     
     func updateCollectionView() {
@@ -161,19 +209,19 @@ class TrackersViewController: UIViewController {
 extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDataSource
 
-    ///Количество категорий
+    ///Количество секций
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return trackersDataService.categories.count
+        return filteredCategories.count
     }
     /// Количество элементов в секции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return trackersDataService.categories[section].trackers.count
+        return filteredCategories[section].trackers.count
     }
     
     /// Настраиваем ячейку
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
-        let tracker = trackersDataService.categories[indexPath.section].trackers[indexPath.item]
+        let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
         cell.configure(with: tracker)
         return cell
     }
