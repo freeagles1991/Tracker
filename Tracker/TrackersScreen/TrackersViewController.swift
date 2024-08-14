@@ -11,14 +11,8 @@ import UIKit
 // Пример первого контроллера
 class TrackersViewController: UIViewController {
     private let trackersDataService = TrackerDataService.shared
-    
-    ///Здесь заглушка для ячеек
-    var trackers: [Tracker] = [
-        Tracker(title: "Workout", color: "#FF5733", emoji: "💪", schedule: [.monday, .wednesday, .friday]),
-        Tracker(title: "Read", color: "#33FF57", emoji: "📚", schedule: [.tuesday, .thursday]),
-        Tracker(title: "Workout", color: "#FF5733", emoji: "💪", schedule: [.monday, .wednesday, .friday])
-    ]
-    private var categories: [TrackerCategory] = []
+    private let createNewTrackerVC = CreateNewTrackerViewController()
+
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date?
     
@@ -45,10 +39,9 @@ class TrackersViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        createNewTrackerVC.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
-        
-        categories.append(TrackerCategory(title: "Default", trackers: self.trackers))
         
         setupNavigationBar()
         setupSearchBar()
@@ -143,7 +136,7 @@ class TrackersViewController: UIViewController {
     }
     
     private func updateUI() {
-        if trackers.isEmpty {
+        if trackersDataService.categories.isEmpty {
             emptyStateView.isHidden = false
             collectionView.isHidden = true
         } else {
@@ -153,12 +146,15 @@ class TrackersViewController: UIViewController {
     }
     
     @objc private func addTracker() {
-        let createNewTrackerVC = CreateNewTrackerViewController()
         present(createNewTrackerVC, animated: true)
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
 
+    }
+    
+    func updateCollectionView() {
+        collectionView.reloadData()
     }
 }
 
@@ -167,24 +163,24 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
 
     ///Количество категорий
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
+        return trackersDataService.categories.count
     }
     /// Количество элементов в секции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categories[section].trackers.count
+        return trackersDataService.categories[section].trackers.count
     }
     
     /// Настраиваем ячейку
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
-        let tracker = categories[indexPath.section].trackers[indexPath.item]
+        let tracker = trackersDataService.categories[indexPath.section].trackers[indexPath.item]
         cell.configure(with: tracker)
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! HeaderView
-        headerView.label.text = categories[indexPath.section].title
+        headerView.label.text = trackersDataService.categories[indexPath.section].title
         return headerView
     }
 

@@ -10,6 +10,7 @@ import UIKit
 
 final class CreateNewTrackerViewController: UIViewController {
     private let createNewHabitVC = CreateNewHabitViewController()
+    weak var delegate: TrackersViewController?
     
     private var screenTitle: UILabel?
     private let screenTitleString = "Создание трекера"
@@ -30,6 +31,11 @@ final class CreateNewTrackerViewController: UIViewController {
         setupHabitButton()
         setupEventButton()
         setupStackView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.updateCollectionView()
     }
     
     private func setupScreenTitle() {

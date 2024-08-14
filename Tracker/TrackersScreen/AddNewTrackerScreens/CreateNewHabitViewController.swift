@@ -12,7 +12,7 @@ final class CreateNewHabitViewController: UIViewController {
     private let trackersDataService = TrackerDataService.shared
     private let chooseCategoryVC = ChooseCategoryViewController()
     private let scheduleScreenVC = ScheduleScreenViewController()
-    var delegate: CreateNewTrackerViewController?
+    weak var delegate: CreateNewTrackerViewController?
     
     private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
@@ -314,9 +314,10 @@ final class CreateNewHabitViewController: UIViewController {
     
     @objc private func createButtonTapped(_ sender: UIButton) {
         createNewTracker()
-        delegate?.dismiss(animated: true) { [ weak self ] in
-            print("Delegate dismissed")
-            self?.dismiss(animated: true, completion: nil)
+
+        self.dismiss(animated: true) { [weak self] in
+            guard let delegate = self?.delegate else { return }
+            delegate.dismiss(animated: false, completion: nil)
         }
     }
     
