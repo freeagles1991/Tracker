@@ -42,6 +42,8 @@ class TrackersViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        trackersDataService.removeAllData()
+        
         createNewTrackerVC.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -75,6 +77,7 @@ class TrackersViewController: UIViewController {
         searchBar.barStyle = .default
         searchBar.placeholder = "Поиск"
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.backgroundImage = UIImage()
         view.addSubview(searchBar)
         
         NSLayoutConstraint.activate([

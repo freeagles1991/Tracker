@@ -112,9 +112,26 @@ class TrackerDataService {
         print("Запись трекера \(tracker.title) удалена")
     }
     
-    // Проверка, выполнен ли трекер на дату
-    func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
-        return records.contains { $0.trackerID == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: date) }
+    // Проверка, выполнен ли трекер
+    func isTrackerCompleted(_ tracker: Tracker) -> Bool {
+        return records.contains { $0.trackerID == tracker.id }
+    }
+    
+    func numberOfRecords(for tracker: Tracker) -> Int {
+        return records.filter { $0.trackerID == tracker.id }.count
+    }
+    
+    func removeAllData() {
+        // Очищаем трекеры
+        trackers = []
+        
+        // Очищаем категории
+        categories = []
+        
+        // Очищаем записи
+        records = []
+        
+        print("Все трекеры, категории и записи были удалены")
     }
 }
 

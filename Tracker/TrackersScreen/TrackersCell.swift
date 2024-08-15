@@ -16,7 +16,7 @@ class TrackerCell: UICollectionViewCell {
     private let emojiLabel = UILabel()
     private let titleLabel = UILabel()
     private let colorPanelView = UIView()
-    private var durationCountInt: Int = 1
+    private var durationCountInt: Int = 0
     private var durationLabel = UILabel()
     private let completeButton = UIButton()
     private var isTrackerComplete = false
@@ -88,8 +88,6 @@ class TrackerCell: UICollectionViewCell {
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
         durationLabel.font = UIFont(name: "SF Pro", size: 12)
         durationLabel.textColor = .black
-        durationLabel.text = "1 день"
-        
         
         bottomBlockView.addSubview(completeButton)
         bottomBlockView.addSubview(durationLabel)
@@ -120,12 +118,11 @@ class TrackerCell: UICollectionViewCell {
             print("Выбрана дата позднее текущей")
         } else {
             if isTrackerComplete{
-                completeButton.setImage(UIImage(named: "DoneButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
                 encreaseDurationLabel()
             } else {
-                completeButton.setImage(UIImage(named: "PlusButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
                 decreaseDurationLabel()
             }
+            updateUI()
         }
     }
     
@@ -142,12 +139,25 @@ class TrackerCell: UICollectionViewCell {
         guard let tracker = self.tracker else { return }
         trackersVC?.setTrackerIncomplete(for: tracker)
     }
+    
+    func updateUI() {
+        if isTrackerComplete{
+            completeButton.setImage(UIImage(named: "DoneButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        } else {
+            completeButton.setImage(UIImage(named: "PlusButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        }
+    }
+    
 
     // Метод для настройки ячейки
     func configure(with tracker: Tracker) {
         self.tracker = tracker
         emojiLabel.text = tracker.emoji
         titleLabel.text = tracker.title
+        self.isTrackerComplete = TrackerDataService.shared.isTrackerCompleted(tracker)
+        updateUI()
+        self.durationCountInt = TrackerDataService.shared.numberOfRecords(for: tracker)
+        durationLabel.text = "\(durationCountInt) дней"
 
         // Преобразование цвета из строки в UIColor
         if let color = UIColor(hexString: tracker.color) {
