@@ -35,7 +35,6 @@ final class CreateNewTrackerViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        delegate?.updateCollectionView()
     }
     
     private func setupScreenTitle() {
@@ -106,6 +105,7 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
+        createNewHabitVC.trackersVC = delegate
         present(createNewHabitVC, animated: true)
     }
     

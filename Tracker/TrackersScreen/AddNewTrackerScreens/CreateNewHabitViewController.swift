@@ -10,6 +10,7 @@ import UIKit
 
 final class CreateNewHabitViewController: UIViewController {
     private let trackersDataService = TrackerDataService.shared
+    weak var trackersVC: TrackersViewController?
     private let chooseCategoryVC = ChooseCategoryViewController()
     private let scheduleScreenVC = ScheduleScreenViewController()
     weak var delegate: CreateNewTrackerViewController?
@@ -302,6 +303,7 @@ final class CreateNewHabitViewController: UIViewController {
         guard let selectedCategory = selectedCategory else { return }
         trackersDataService.addTracker(newTracker, toCategory: selectedCategory.title)
         print("Новый трекер \(newTracker.title) успешно добавлен в категорию \(selectedCategory.title)")
+        trackersVC?.updateCollectionViewWithNewTracker()
     }
     
     @objc private func categoryButtonTapped(_ sender: UIButton) {

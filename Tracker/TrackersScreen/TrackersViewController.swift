@@ -42,6 +42,8 @@ class TrackersViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        selectedDate = Date()
+        
         trackersDataService.removeAllData()
         
         createNewTrackerVC.delegate = self
@@ -207,8 +209,9 @@ class TrackersViewController: UIViewController {
         updateTrackers(for: selectedDate)
     }
     
-    func updateCollectionView() {
-        collectionView.reloadData()
+    func updateCollectionViewWithNewTracker() {
+        guard let selectedDate = selectedDate else { return }
+        updateTrackers(for: selectedDate)
     }
     
     func getDateFromUIDatePicker() -> Date? {
