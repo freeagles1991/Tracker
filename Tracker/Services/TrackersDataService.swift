@@ -13,12 +13,12 @@ class TrackerDataService {
     
     private let trackersKey = "trackers"
     private let categoriesKey = "categories"
+    private let recordsKey = "records"
     
     // MARK: - Trackers
     
     var trackers: [Tracker] {
         get {
-            // Получаем данные из UserDefaults
             if let data = UserDefaults.standard.data(forKey: trackersKey),
                let decodedTrackers = try? JSONDecoder().decode([Tracker].self, from: data) {
                 return decodedTrackers
@@ -26,7 +26,6 @@ class TrackerDataService {
             return []
         }
         set {
-            // Сохраняем данные в UserDefaults
             if let encoded = try? JSONEncoder().encode(newValue) {
                 UserDefaults.standard.set(encoded, forKey: trackersKey)
             }
@@ -37,7 +36,6 @@ class TrackerDataService {
     
     var categories: [TrackerCategory] {
         get {
-            // Получаем данные из UserDefaults
             if let data = UserDefaults.standard.data(forKey: categoriesKey),
                let decodedCategories = try? JSONDecoder().decode([TrackerCategory].self, from: data) {
                 return decodedCategories
@@ -45,9 +43,25 @@ class TrackerDataService {
             return []
         }
         set {
-            // Сохраняем данные в UserDefaults
             if let encoded = try? JSONEncoder().encode(newValue) {
                 UserDefaults.standard.set(encoded, forKey: categoriesKey)
+            }
+        }
+    }
+    
+    // MARK: - Records (новая логика для хранения записей)
+    
+    var records: [TrackerRecord] {
+        get {
+            if let data = UserDefaults.standard.data(forKey: recordsKey),
+               let decodedRecords = try? JSONDecoder().decode([TrackerRecord].self, from: data) {
+                return decodedRecords
+            }
+            return []
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(encoded, forKey: recordsKey)
             }
         }
     }
@@ -69,7 +83,6 @@ class TrackerDataService {
         var updatedCategories = categories
         if let index = updatedCategories.firstIndex(where: { $0.title == categoryTitle }) {
             updatedCategories[index].trackers.removeAll { $0.id == tracker.id }
-            // Удаляем категорию, если в ней больше нет трекеров
             if updatedCategories[index].trackers.isEmpty {
                 updatedCategories.remove(at: index)
             }
@@ -78,8 +91,31 @@ class TrackerDataService {
     }
     
     func removeAllCategoriesExceptFirst() {
-        guard categories.count > 1 else { return } // Если есть только одна категория, ничего не делаем
-        categories = [categories[0]] // Оставляем только первую категорию
+        guard categories.count > 1 else { return }
+        categories = [categories[0]]
+    }
+    
+    // MARK: - Добавление/Удаление записей трекеров
+    
+    func addRecord(for tracker: Tracker, on date: Date) {
+        var updatedRecords = records
+        let newRecord = TrackerRecord(trackerID: tracker.id, date: date)
+        updatedRecords.append(newRecord)
+        records = updatedRecords
+        print("Запись трекера \(tracker.title) выполнена")
+    }
+    
+    func removeRecord(for tracker: Tracker, on date: Date) {
+        var updatedRecords = records
+        updatedRecords.removeAll { $0.trackerID == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: date) }
+        records = updatedRecords
+        print("Запись трекера \(tracker.title) удалена")
+    }
+    
+    // Проверка, выполнен ли трекер на дату
+    func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
+        return records.contains { $0.trackerID == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: date) }
     }
 }
+
 

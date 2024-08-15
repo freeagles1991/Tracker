@@ -10,6 +10,7 @@ import UIKit
 
 class TrackerCell: UICollectionViewCell {
     weak var trackersVC: TrackersViewController?
+    private var tracker: Tracker?
     
     // Элементы ячейки
     private let emojiLabel = UILabel()
@@ -131,15 +132,20 @@ class TrackerCell: UICollectionViewCell {
     private func encreaseDurationLabel(){
         durationCountInt += 1
         durationLabel.text = "\(durationCountInt) дней"
+        guard let tracker = self.tracker else { return }
+        trackersVC?.setTrackerComplete(for: tracker)
     }
     
     private func decreaseDurationLabel(){
         durationCountInt -= 1
         durationLabel.text = "\(durationCountInt) дней"
+        guard let tracker = self.tracker else { return }
+        trackersVC?.setTrackerIncomplete(for: tracker)
     }
 
     // Метод для настройки ячейки
     func configure(with tracker: Tracker) {
+        self.tracker = tracker
         emojiLabel.text = tracker.emoji
         titleLabel.text = tracker.title
 

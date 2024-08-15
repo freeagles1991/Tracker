@@ -12,10 +12,12 @@ import UIKit
 class TrackersViewController: UIViewController {
     private let trackersDataService = TrackerDataService.shared
     private let createNewTrackerVC = CreateNewTrackerViewController()
-
+    
+    private var categories: [TrackerCategory] = []
+    private var filteredCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var selectedDate: Date?
-    var filteredCategories: [TrackerCategory] = []
+
     
     private var emptyStateView = UIView()
     private var searchBar = UISearchBar()
@@ -210,7 +212,16 @@ class TrackersViewController: UIViewController {
         guard let selectedDate = selectedDate else { return nil }
         return selectedDate
     }
+    
+    func setTrackerComplete(for tracker: Tracker) {
+        trackersDataService.addRecord(for: tracker, on: Date())
+    }
+    
+    func setTrackerIncomplete(for tracker: Tracker) {
+        trackersDataService.removeRecord(for: tracker, on: Date())
+    }
 }
+
 
 extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDataSource
