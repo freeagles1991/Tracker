@@ -22,8 +22,8 @@ class TrackersViewController: UIViewController {
     private var searchBar = UISearchBar()
     private var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0 // Задаем расстояние между строками
-        layout.minimumInteritemSpacing = 9 // Задаем расстояние между ячейками
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 9
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .white
@@ -137,9 +137,7 @@ class TrackersViewController: UIViewController {
     }
     
     private func setupCollectionView() {
-        // Регистрируем ячейку для использования в коллекции
         collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: "TrackerCell")
-        ///Регистрируем заголовок
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
     
         view.addSubview(collectionView)
@@ -162,7 +160,6 @@ class TrackersViewController: UIViewController {
         }
     }
     
-    // Функция для получения Weekday из выбранной даты
     private func getWeekday(from date: Date) -> Weekday? {
         let calendar = Calendar.current
         let weekdayNumber = calendar.component(.weekday, from: date)
@@ -179,7 +176,6 @@ class TrackersViewController: UIViewController {
         }
     }
     
-    // Функция для фильтрации трекеров по дню недели
     private func filterTrackers(for weekday: Weekday, from categories: [TrackerCategory]) -> [TrackerCategory] {
         var filteredCategories: [TrackerCategory] = []
         
@@ -188,7 +184,6 @@ class TrackersViewController: UIViewController {
                 return tracker.schedule.contains(weekday)
             }
             
-            // Если в категории остались трекеры, добавляем ее в отфильтрованный список
             if !filteredTrackers.isEmpty {
                 let filteredCategory = TrackerCategory(title: category.title, trackers: filteredTrackers)
                 filteredCategories.append(filteredCategory)
@@ -198,7 +193,6 @@ class TrackersViewController: UIViewController {
         return filteredCategories
     }
     
-    // Функция для обновления данных в CollectionView
     private func updateTrackers(for date: Date) {
         if let selectedWeekday = getWeekday(from: date) {
             filteredCategories = filterTrackers(for: selectedWeekday, from: trackersDataService.categories)

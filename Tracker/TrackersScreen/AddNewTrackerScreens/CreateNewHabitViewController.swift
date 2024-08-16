@@ -89,7 +89,6 @@ final class CreateNewHabitViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(textField)
         
-        // Отступы слева и справа
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
         textField.leftView = paddingView
         textField.leftViewMode = .always
@@ -117,9 +116,8 @@ final class CreateNewHabitViewController: UIViewController {
         button.contentHorizontalAlignment = .left
         button.backgroundColor = UIColor(named: "lightGrey")
         button.layer.cornerRadius = 16
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40) // Увеличиваем правый отступ для изображения
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40)
         
-        // Настройка для многострочного текста
         button.titleLabel?.numberOfLines = 0
         button.titleLabel?.lineBreakMode = .byWordWrapping
         
@@ -153,7 +151,7 @@ final class CreateNewHabitViewController: UIViewController {
         ])
         
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 2 // Задаем нужный межстрочный интервал
+        paragraphStyle.lineSpacing = 2
         
         let additionalText = "\n\(categoryTitle)"
         print(categoryTitle)
@@ -183,7 +181,7 @@ final class CreateNewHabitViewController: UIViewController {
         ])
         
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 2 // Задаем нужный межстрочный интервал
+        paragraphStyle.lineSpacing = 2
         
         let additionalText = "\n\(selectedWeekdaysString)"
         print(selectedWeekdaysString)
@@ -302,7 +300,6 @@ final class CreateNewHabitViewController: UIViewController {
     
     func createNewTracker() {
         guard let trackerName = trackerNameTextField.text, !trackerName.isEmpty else {
-            // Обработайте случай, если поле ввода пустое
             print("Название трекера не может быть пустым.")
             return
         }

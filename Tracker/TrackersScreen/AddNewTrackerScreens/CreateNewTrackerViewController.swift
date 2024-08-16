@@ -76,7 +76,6 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     private func setupStackView() {
-        // Создание StackView для кнопок
         guard let habitButton = habitButton, let eventButton = eventButton else { return }
         let stackView = UIStackView(arrangedSubviews: [habitButton, eventButton])
         stackView.axis = .vertical
@@ -84,20 +83,15 @@ final class CreateNewTrackerViewController: UIViewController {
         stackView.alignment = .fill
         stackView.distribution = .fill
         
-        // Добавление StackView на view
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
         
-        // Установка constraints для StackView
         NSLayoutConstraint.activate([
-            // Центрирование StackView по горизонтали
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            // Центрирование StackView по вертикали
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
-        // Установка constraints для кнопок
         NSLayoutConstraint.activate([
             habitButton.heightAnchor.constraint(equalToConstant: 60),
             eventButton.heightAnchor.constraint(equalToConstant: 60)

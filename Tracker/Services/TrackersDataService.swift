@@ -112,7 +112,6 @@ class TrackerDataService {
         print("Запись трекера \(tracker.title) удалена")
     }
     
-    // Проверка, выполнен ли трекер
     func isTrackerCompleted(_ tracker: Tracker) -> Bool {
         return records.contains { $0.trackerID == tracker.id }
     }
@@ -122,13 +121,8 @@ class TrackerDataService {
     }
     
     func removeAllData() {
-        // Очищаем трекеры
         trackers = []
-        
-        // Очищаем категории
         categories = []
-        
-        // Очищаем записи
         records = []
         
         print("Все трекеры, категории и записи были удалены")

@@ -95,18 +95,15 @@ final class CreateNewCategoryViewController: UIViewController {
     
     @objc private func doneButtonTapped(_ sender: UIButton) {
         guard let categoryName = categoryNameTextField.text, !categoryName.isEmpty else {
-            // Обработайте случай, если поле ввода пустое
             print("Название категории не может быть пустым.")
             return
         }
         
         let newCategory = TrackerCategory(title: categoryName, trackers: [])
         
-        // Действия по сохранению новой категории, например:
         trackersDataService.categories.append(newCategory)
         delegate?.updateTableView()
         
-        // Закрываем экран после сохранения
         dismiss(animated: true, completion: nil)
     }
 }

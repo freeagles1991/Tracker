@@ -103,7 +103,6 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "lightGrey")
         
-        // Добавление иконки галочки, если ячейка выбрана
         if isSelectedArray[indexPath.row] {
             cell.accessoryView = UIImageView(image: UIImage(systemName: "checkmark"))
         } else {
@@ -117,18 +116,14 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         return 75
     }
     
-    // Метод, вызываемый при тапе на ячейку таблицы
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let choosenCategory = trackersDataService.categories[indexPath.row]
         print("Выбрана категория: \(choosenCategory.title)")
         
-        // Переключаем состояние выбора
         isSelectedArray[indexPath.row].toggle()
         tableView.reloadRows(at: [indexPath], with: .automatic)
         
-        //Делегируем на экран создания трекера
         delegate?.updateCategory(choosenCategory)
-        
         dismiss(animated: true, completion: nil)
     }
     

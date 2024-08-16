@@ -12,7 +12,6 @@ class TrackerCell: UICollectionViewCell {
     weak var trackersVC: TrackersViewController?
     private var tracker: Tracker?
     
-    // Элементы ячейки
     private let emojiLabel = UILabel()
     private let titleLabel = UILabel()
     private let colorPanelView = UIView()
@@ -30,9 +29,7 @@ class TrackerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // Настройка элементов ячейки
     private func setupViews() {
-        ///Настраиваем блок с заголовком
         let titleBlockView = UIView()
         titleBlockView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -76,7 +73,6 @@ class TrackerCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8)
         ])
         
-        ///Настраиваем нижний блок с кнопкой
         let  bottomBlockView = UIView()
         bottomBlockView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -148,8 +144,6 @@ class TrackerCell: UICollectionViewCell {
         }
     }
     
-
-    // Метод для настройки ячейки
     func configure(with tracker: Tracker) {
         self.tracker = tracker
         emojiLabel.text = tracker.emoji
@@ -159,7 +153,6 @@ class TrackerCell: UICollectionViewCell {
         self.durationCountInt = TrackerDataService.shared.numberOfRecords(for: tracker)
         durationLabel.text = "\(durationCountInt) дней"
 
-        // Преобразование цвета из строки в UIColor
         if let color = UIColor(hexString: tracker.color) {
             colorPanelView.backgroundColor = color
             completeButton.tintColor = color

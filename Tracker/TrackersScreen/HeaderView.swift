@@ -17,7 +17,6 @@ class HeaderView: UICollectionReusableView {
         return label
     }()
     
-    // Инициализатор
     override init(frame: CGRect) {
         super.init(frame: frame)
         

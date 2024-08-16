@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-// Пример второго контроллера
 class StatisticsViewController: UIViewController {
     
     override func viewDidLoad() {
