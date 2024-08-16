@@ -68,12 +68,14 @@ class TrackersViewController: UIViewController {
     
     private func setupNavigationBar() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTracker))
+        addButton.tintColor = .black
         navigationItem.leftBarButtonItem = addButton
         
         navigationItem.title = navBarTitleString
         navigationController?.navigationBar.prefersLargeTitles = true
         
         let datePicker = UIDatePicker()
+        datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         

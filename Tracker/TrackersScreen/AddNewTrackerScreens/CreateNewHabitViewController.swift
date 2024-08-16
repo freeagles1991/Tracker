@@ -46,6 +46,9 @@ final class CreateNewHabitViewController: UIViewController {
     private var createButton = UIButton()
     private let createButtonString: String = "Создать"
     
+    private var isCategorySelected = false
+    private var isScheduleSelected = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -57,6 +60,7 @@ final class CreateNewHabitViewController: UIViewController {
         setupTextField()
         setupParametresStackView()
         setupScreenControlsStackView()
+        updateCreateButtonState()
     }
     
     private func setupScreenTitle() {
@@ -91,6 +95,8 @@ final class CreateNewHabitViewController: UIViewController {
         textField.leftViewMode = .always
         textField.rightView = paddingView
         textField.rightViewMode = .always
+        
+        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         
         NSLayoutConstraint.activate([
@@ -283,6 +289,7 @@ final class CreateNewHabitViewController: UIViewController {
     func updateCategory(_ category: TrackerCategory) {
         self.selectedCategory = category
         updateCategoryButton(with: category.title)
+        updateCreateButtonState()
     }
     
     func updateSelectedWeekdays(_ selectedWeekdays: Set<Weekday>) {
@@ -290,6 +297,7 @@ final class CreateNewHabitViewController: UIViewController {
         print("Выбранные дни - \(selectedWeekdays) - сохранены")
         let selectedWeekdaysString = self.convertWeekdaysToString(selectedWeekdays)
         updateSheduleButton(with: selectedWeekdaysString)
+        updateCreateButtonState()
     }
     
     func createNewTracker() {
@@ -325,6 +333,20 @@ final class CreateNewHabitViewController: UIViewController {
     
     @objc private func cancelButtonTapped(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func textFieldDidChange() {
+        updateCreateButtonState()
+    }
+    
+    private func updateCreateButtonState() {
+        if selectedCategory != nil && !selectedWeekdays.isEmpty && !(trackerNameTextField.text?.isEmpty ?? true) {
+            createButton.isEnabled = true
+            createButton.alpha = 1.0
+        } else {
+            createButton.isEnabled = false
+            createButton.alpha = 0.5
+        }
     }
 }
 
