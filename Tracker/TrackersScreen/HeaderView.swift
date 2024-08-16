@@ -11,7 +11,7 @@ import UIKit
 class HeaderView: UICollectionReusableView {
     let label: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "SF Pro", size: 100)
+        label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

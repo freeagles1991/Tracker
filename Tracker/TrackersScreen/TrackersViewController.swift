@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-// Пример первого контроллера
 class TrackersViewController: UIViewController {
     private let trackersDataService = TrackerDataService.shared
     private let createNewTrackerVC = CreateNewTrackerViewController()
@@ -23,9 +22,18 @@ class TrackersViewController: UIViewController {
     private var searchBar = UISearchBar()
     private var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0 // Задаем расстояние между строками
+        layout.minimumInteritemSpacing = 9 // Задаем расстояние между ячейками
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .white
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    
+    let itemsPerRow: CGFloat = 2
+    let sectionInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+    let interItemSpacing: CGFloat = 9
     
     private let emptyStateViewString = "Что будем отслеживать?"
     private let navBarTitleString = "Трекеры"
@@ -131,8 +139,7 @@ class TrackersViewController: UIViewController {
         collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: "TrackerCell")
         ///Регистрируем заголовок
         collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+    
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
@@ -231,7 +238,7 @@ class TrackersViewController: UIViewController {
 
 extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDataSource
-
+    
     ///Количество секций
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return filteredCategories.count
@@ -249,36 +256,45 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         cell.trackersVC = self
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! HeaderView
         headerView.label.text = trackersDataService.categories[indexPath.section].title
         return headerView
     }
-
+    
     
     // MARK: - UICollectionViewDelegateFlowLayout
     
-    /// Настраиваем размер ячейки
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 167, height: 148)
+        let screenWidth = view.frame.width
+        let paddingSpace = sectionInsets.left + sectionInsets.right + interItemSpacing * (itemsPerRow - 1)
+        let availableWidth = screenWidth - paddingSpace
+        let widthPerItem = availableWidth / itemsPerRow
+        let heightPerItem = widthPerItem * (148 / 167)
+        return CGSize(width: widthPerItem, height: heightPerItem)
     }
+    
     ///Настраиваем размер layout для заголовка секции
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 50)
     }
-    ///Отступы для секции
+    
+    // Отступы для секции
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        return sectionInsets
     }
-    ///Горизонтальное расстояние между ячейками
+    
+    // Горизонтальное расстояние между ячейками
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        return interItemSpacing
     }
-    ///Вертикальные отсутпы между ячейками
+    
+    // Вертикальные отступы между строками ячеек
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        return 10
     }
 }
+
 
 
