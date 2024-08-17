@@ -126,14 +126,14 @@ class TrackerCell: UICollectionViewCell {
     
     private func encreaseDurationLabel(){
         durationCountInt += 1
-        durationLabel.text = "\(durationCountInt) дней"
+        durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
         guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
         trackersVC?.setTrackerComplete(for: tracker, on: selectedDate)
     }
     
     private func decreaseDurationLabel(){
         durationCountInt -= 1
-        durationLabel.text = "\(durationCountInt) дней"
+        durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
         guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
         trackersVC?.setTrackerIncomplete(for: tracker, on: selectedDate)
     }
@@ -154,7 +154,7 @@ class TrackerCell: UICollectionViewCell {
         self.isTrackerComplete = trackersVC?.isTrackerCompleted(tracker) ?? false
         updateUI()
         self.durationCountInt = trackersVC?.numberOfRecords(for: tracker) ?? 0
-        durationLabel.text = "\(durationCountInt) дней"
+        durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
         
         if let color = UIColor(hexString: tracker.color) {
             colorPanelView.backgroundColor = color
@@ -162,6 +162,24 @@ class TrackerCell: UICollectionViewCell {
         } else {
             colorPanelView.backgroundColor = .gray
             completeButton.tintColor = .gray
+        }
+    }
+    
+    private func declensionForDay(_ count: Int) -> String {
+        let lastDigit = count % 10
+        let lastTwoDigits = count % 100
+
+        if lastTwoDigits >= 11 && lastTwoDigits <= 19 {
+            return "дней"
+        }
+        
+        switch lastDigit {
+        case 1:
+            return "день"
+        case 2, 3, 4:
+            return "дня"
+        default:
+            return "дней"
         }
     }
 }

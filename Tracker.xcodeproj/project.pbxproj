@@ -130,7 +130,6 @@
 			isa = PBXGroup;
 			children = (
 				32BABF0C2C6D11BC00E176E2 /* Extensions */,
-				32BABF092C67786800E176E2 /* Services */,
 				32A45BAF2C5EA9B2002A97F5 /* Models */,
 				32A45B6C2C53DA6A002A97F5 /* StatisticsScreen */,
 				32A45B692C53DA0B002A97F5 /* TrackersScreen */,
@@ -227,13 +226,6 @@
 				32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */,
 			);
 			path = Category;
-			sourceTree = "<group>";
-		};
-		32BABF092C67786800E176E2 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Services;
 			sourceTree = "<group>";
 		};
 		32BABF0C2C6D11BC00E176E2 /* Extensions */ = {
