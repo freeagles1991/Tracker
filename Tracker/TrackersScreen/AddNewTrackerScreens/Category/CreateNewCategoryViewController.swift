@@ -8,7 +8,6 @@ import Foundation
 import UIKit
 
 final class CreateNewCategoryViewController: UIViewController {
-    private let trackersDataService = TrackerDataService.shared
     weak var delegate: ChooseCategoryViewController?
     
     private var screenTitle = UILabel()
@@ -101,7 +100,7 @@ final class CreateNewCategoryViewController: UIViewController {
         
         let newCategory = TrackerCategory(title: categoryName, trackers: [])
         
-        trackersDataService.categories.append(newCategory)
+        delegate?.trackersVC?.categories.append(newCategory)
         delegate?.updateTableView()
         
         dismiss(animated: true, completion: nil)

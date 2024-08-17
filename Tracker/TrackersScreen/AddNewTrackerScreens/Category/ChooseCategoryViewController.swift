@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    private let trackersDataService = TrackerDataService.shared
+    weak var trackersVC: TrackersViewController?
     let createNewCategoryVC = CreateNewCategoryViewController()
     
     weak var delegate: CreateNewHabitViewController?
@@ -93,12 +93,13 @@ final class ChooseCategoryViewController: UIViewController {
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return trackersDataService.categories.count
+        guard let count = trackersVC?.categories.count else { return 0 }
+        return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = trackersDataService.categories[indexPath.row].title
+        cell.textLabel?.text = trackersVC?.categories[indexPath.row].title
         cell.layer.cornerRadius = 16
         cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "lightGrey")
@@ -117,7 +118,7 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let choosenCategory = trackersDataService.categories[indexPath.row]
+        guard let choosenCategory = trackersVC?.categories[indexPath.row] else { return }
         print("Выбрана категория: \(choosenCategory.title)")
         
         isSelectedArray[indexPath.row].toggle()

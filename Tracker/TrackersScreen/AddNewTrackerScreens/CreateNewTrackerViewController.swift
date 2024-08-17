@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 final class CreateNewTrackerViewController: UIViewController {
+    weak var trackersVC: TrackersViewController?
     private let createNewHabitVC = CreateNewHabitViewController()
-    weak var delegate: TrackersViewController?
     
     private var screenTitle: UILabel?
     private let screenTitleString = "Создание трекера"
@@ -99,7 +99,7 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
-        createNewHabitVC.trackersVC = delegate
+        createNewHabitVC.trackersVC = self.trackersVC
         present(createNewHabitVC, animated: true)
     }
     

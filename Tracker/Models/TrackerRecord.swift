@@ -11,7 +11,7 @@ struct TrackerRecord: Codable {
     let trackerID: UUID
     let date: Date
 
-    init(id: UUID = UUID(), trackerID: UUID, date: Date) {
+    init(trackerID: UUID, date: Date) {
         self.trackerID = trackerID
         self.date = date
     }

@@ -30,7 +30,6 @@
 		32BABF022C6699EE00E176E2 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF012C6699EE00E176E2 /* HeaderView.swift */; };
 		32BABF042C6766E400E176E2 /* ChooseCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF032C6766E400E176E2 /* ChooseCategoryViewController.swift */; };
 		32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */; };
-		32BABF0B2C67788E00E176E2 /* TrackersDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0A2C67788E00E176E2 /* TrackersDataService.swift */; };
 		32BABF0E2C6D11D200E176E2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0D2C6D11D200E176E2 /* UIColor.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,7 +78,6 @@
 		32BABF012C6699EE00E176E2 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		32BABF032C6766E400E176E2 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
 		32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewCategoryViewController.swift; sourceTree = "<group>"; };
-		32BABF0A2C67788E00E176E2 /* TrackersDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataService.swift; sourceTree = "<group>"; };
 		32BABF0D2C6D11D200E176E2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -234,7 +232,6 @@
 		32BABF092C67786800E176E2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				32BABF0A2C67788E00E176E2 /* TrackersDataService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -403,7 +400,6 @@
 			files = (
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
 				32A45BB32C5EAC34002A97F5 /* TrackerCategory.swift in Sources */,
-				32BABF0B2C67788E00E176E2 /* TrackersDataService.swift in Sources */,
 				32A45BB72C5FE326002A97F5 /* CreateNewTrackerViewController.swift in Sources */,
 				32BABEFC2C60DAAC00E176E2 /* CreateNewHabitViewController.swift in Sources */,
 				32A45BB12C5EA9C6002A97F5 /* Tracker.swift in Sources */,

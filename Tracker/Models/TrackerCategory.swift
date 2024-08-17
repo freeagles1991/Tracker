@@ -8,8 +8,8 @@
 import Foundation
 
 struct TrackerCategory: Codable {
-    var title: String
-    var trackers: [Tracker]
+    let title: String
+    let trackers: [Tracker]
 
     init(title: String, trackers: [Tracker]) {
         self.title = title

@@ -17,12 +17,12 @@ enum Weekday: String, CaseIterable, Codable {
     case sunday = "Воскресенье"
 }
 
-struct Tracker: Identifiable, Codable {
+struct Tracker: Identifiable, Codable, Equatable {
     let id: UUID
-    var title: String
-    var color: String
-    var emoji: String
-    var schedule: [Weekday]
+    let title: String
+    let color: String
+    let emoji: String
+    let schedule: [Weekday]
     
     init(id: UUID = UUID(), title: String, color: String, emoji: String, schedule: [Weekday]) {
         self.id = id

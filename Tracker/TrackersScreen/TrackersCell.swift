@@ -19,6 +19,8 @@ class TrackerCell: UICollectionViewCell {
     private var durationLabel = UILabel()
     private let completeButton = UIButton()
     private var isTrackerComplete = false
+    
+    private var selectedDate: Date?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -125,15 +127,15 @@ class TrackerCell: UICollectionViewCell {
     private func encreaseDurationLabel(){
         durationCountInt += 1
         durationLabel.text = "\(durationCountInt) дней"
-        guard let tracker = self.tracker else { return }
-        trackersVC?.setTrackerComplete(for: tracker)
+        guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
+        trackersVC?.setTrackerComplete(for: tracker, on: selectedDate)
     }
     
     private func decreaseDurationLabel(){
         durationCountInt -= 1
         durationLabel.text = "\(durationCountInt) дней"
-        guard let tracker = self.tracker else { return }
-        trackersVC?.setTrackerIncomplete(for: tracker)
+        guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
+        trackersVC?.setTrackerIncomplete(for: tracker, on: selectedDate)
     }
     
     func updateUI() {
@@ -144,15 +146,16 @@ class TrackerCell: UICollectionViewCell {
         }
     }
     
-    func configure(with tracker: Tracker) {
+    func configure(with tracker: Tracker, on date: Date) {
         self.tracker = tracker
         emojiLabel.text = tracker.emoji
         titleLabel.text = tracker.title
-        self.isTrackerComplete = TrackerDataService.shared.isTrackerCompleted(tracker)
+        selectedDate = date
+        self.isTrackerComplete = trackersVC?.isTrackerCompleted(tracker) ?? false
         updateUI()
-        self.durationCountInt = TrackerDataService.shared.numberOfRecords(for: tracker)
+        self.durationCountInt = trackersVC?.numberOfRecords(for: tracker) ?? 0
         durationLabel.text = "\(durationCountInt) дней"
-
+        
         if let color = UIColor(hexString: tracker.color) {
             colorPanelView.backgroundColor = color
             completeButton.tintColor = color

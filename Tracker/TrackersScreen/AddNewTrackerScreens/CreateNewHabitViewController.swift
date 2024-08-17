@@ -9,15 +9,15 @@ import Foundation
 import UIKit
 
 final class CreateNewHabitViewController: UIViewController {
-    private let trackersDataService = TrackerDataService.shared
     weak var trackersVC: TrackersViewController?
     private let chooseCategoryVC = ChooseCategoryViewController()
     private let scheduleScreenVC = ScheduleScreenViewController()
     weak var delegate: CreateNewTrackerViewController?
     
+    let notificationName = Notification.Name("MyCustomNotification")
+    
     private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
-    private var newTracker: Tracker?
     private let defaultEmoji: String = "💪"
     private let defaultColor: String = "#FF5733"
     
@@ -306,12 +306,19 @@ final class CreateNewHabitViewController: UIViewController {
         let selectedWeekdaysArray = Array(selectedWeekdays)
         let newTracker = Tracker(title: trackerName, color: defaultColor, emoji: defaultEmoji, schedule: selectedWeekdaysArray)
         guard let selectedCategory = selectedCategory else { return }
-        trackersDataService.addTracker(newTracker, toCategory: selectedCategory.title)
-        print("Новый трекер \(newTracker.title) успешно добавлен в категорию \(selectedCategory.title)")
+        
+        // Отправляем уведомление
+        let userInfo: [String: Any] = [
+            "tracker": newTracker,
+            "category": selectedCategory]
+        NotificationCenter.default.post(name: notificationName, object: nil, userInfo: userInfo)
+        
+        trackersVC?.addTracker(newTracker, toCategory: selectedCategory.title)
         trackersVC?.updateCollectionViewWithNewTracker()
     }
     
     @objc private func categoryButtonTapped(_ sender: UIButton) {
+        chooseCategoryVC.trackersVC = self.trackersVC
         present(chooseCategoryVC, animated: true)
     }
     
