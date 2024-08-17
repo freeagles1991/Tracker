@@ -85,7 +85,7 @@ final class CreateNewHabitViewController: UIViewController {
         textField.borderStyle = .none
         textField.layer.cornerRadius = 16
         textField.layer.masksToBounds = true
-        textField.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        textField.backgroundColor = UIColor(named: "background")
         textField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(textField)
         
@@ -114,7 +114,7 @@ final class CreateNewHabitViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.contentHorizontalAlignment = .left
-        button.backgroundColor = UIColor(named: "lightGray")
+        button.backgroundColor = UIColor(named: "background")
         button.layer.cornerRadius = 16
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40)
         
