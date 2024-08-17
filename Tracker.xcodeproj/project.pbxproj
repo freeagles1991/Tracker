@@ -31,6 +31,7 @@
 		32BABF042C6766E400E176E2 /* ChooseCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF032C6766E400E176E2 /* ChooseCategoryViewController.swift */; };
 		32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */; };
 		32BABF0E2C6D11D200E176E2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0D2C6D11D200E176E2 /* UIColor.swift */; };
+		32BABF102C71212500E176E2 /* UITabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0F2C71212500E176E2 /* UITabBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		32BABF032C6766E400E176E2 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
 		32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewCategoryViewController.swift; sourceTree = "<group>"; };
 		32BABF0D2C6D11D200E176E2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		32BABF0F2C71212500E176E2 /* UITabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITabBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				32BABF0D2C6D11D200E176E2 /* UIColor.swift */,
+				32BABF0F2C71212500E176E2 /* UITabBar.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				32A45B6B2C53DA2E002A97F5 /* TrackersViewController.swift in Sources */,
 				32BABF0E2C6D11D200E176E2 /* UIColor.swift in Sources */,
 				32A45B6E2C53DAA2002A97F5 /* StatisticsViewController.swift in Sources */,
+				32BABF102C71212500E176E2 /* UITabBar.swift in Sources */,
 				32BABF042C6766E400E176E2 /* ChooseCategoryViewController.swift in Sources */,
 				32A45BB52C5EACDC002A97F5 /* TrackerRecord.swift in Sources */,
 				32BABF002C65194600E176E2 /* TrackersCell.swift in Sources */,

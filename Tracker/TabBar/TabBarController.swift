@@ -11,11 +11,21 @@ import UIKit
 class TabBarController: UITabBarController {
     private let trackersTabBarTitle = "Трекеры"
     private let statisticsTabBarTitle = "Статистика"
+    private let customTabBarHeight: CGFloat = 90.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewControllers()
         setupTabBarAppearance()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        var tabBarFrame = tabBar.frame
+        tabBarFrame.size.height = customTabBarHeight
+        tabBarFrame.origin.y = view.frame.height - customTabBarHeight
+        tabBar.frame = tabBarFrame
     }
     
     private func setupViewControllers() {
@@ -33,6 +43,7 @@ class TabBarController: UITabBarController {
     private func setupTabBarAppearance() {
         tabBar.tintColor = .systemBlue
         tabBar.unselectedItemTintColor = .gray
+        tabBar.addTopBorder(with: .gray, andHeight: 1.0)
     }
 }
 
