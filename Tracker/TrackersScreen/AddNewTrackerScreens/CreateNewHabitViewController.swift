@@ -65,7 +65,7 @@ final class CreateNewHabitViewController: UIViewController {
     
     private func setupScreenTitle() {
         let label = UILabel()
-        let font = UIFont(name: "SF Pro", size: 16)
+        let font = UIFont.systemFont(ofSize: 16)
         label.text = screenTitleString
         label.textColor = .black
         label.font = font
@@ -81,7 +81,7 @@ final class CreateNewHabitViewController: UIViewController {
     private func setupTextField() {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
-        textField.font = UIFont(name: "SF Pro", size: 16)
+        textField.font = UIFont.systemFont(ofSize: 16)
         textField.borderStyle = .none
         textField.layer.cornerRadius = 16
         textField.layer.masksToBounds = true
@@ -112,7 +112,7 @@ final class CreateNewHabitViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont(name: "SF Pro", size: 17)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.contentHorizontalAlignment = .left
         button.backgroundColor = UIColor(named: "lightGrey")
         button.layer.cornerRadius = 16
@@ -221,7 +221,7 @@ final class CreateNewHabitViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont(name: "SF Pro", size: 16)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.backgroundColor = .black
         button.contentHorizontalAlignment = .center
         button.layer.cornerRadius = 16

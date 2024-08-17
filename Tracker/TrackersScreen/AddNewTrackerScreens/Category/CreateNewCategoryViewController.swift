@@ -31,7 +31,7 @@ final class CreateNewCategoryViewController: UIViewController {
     
     private func setupScreenTitle() {
         let label = UILabel()
-        let font = UIFont(name: "SF Pro", size: 16)
+        let font = UIFont.systemFont(ofSize: 16)
         label.text = screenTitleString
         label.textColor = .black
         label.font = font

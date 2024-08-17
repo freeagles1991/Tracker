@@ -108,14 +108,12 @@ final class TrackersViewController: UIViewController {
         view.addSubview(emptyStateView)
         
         let imageView = UIImageView(image: UIImage(named: "EmptyTrackersIcon"))
-        imageView.tintColor = .gray
-        imageView.alpha = 0.5
         imageView.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.addSubview(imageView)
         
         let label = UILabel()
         label.text = emptyStateViewString
-        label.font = UIFont(name: "SF Pro", size: 12)
+        label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.addSubview(label)

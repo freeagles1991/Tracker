@@ -36,10 +36,10 @@ class TrackerCell: UICollectionViewCell {
         titleBlockView.translatesAutoresizingMaskIntoConstraints = false
         
         
-        emojiLabel.font = UIFont(name: "SF Pro", size: 16)
+        emojiLabel.font = UIFont.systemFont(ofSize: 16)
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        titleLabel.font = UIFont(name: "SF Pro", size: 12)
+        titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .left
         titleLabel.numberOfLines = 2
@@ -84,7 +84,7 @@ class TrackerCell: UICollectionViewCell {
         
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
-        durationLabel.font = UIFont(name: "SF Pro", size: 12)
+        durationLabel.font = UIFont.systemFont(ofSize: 12)
         durationLabel.textColor = .black
         
         bottomBlockView.addSubview(completeButton)
