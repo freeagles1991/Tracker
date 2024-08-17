@@ -102,7 +102,7 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         cell.textLabel?.text = trackersVC?.categories[indexPath.row].title
         cell.layer.cornerRadius = 16
         cell.layer.masksToBounds = true
-        cell.backgroundColor = UIColor(named: "lightGrey")
+        cell.backgroundColor = UIColor(named: "lightGray")
         
         if isSelectedArray[indexPath.row] {
             cell.accessoryView = UIImageView(image: UIImage(systemName: "checkmark"))

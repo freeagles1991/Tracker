@@ -119,9 +119,10 @@ extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let weekday = daysOfWeek[indexPath.row]
         cell.textLabel?.text = weekday.rawValue
-        cell.backgroundColor = UIColor(named: "lightGrey")
+        cell.backgroundColor = UIColor(named: "lightGray")
         
         let switchView = UISwitch(frame: .zero)
+        switchView.onTintColor = UIColor(named: "blue")
         switchView.setOn(switchStates[indexPath.row], animated: true)
         switchView.tag = indexPath.row
         switchView.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)

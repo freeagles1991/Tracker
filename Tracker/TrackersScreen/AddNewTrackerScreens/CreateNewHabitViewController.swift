@@ -114,7 +114,7 @@ final class CreateNewHabitViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.contentHorizontalAlignment = .left
-        button.backgroundColor = UIColor(named: "lightGrey")
+        button.backgroundColor = UIColor(named: "lightGray")
         button.layer.cornerRadius = 16
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40)
         
