@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class HeaderView: UICollectionReusableView {
+final class HeaderView: UICollectionReusableView {
     let label: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)

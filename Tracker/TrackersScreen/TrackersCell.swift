@@ -10,7 +10,7 @@ import UIKit
 
 import UIKit
 
-class TrackerCell: UICollectionViewCell {
+final class TrackerCell: UICollectionViewCell {
     weak var trackersVC: TrackersViewController?
     private var tracker: Tracker?
     

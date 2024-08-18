@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class TabBarController: UITabBarController {
+final class TabBarController: UITabBarController {
     private let trackersTabBarTitle = "Трекеры"
     private let statisticsTabBarTitle = "Статистика"
     private let customTabBarHeight: CGFloat = 90.0
