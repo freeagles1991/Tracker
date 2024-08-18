@@ -281,8 +281,10 @@ final class TrackersViewController: UIViewController {
         categories = updatedCategories
     }
     
-    func isTrackerCompleted(_ tracker: Tracker) -> Bool {
-        return completedTrackers.contains { $0.trackerID == tracker.id }
+    func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
+        return completedTrackers.contains { record in
+            record.trackerID == tracker.id && Calendar.current.isDate(record.date, inSameDayAs: date)
+        }
     }
     
     func numberOfRecords(for tracker: Tracker) -> Int {

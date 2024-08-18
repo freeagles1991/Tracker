@@ -151,7 +151,7 @@ class TrackerCell: UICollectionViewCell {
         emojiLabel.text = tracker.emoji
         titleLabel.text = tracker.title
         selectedDate = date
-        self.isTrackerComplete = trackersVC?.isTrackerCompleted(tracker) ?? false
+        self.isTrackerComplete = trackersVC?.isTrackerCompleted(tracker, on: date) ?? false
         updateUI()
         self.durationCountInt = trackersVC?.numberOfRecords(for: tracker) ?? 0
         durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
