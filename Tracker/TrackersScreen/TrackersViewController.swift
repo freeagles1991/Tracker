@@ -351,7 +351,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     // Вертикальные отступы между строками ячеек
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 10
+        return 0
     }
 }
 
