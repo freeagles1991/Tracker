@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class TrackersViewController: UIViewController {
-    private let createNewTrackerVC = CreateNewTrackerViewController()
+    private let  chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
     
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
@@ -210,8 +210,8 @@ final class TrackersViewController: UIViewController {
 
     
     @objc private func createNewTracker() {
-        createNewTrackerVC.trackersVC = self
-        present(createNewTrackerVC, animated: true)
+         chooseTrackerTypeVC.trackersVC = self
+        present( chooseTrackerTypeVC, animated: true)
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {

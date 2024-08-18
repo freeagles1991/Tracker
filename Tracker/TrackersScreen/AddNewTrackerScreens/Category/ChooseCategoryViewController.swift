@@ -12,7 +12,7 @@ final class ChooseCategoryViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
     let createNewCategoryVC = CreateNewCategoryViewController()
     
-    weak var delegate: CreateNewHabitViewController?
+    weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Категория"

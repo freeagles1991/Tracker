@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ScheduleScreenViewController: UIViewController {
-    weak var delegate: CreateNewHabitViewController?
+    weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая привычка"
