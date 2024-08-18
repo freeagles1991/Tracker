@@ -32,7 +32,7 @@ final class TrackersViewController: UIViewController {
     }()
     
     let itemsPerRow: CGFloat = 2
-    let sectionInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+    let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
     
     private let emptyStateViewString = "Что будем отслеживать?"
