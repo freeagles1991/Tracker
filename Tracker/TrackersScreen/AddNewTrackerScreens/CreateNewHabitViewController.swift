@@ -14,6 +14,8 @@ final class CreateNewHabitViewController: UIViewController {
     private let scheduleScreenVC = ScheduleScreenViewController()
     weak var delegate: CreateNewTrackerViewController?
     
+    private var isRegularEvent = true
+    
     let notificationName = Notification.Name("MyCustomNotification")
     
     private var selectedCategory: TrackerCategory?
@@ -62,6 +64,11 @@ final class CreateNewHabitViewController: UIViewController {
         setupParametresStackView()
         setupScreenControlsStackView()
         updateCreateButtonState()
+        
+        if !isRegularEvent {
+            guard let weekday = Weekday.fromDate(Date()) else { return }
+            selectedWeekdays.insert(weekday)
+        }
     }
     
     private func setupScreenTitle() {
@@ -116,7 +123,6 @@ final class CreateNewHabitViewController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.contentHorizontalAlignment = .left
         button.backgroundColor = UIColor(named: "background")
-        button.layer.cornerRadius = 16
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40)
         
         button.titleLabel?.numberOfLines = 0
@@ -201,11 +207,19 @@ final class CreateNewHabitViewController: UIViewController {
         setupCategoryButton()
         setupScheduleButton()
         
-        let stackView = UIStackView(arrangedSubviews: [categoryButton, separator, scheduleButton])
+        var arrangedSubviews = [categoryButton, separator, scheduleButton]
+        
+        if !isRegularEvent {
+            arrangedSubviews = [categoryButton]
+        }
+        
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.axis = .vertical
         stackView.spacing = 0
         stackView.alignment = .fill
         stackView.distribution = .fill
+        stackView.layer.cornerRadius = 16
+        stackView.layer.masksToBounds = true
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
@@ -318,6 +332,10 @@ final class CreateNewHabitViewController: UIViewController {
         trackersVC?.updateCollectionViewWithNewTracker()
     }
     
+    func configureTrackerType(isRegularEvent: Bool) {
+        self.isRegularEvent = isRegularEvent
+    }
+    
     @objc private func categoryButtonTapped(_ sender: UIButton) {
         chooseCategoryVC.trackersVC = self.trackersVC
         present(chooseCategoryVC, animated: true)
@@ -329,7 +347,7 @@ final class CreateNewHabitViewController: UIViewController {
     
     @objc private func createButtonTapped(_ sender: UIButton) {
         createNewTracker()
-
+        
         self.dismiss(animated: true) { [weak self] in
             guard let delegate = self?.delegate else { return }
             delegate.dismiss(animated: false, completion: nil)
@@ -345,14 +363,23 @@ final class CreateNewHabitViewController: UIViewController {
     }
     
     private func updateCreateButtonState() {
-        if selectedCategory != nil && !selectedWeekdays.isEmpty && !(trackerNameTextField.text?.isEmpty ?? true) {
-            createButton.isEnabled = true
-            createButton.alpha = 1.0
+        if isRegularEvent {
+            if selectedCategory != nil && !selectedWeekdays.isEmpty && !(trackerNameTextField.text?.isEmpty ?? true) {
+                createButton.isEnabled = true
+                createButton.alpha = 1.0
+            } else {
+                createButton.isEnabled = false
+                createButton.alpha = 0.5
+            }
         } else {
-            createButton.isEnabled = false
-            createButton.alpha = 0.5
+            if selectedCategory != nil && !(trackerNameTextField.text?.isEmpty ?? true) {
+                createButton.isEnabled = true
+                createButton.alpha = 1.0
+            } else {
+                createButton.isEnabled = false
+                createButton.alpha = 0.5
+            }
+            
         }
     }
 }
-
-

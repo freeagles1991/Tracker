@@ -74,24 +74,21 @@ class TrackerCell: UICollectionViewCell {
 
             titleLabel.leadingAnchor.constraint(equalTo: colorPanelView.leadingAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: colorPanelView.trailingAnchor, constant: -12),
-            titleLabel.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),
+            titleLabel.topAnchor.constraint(equalTo: colorPanelView.topAnchor, constant: 44),
             titleLabel.bottomAnchor.constraint(equalTo: colorPanelView.bottomAnchor, constant: -12)
         ])
         
         let  bottomBlockView = UIView()
         bottomBlockView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Настраиваем кнопку
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         completeButton.backgroundColor = .systemBlue // Начальный цвет фона
         completeButton.tintColor = .white // Цвет изображения
         
-        // Устанавливаем системное изображение "плюс" из SF Symbols
-        let plusImage = UIImage(systemName: "plus") // Системное изображение "плюс"
+        let plusImage = UIImage(systemName: "plus")
         completeButton.setImage(plusImage, for: .normal)
-        completeButton.tintColor = .white // Цвет изображения "плюс"
+        completeButton.tintColor = .white
         
-        // Настраиваем круглую форму кнопки
         completeButton.layer.cornerRadius = 17
         completeButton.clipsToBounds = true
         
@@ -101,7 +98,7 @@ class TrackerCell: UICollectionViewCell {
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
         durationLabel.font = UIFont.systemFont(ofSize: 12)
         durationLabel.textColor = .black
-        // Убедитесь, что label использует Dynamic Type
+
         durationLabel.adjustsFontForContentSizeCategory = true
         durationLabel.numberOfLines = 0
         

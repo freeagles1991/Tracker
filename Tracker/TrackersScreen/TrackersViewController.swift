@@ -266,6 +266,7 @@ final class TrackersViewController: UIViewController {
             updatedCategories.append(newCategory)
         }
         categories = updatedCategories
+        print("Новый трекер добавлен \(tracker.schedule)")
     }
     
     private func removeTracker(_ tracker: Tracker, from categoryTitle: String) {

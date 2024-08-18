@@ -11,6 +11,7 @@ import UIKit
 final class CreateNewTrackerViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
     private let createNewHabitVC = CreateNewHabitViewController()
+    private let createNewEventVC = CreateNewHabitViewController()
     
     private var screenTitle: UILabel?
     private let screenTitleString = "Создание трекера"
@@ -24,8 +25,6 @@ final class CreateNewTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        createNewHabitVC.delegate = self
         
         setupScreenTitle()
         setupHabitButton()
@@ -99,11 +98,16 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
+        createNewHabitVC.delegate = self
         createNewHabitVC.trackersVC = self.trackersVC
+        createNewHabitVC.configureTrackerType(isRegularEvent: true)
         present(createNewHabitVC, animated: true)
     }
     
     @objc private func eventButtonTapped(_ sender: UIButton) {
-        
+        createNewEventVC.delegate = self
+        createNewEventVC.trackersVC = self.trackersVC
+        createNewEventVC.configureTrackerType(isRegularEvent: false)
+        present(createNewEventVC, animated: true)
     }
 }
