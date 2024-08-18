@@ -19,6 +19,7 @@ class TrackerCell: UICollectionViewCell {
     private var durationLabel = UILabel()
     private let completeButton = UIButton()
     private var isTrackerComplete = false
+    private var cellColor =  UIColor()
     
     private var selectedDate: Date?
 
@@ -39,11 +40,12 @@ class TrackerCell: UICollectionViewCell {
         emojiLabel.font = UIFont.systemFont(ofSize: 16)
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .left
+        titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.numberOfLines = 2
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         colorPanelView.layer.cornerRadius = 16
         colorPanelView.translatesAutoresizingMaskIntoConstraints = false
@@ -72,20 +74,36 @@ class TrackerCell: UICollectionViewCell {
 
             titleLabel.leadingAnchor.constraint(equalTo: colorPanelView.leadingAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: colorPanelView.trailingAnchor, constant: -12),
-            titleLabel.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8)
+            titleLabel.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),
+            titleLabel.bottomAnchor.constraint(equalTo: colorPanelView.bottomAnchor, constant: -12)
         ])
         
         let  bottomBlockView = UIView()
         bottomBlockView.translatesAutoresizingMaskIntoConstraints = false
         
+        // Настраиваем кнопку
         completeButton.translatesAutoresizingMaskIntoConstraints = false
-        completeButton.setImage(UIImage(named: "PlusButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        completeButton.backgroundColor = .systemBlue // Начальный цвет фона
+        completeButton.tintColor = .white // Цвет изображения
+        
+        // Устанавливаем системное изображение "плюс" из SF Symbols
+        let plusImage = UIImage(systemName: "plus") // Системное изображение "плюс"
+        completeButton.setImage(plusImage, for: .normal)
+        completeButton.tintColor = .white // Цвет изображения "плюс"
+        
+        // Настраиваем круглую форму кнопки
+        completeButton.layer.cornerRadius = 17
+        completeButton.clipsToBounds = true
+        
         completeButton.addTarget(self, action: #selector(completeButtonTapped(_:)), for: .touchUpInside)
         
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
         durationLabel.font = UIFont.systemFont(ofSize: 12)
         durationLabel.textColor = .black
+        // Убедитесь, что label использует Dynamic Type
+        durationLabel.adjustsFontForContentSizeCategory = true
+        durationLabel.numberOfLines = 0
         
         bottomBlockView.addSubview(completeButton)
         bottomBlockView.addSubview(durationLabel)
@@ -120,7 +138,7 @@ class TrackerCell: UICollectionViewCell {
             } else {
                 decreaseDurationLabel()
             }
-            updateUI()
+            updateUI(with: cellColor)
         }
     }
     
@@ -138,11 +156,14 @@ class TrackerCell: UICollectionViewCell {
         trackersVC?.setTrackerIncomplete(for: tracker, on: selectedDate)
     }
     
-    func updateUI() {
-        if isTrackerComplete{
-            completeButton.setImage(UIImage(named: "DoneButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+    func updateUI(with color: UIColor) {
+        colorPanelView.backgroundColor = color
+        if isTrackerComplete {
+            completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            completeButton.backgroundColor = color.withAlphaComponent(0.5)
         } else {
-            completeButton.setImage(UIImage(named: "PlusButton")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
+            completeButton.backgroundColor = color.withAlphaComponent(1)
         }
     }
     
@@ -151,18 +172,11 @@ class TrackerCell: UICollectionViewCell {
         emojiLabel.text = tracker.emoji
         titleLabel.text = tracker.title
         selectedDate = date
+        cellColor = UIColor(hexString: tracker.color) ?? .gray
         self.isTrackerComplete = trackersVC?.isTrackerCompleted(tracker, on: date) ?? false
-        updateUI()
+        updateUI(with: cellColor)
         self.durationCountInt = trackersVC?.numberOfRecords(for: tracker) ?? 0
         durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
-        
-        if let color = UIColor(hexString: tracker.color) {
-            colorPanelView.backgroundColor = color
-            completeButton.tintColor = color
-        } else {
-            colorPanelView.backgroundColor = .gray
-            completeButton.tintColor = .gray
-        }
     }
     
     private func declensionForDay(_ count: Int) -> String {
