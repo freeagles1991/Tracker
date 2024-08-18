@@ -22,6 +22,7 @@ final class CreateNewCategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        view.addTapGestureToHideKeyboard()
         
         setupScreenTitle()
         setupCategoryNameTextField()

@@ -32,6 +32,7 @@
 		32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */; };
 		32BABF0E2C6D11D200E176E2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0D2C6D11D200E176E2 /* UIColor.swift */; };
 		32BABF102C71212500E176E2 /* UITabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF0F2C71212500E176E2 /* UITabBar.swift */; };
+		32BABF122C7213B300E176E2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF112C7213B300E176E2 /* UIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		32BABF072C676A9200E176E2 /* CreateNewCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewCategoryViewController.swift; sourceTree = "<group>"; };
 		32BABF0D2C6D11D200E176E2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		32BABF0F2C71212500E176E2 /* UITabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITabBar.swift; sourceTree = "<group>"; };
+		32BABF112C7213B300E176E2 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,7 @@
 			children = (
 				32BABF0D2C6D11D200E176E2 /* UIColor.swift */,
 				32BABF0F2C71212500E176E2 /* UITabBar.swift */,
+				32BABF112C7213B300E176E2 /* UIView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32BABF122C7213B300E176E2 /* UIView.swift in Sources */,
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
 				32A45BB32C5EAC34002A97F5 /* TrackerCategory.swift in Sources */,
 				32A45BB72C5FE326002A97F5 /* CreateNewTrackerViewController.swift in Sources */,

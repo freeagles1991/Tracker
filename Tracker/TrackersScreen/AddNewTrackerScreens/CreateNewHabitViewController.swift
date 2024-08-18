@@ -52,6 +52,7 @@ final class CreateNewHabitViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        view.addTapGestureToHideKeyboard()
         
         chooseCategoryVC.delegate = self
         scheduleScreenVC.delegate = self
