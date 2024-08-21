@@ -1,0 +1,88 @@
+//
+//  EmojiCollectionViewDataSourceDelegate.swift
+//  Tracker
+//
+//  Created by Дима on 20.08.2024.
+//
+
+import Foundation
+import UIKit
+
+final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDataSource,
+                                                   UICollectionViewDelegateFlowLayout,
+                                                   UICollectionViewDelegate {
+    var createNewTrackerVC: CreateNewTrackerViewController?
+    
+    let itemsPerRow: CGFloat = 6
+    let sectionInsets = UIEdgeInsets(top: 0, left: 19, bottom: 0, right: 19)
+    let interItemSpacing: CGFloat = 5
+    
+    // MARK: - UICollectionViewDataSource
+    ///Количество секций
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    /// Количество элементов в секци
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let count = createNewTrackerVC?.emoji.count else {return 0}
+        return count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as! EmojiCell
+        guard let emoji = createNewTrackerVC?.emoji[indexPath.row] else { return cell }
+        cell.configure(with: emoji)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "EmojiHeader", for: indexPath) as! EmojiHeaderView
+        headerView.label.text = createNewTrackerVC?.emojiHeaderString
+        return headerView
+    }
+    
+    // MARK: - UICollectionViewDelegate
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! EmojiCell
+        if let emoji = cell.emoji {
+            didEmojiCellSelected(with: emoji)
+        }
+    }
+    
+    func didEmojiCellSelected(with emoji: String) {
+        print("Selected emoji: \(emoji)")
+        // Ваши действия при выборе эмоджи
+    }
+    
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let screenWidth = createNewTrackerVC?.view.frame.width else {return CGSize()}
+        let paddingSpace = sectionInsets.left + sectionInsets.right + interItemSpacing * (itemsPerRow - 1)
+        let availableWidth = screenWidth - paddingSpace
+        let widthPerItem = availableWidth / itemsPerRow
+        let heightPerItem = widthPerItem
+        return CGSize(width: widthPerItem, height: heightPerItem)
+    }
+    
+    ///Настраиваем размер layout для заголовка секции
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 50)
+    }
+    
+    // Отступы для секции
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionInsets
+    }
+    
+    // Горизонтальное расстояние между ячейками
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return interItemSpacing
+    }
+    
+    // Вертикальные отступы между строками ячеек
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+}

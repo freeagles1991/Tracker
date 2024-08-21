@@ -20,7 +20,10 @@ final class CreateNewTrackerViewController: UIViewController {
     
     private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
-    private let defaultEmoji: String = "💪"
+    let emoji: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
+                           "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+                           "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
+    private var selectedEmoji: String?
     private let defaultColor: String = "#FF5733"
     
     private var screenTitle = UILabel()
@@ -42,6 +45,35 @@ final class CreateNewTrackerViewController: UIViewController {
         return view
     }()
     
+    private var parametersStackView = UIStackView()
+    
+    private let emojiCollectionViewDataSourceDelegate = EmojiCollectionViewDataSourceDelegate()
+    let emojiHeaderString = "Emoji"
+    private var emojiCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 5
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .white
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.allowsSelection = true
+        collectionView.isUserInteractionEnabled = true
+        return collectionView
+    }()
+    
+//    private let colorCollectionViewDataSourceDelegate = ColorCollectionViewDataSourceDelegate()
+//    private var colorCollectionView: UICollectionView = {
+//        let layout = UICollectionViewFlowLayout()
+//        layout.minimumLineSpacing = 0
+//        layout.minimumInteritemSpacing = 5
+//        
+//        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        collectionView.backgroundColor = .white
+//        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        return collectionView
+//    }()
+    
     private var cancelButton = UIButton()
     private let cancelButtonString: String = "Отменить"
     
@@ -62,6 +94,7 @@ final class CreateNewTrackerViewController: UIViewController {
         setupScreenTitle()
         setupTextField()
         setupParametresStackView()
+        setupEmojiCollectionView()
         setupScreenControlsStackView()
         updateCreateButtonState()
         
@@ -230,6 +263,27 @@ final class CreateNewTrackerViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+        
+        self.parametersStackView = stackView
+    }
+    
+    private func setupEmojiCollectionView() {
+        emojiCollectionView.register(EmojiCell.self, forCellWithReuseIdentifier: "EmojiCell")
+        emojiCollectionView.register(EmojiHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "EmojiHeader")
+        
+        emojiCollectionViewDataSourceDelegate.createNewTrackerVC = self
+        emojiCollectionView.dataSource = emojiCollectionViewDataSourceDelegate
+        emojiCollectionView.delegate = emojiCollectionViewDataSourceDelegate
+    
+        view.addSubview(emojiCollectionView)
+        
+        NSLayoutConstraint.activate([
+            emojiCollectionView.topAnchor.constraint(equalTo: parametersStackView.bottomAnchor),
+            emojiCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            emojiCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            emojiCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+
     }
     
     private func setupBaseButton(with text: String) -> UIButton {
@@ -318,8 +372,9 @@ final class CreateNewTrackerViewController: UIViewController {
             print("Название трекера не может быть пустым.")
             return
         }
+        guard let selectedEmoji = selectedEmoji else { return }
         let selectedWeekdaysArray = Array(selectedWeekdays)
-        let newTracker = Tracker(title: trackerName, color: defaultColor, emoji: defaultEmoji, schedule: selectedWeekdaysArray)
+        let newTracker = Tracker(title: trackerName, color: defaultColor, emoji: selectedEmoji, schedule: selectedWeekdaysArray)
         guard let selectedCategory = selectedCategory else { return }
         
         // Отправляем уведомление
@@ -383,3 +438,4 @@ final class CreateNewTrackerViewController: UIViewController {
         }
     }
 }
+
