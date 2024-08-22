@@ -45,15 +45,9 @@ final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! EmojiCell
         if let emoji = cell.emoji {
-            didEmojiCellSelected(with: emoji)
+            createNewTrackerVC?.updateSelectedEmoji(with: emoji)
         }
     }
-    
-    func didEmojiCellSelected(with emoji: String) {
-        print("Selected emoji: \(emoji)")
-        // Ваши действия при выборе эмоджи
-    }
-    
     
     // MARK: - UICollectionViewDelegateFlowLayout
     

@@ -55,6 +55,7 @@ final class CreateNewTrackerViewController: UIViewController {
         layout.minimumInteritemSpacing = 5
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsSelection = true
@@ -79,9 +80,6 @@ final class CreateNewTrackerViewController: UIViewController {
     
     private var createButton = UIButton()
     private let createButtonString: String = "Создать"
-    
-    private var isCategorySelected = false
-    private var isScheduleSelected = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -367,6 +365,11 @@ final class CreateNewTrackerViewController: UIViewController {
         updateCreateButtonState()
     }
     
+    func updateSelectedEmoji(with emoji: String) {
+        self.selectedEmoji = emoji
+        print("Выбранный емоджи сохранен")
+    }
+    
     func createNewTracker() {
         guard let trackerName = trackerNameTextField.text, !trackerName.isEmpty else {
             print("Название трекера не может быть пустым.")
@@ -419,7 +422,10 @@ final class CreateNewTrackerViewController: UIViewController {
     
     private func updateCreateButtonState() {
         if isRegularEvent {
-            if selectedCategory != nil && !selectedWeekdays.isEmpty && !(trackerNameTextField.text?.isEmpty ?? true) {
+            if selectedCategory != nil &&
+                !selectedWeekdays.isEmpty &&
+                !(trackerNameTextField.text?.isEmpty ?? true) &&
+                !(selectedEmoji?.isEmpty ?? true) {
                 createButton.isEnabled = true
                 createButton.alpha = 1.0
             } else {
@@ -427,7 +433,9 @@ final class CreateNewTrackerViewController: UIViewController {
                 createButton.alpha = 0.5
             }
         } else {
-            if selectedCategory != nil && !(trackerNameTextField.text?.isEmpty ?? true) {
+            if selectedCategory != nil &&
+            !(trackerNameTextField.text?.isEmpty ?? true) &&
+            !(selectedEmoji?.isEmpty ?? true) {
                 createButton.isEnabled = true
                 createButton.alpha = 1.0
             } else {
