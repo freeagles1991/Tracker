@@ -36,6 +36,9 @@
 		32BABF1A2C750BF500E176E2 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF192C750BF500E176E2 /* EmojiCell.swift */; };
 		32BABF1C2C750F1C00E176E2 /* EmojiHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABF1B2C750F1C00E176E2 /* EmojiHeader.swift */; };
 		32C3B6AF2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C3B6AE2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift */; };
+		32C3B6B22C7770C500E34DFD /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C3B6B12C7770C500E34DFD /* ColorCell.swift */; };
+		32C3B6B42C7770D700E34DFD /* ColorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C3B6B32C7770D700E34DFD /* ColorHeader.swift */; };
+		32C3B6B62C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C3B6B52C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +92,9 @@
 		32BABF192C750BF500E176E2 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
 		32BABF1B2C750F1C00E176E2 /* EmojiHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiHeader.swift; sourceTree = "<group>"; };
 		32C3B6AE2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCollectionViewDataSourceDelegate.swift; sourceTree = "<group>"; };
+		32C3B6B12C7770C500E34DFD /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
+		32C3B6B32C7770D700E34DFD /* ColorHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorHeader.swift; sourceTree = "<group>"; };
+		32C3B6B52C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewDataSourceDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,6 +267,7 @@
 			children = (
 				32BABEFB2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift */,
 				32BABF182C750BC800E176E2 /* EmojiCollectionView */,
+				32C3B6B02C776FC700E34DFD /* ColorCollectionView */,
 			);
 			path = CreateNewTrackerScreen;
 			sourceTree = "<group>";
@@ -273,6 +280,16 @@
 				32BABF012C6699EE00E176E2 /* TrackersHeaderView.swift */,
 			);
 			path = TrackersMainScreen;
+			sourceTree = "<group>";
+		};
+		32C3B6B02C776FC700E34DFD /* ColorCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				32C3B6B12C7770C500E34DFD /* ColorCell.swift */,
+				32C3B6B32C7770D700E34DFD /* ColorHeader.swift */,
+				32C3B6B52C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift */,
+			);
+			path = ColorCollectionView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -430,6 +447,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32BABF122C7213B300E176E2 /* UIView.swift in Sources */,
+				32C3B6B62C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift in Sources */,
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
 				32C3B6AF2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift in Sources */,
 				32A45BB32C5EAC34002A97F5 /* TrackerCategory.swift in Sources */,
@@ -446,9 +464,11 @@
 				32BABF002C65194600E176E2 /* TrackersCell.swift in Sources */,
 				3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */,
 				32BABF1C2C750F1C00E176E2 /* EmojiHeader.swift in Sources */,
+				32C3B6B22C7770C500E34DFD /* ColorCell.swift in Sources */,
 				32BABF1A2C750BF500E176E2 /* EmojiCell.swift in Sources */,
 				32BABF022C6699EE00E176E2 /* TrackersHeaderView.swift in Sources */,
 				32A45B652C53D549002A97F5 /* LaunchScreenViewController.swift in Sources */,
+				32C3B6B42C7770D700E34DFD /* ColorHeader.swift in Sources */,
 				32A45B682C53D9A6002A97F5 /* TabBarController.swift in Sources */,
 				32BABEFE2C61501A00E176E2 /* ScheduleScreenViewController.swift in Sources */,
 				3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */,

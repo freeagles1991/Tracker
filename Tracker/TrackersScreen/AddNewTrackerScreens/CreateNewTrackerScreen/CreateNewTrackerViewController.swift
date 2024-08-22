@@ -20,11 +20,15 @@ final class CreateNewTrackerViewController: UIViewController {
     
     private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
-    let emoji: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
+    let emojies: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
                            "😇", "😡", "🥶", "🤔", "🙌", "🍔",
                            "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var selectedEmoji: String?
-    private let defaultColor: String = "#FF5733"
+    
+    let colors: [String] = ["#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4",
+                            "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC",
+                            "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"]
+    private var selectedColor: String?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая привычка"
@@ -60,20 +64,25 @@ final class CreateNewTrackerViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsSelection = true
         collectionView.isUserInteractionEnabled = true
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
     
-//    private let colorCollectionViewDataSourceDelegate = ColorCollectionViewDataSourceDelegate()
-//    private var colorCollectionView: UICollectionView = {
-//        let layout = UICollectionViewFlowLayout()
-//        layout.minimumLineSpacing = 0
-//        layout.minimumInteritemSpacing = 5
-//        
-//        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-//        collectionView.backgroundColor = .white
-//        collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        return collectionView
-//    }()
+    private let colorCollectionViewDataSourceDelegate = ColorCollectionViewDataSourceDelegate()
+    let colorHeaderString = "Color"
+    private var colorCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 5
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .white
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.allowsSelection = true
+        collectionView.isUserInteractionEnabled = true
+        collectionView.isScrollEnabled = false
+        return collectionView
+    }()
     
     private var cancelButton = UIButton()
     private let cancelButtonString: String = "Отменить"
@@ -93,6 +102,7 @@ final class CreateNewTrackerViewController: UIViewController {
         setupTextField()
         setupParametresStackView()
         setupEmojiCollectionView()
+        setupColorCollectionView()
         setupScreenControlsStackView()
         updateCreateButtonState()
         
@@ -277,11 +287,29 @@ final class CreateNewTrackerViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             emojiCollectionView.topAnchor.constraint(equalTo: parametersStackView.bottomAnchor),
-            emojiCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            emojiCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             emojiCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            emojiCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            emojiCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
         ])
 
+    }
+    
+    private func setupColorCollectionView() {
+        colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
+        colorCollectionView.register(ColorHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "ColorHeader")
+        
+        colorCollectionViewDataSourceDelegate.createNewTrackerVC = self
+        colorCollectionView.dataSource = colorCollectionViewDataSourceDelegate
+        colorCollectionView.delegate = colorCollectionViewDataSourceDelegate
+    
+        view.addSubview(colorCollectionView)
+        
+        NSLayoutConstraint.activate([
+            colorCollectionView.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor),
+            colorCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            colorCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            colorCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
+        ])
     }
     
     private func setupBaseButton(with text: String) -> UIButton {
@@ -370,14 +398,26 @@ final class CreateNewTrackerViewController: UIViewController {
         print("Выбранный емоджи сохранен")
     }
     
+    func updateSelectedColor(with color: String) {
+        self.selectedColor = color
+        print("Выбранный емоджи сохранен")
+    }
+    
     func createNewTracker() {
         guard let trackerName = trackerNameTextField.text, !trackerName.isEmpty else {
             print("Название трекера не может быть пустым.")
             return
         }
-        guard let selectedEmoji = selectedEmoji else { return }
+        guard let selectedEmoji = selectedEmoji else {
+            print("Выбранный emoji отсутствует")
+            return
+        }
+        guard let selectedColor = selectedColor else {
+            print("Выбранный color отсутствует")
+            return
+        }
         let selectedWeekdaysArray = Array(selectedWeekdays)
-        let newTracker = Tracker(title: trackerName, color: defaultColor, emoji: selectedEmoji, schedule: selectedWeekdaysArray)
+        let newTracker = Tracker(title: trackerName, color: selectedColor, emoji: selectedEmoji, schedule: selectedWeekdaysArray)
         guard let selectedCategory = selectedCategory else { return }
         
         // Отправляем уведомление

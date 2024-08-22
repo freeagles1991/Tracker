@@ -1,14 +1,14 @@
 //
-//  EmojiCollectionViewDataSourceDelegate.swift
+//  ColorCollectionViewDataSourceDelegate.swift
 //  Tracker
 //
-//  Created by Дима on 20.08.2024.
+//  Created by Дима on 22.08.2024.
 //
 
 import Foundation
 import UIKit
 
-final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDataSource,
+final class ColorCollectionViewDataSourceDelegate: NSObject, UICollectionViewDataSource,
                                                    UICollectionViewDelegateFlowLayout,
                                                    UICollectionViewDelegate {
     var createNewTrackerVC: CreateNewTrackerViewController?
@@ -24,28 +24,28 @@ final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
     }
     /// Количество элементов в секци
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let count = createNewTrackerVC?.emojies.count else {return 0}
+        guard let count = createNewTrackerVC?.colors.count else {return 0}
         return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as! EmojiCell
-        guard let emoji = createNewTrackerVC?.emojies[indexPath.row] else { return cell }
-        cell.configure(with: emoji)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as! ColorCell
+        guard let colorHex = createNewTrackerVC?.colors[indexPath.row] else { return cell }
+        cell.configure(with: UIColor(hexString: colorHex) ?? .black)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "EmojiHeader", for: indexPath) as! EmojiHeaderView
-        headerView.label.text = createNewTrackerVC?.emojiHeaderString
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "ColorHeader", for: indexPath) as! ColorHeaderView
+        headerView.label.text = createNewTrackerVC?.colorHeaderString
         return headerView
     }
     
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! EmojiCell
-        if let emoji = cell.emoji {
-            createNewTrackerVC?.updateSelectedEmoji(with: emoji)
+        let cell = collectionView.cellForItem(at: indexPath) as! ColorCell
+        if let colorHex = cell.color?.toHexString {
+            createNewTrackerVC?.updateSelectedColor(with: colorHex)
         }
     }
     
@@ -80,3 +80,4 @@ final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
         return 0
     }
 }
+
