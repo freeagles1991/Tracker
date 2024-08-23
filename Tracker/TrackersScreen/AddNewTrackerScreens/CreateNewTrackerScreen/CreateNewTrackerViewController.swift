@@ -96,7 +96,7 @@ final class CreateNewTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        //view.addTapGestureToHideKeyboard()
+        view.addTapGestureToHideKeyboard()
         
         chooseCategoryVC.delegate = self
         scheduleScreenVC.delegate = self
@@ -495,11 +495,15 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     private func updateCreateButtonState() {
+        let isAllParametresSelected: Bool = {
+            return selectedCategory != nil &&
+            !(trackerNameTextField.text?.isEmpty ?? true) &&
+            !(selectedEmoji?.isEmpty ?? true) &&
+            !(selectedColor?.isEmpty ?? true)
+        }()
+        
         if isRegularEvent {
-            if selectedCategory != nil &&
-                !selectedWeekdays.isEmpty &&
-                !(trackerNameTextField.text?.isEmpty ?? true) &&
-                !(selectedEmoji?.isEmpty ?? true) {
+            if isAllParametresSelected && !selectedWeekdays.isEmpty {
                 createButton.isEnabled = true
                 createButton.alpha = 1.0
             } else {
@@ -507,9 +511,7 @@ final class CreateNewTrackerViewController: UIViewController {
                 createButton.alpha = 0.5
             }
         } else {
-            if selectedCategory != nil &&
-            !(trackerNameTextField.text?.isEmpty ?? true) &&
-            !(selectedEmoji?.isEmpty ?? true) {
+            if isAllParametresSelected {
                 createButton.isEnabled = true
                 createButton.alpha = 1.0
             } else {

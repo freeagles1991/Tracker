@@ -32,22 +32,28 @@ final class ColorCell: UICollectionViewCell {
 
     private func setupViews() {
         colorView.translatesAutoresizingMaskIntoConstraints = false
-        colorView.layer.cornerRadius = 16
+        colorView.layer.cornerRadius = 8
         colorView.layer.masksToBounds = true
         colorView.backgroundColor = .gray
         
         selectionRect.translatesAutoresizingMaskIntoConstraints = false
         selectionRect.backgroundColor = .white
-        selectionRect.layer.cornerRadius = 16
+        selectionRect.layer.cornerRadius = 8
         selectionRect.layer.masksToBounds = true
+        selectionRect.layer.borderWidth = 3
+        selectionRect.layer.borderColor = UIColor.white.cgColor
         
         contentView.addSubview(selectionRect)
         contentView.addSubview(colorView)
         
         NSLayoutConstraint.activate([
-            colorView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
-            colorView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            colorView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.77),
+            colorView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.77),
             
+            selectionRect.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            selectionRect.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             selectionRect.heightAnchor.constraint(equalTo: contentView.heightAnchor),
             selectionRect.widthAnchor.constraint(equalTo: contentView.widthAnchor)
         ])
@@ -55,9 +61,9 @@ final class ColorCell: UICollectionViewCell {
     
     private func updateSelectionAppearance() {
         if isSelected {
-            selectionRect.backgroundColor = color?.withAlphaComponent(0.3)
+            selectionRect.layer.borderColor = color?.withAlphaComponent(0.3).cgColor
         } else {
-            selectionRect.backgroundColor = .white
+            selectionRect.layer.borderColor = UIColor.white.cgColor
         }
     }
     
