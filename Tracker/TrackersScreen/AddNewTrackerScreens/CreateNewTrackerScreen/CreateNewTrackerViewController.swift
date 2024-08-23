@@ -14,10 +14,6 @@ final class CreateNewTrackerViewController: UIViewController {
     private let scheduleScreenVC = ScheduleScreenViewController()
     weak var delegate: ChooseTrackerTypeViewController?
     
-    private var isRegularEvent = true
-    
-    let notificationName = Notification.Name("MyCustomNotification")
-    
     private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
     let emojies: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -29,6 +25,9 @@ final class CreateNewTrackerViewController: UIViewController {
                             "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC",
                             "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"]
     private var selectedColor: String?
+    
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая привычка"
@@ -90,20 +89,26 @@ final class CreateNewTrackerViewController: UIViewController {
     private var createButton = UIButton()
     private let createButtonString: String = "Создать"
     
+    private var isRegularEvent = true
+    
+    let notificationName = Notification.Name("MyCustomNotification")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        view.addTapGestureToHideKeyboard()
+        //view.addTapGestureToHideKeyboard()
         
         chooseCategoryVC.delegate = self
         scheduleScreenVC.delegate = self
         
         setupScreenTitle()
+        setupScrollView()
         setupTextField()
         setupParametresStackView()
         setupEmojiCollectionView()
         setupColorCollectionView()
         setupScreenControlsStackView()
+        setupScrollViewBottomAnchor()
         updateCreateButtonState()
         
         if !isRegularEvent {
@@ -127,6 +132,30 @@ final class CreateNewTrackerViewController: UIViewController {
         self.screenTitle = label
     }
     
+    private func setupScrollView() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+        
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+        
+    }
+    
     private func setupTextField() {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
@@ -136,7 +165,7 @@ final class CreateNewTrackerViewController: UIViewController {
         textField.layer.masksToBounds = true
         textField.backgroundColor = UIColor(named: "background")
         textField.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(textField)
+        contentView.addSubview(textField)
         
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
         textField.leftView = paddingView
@@ -148,9 +177,9 @@ final class CreateNewTrackerViewController: UIViewController {
         
         
         NSLayoutConstraint.activate([
-            textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
-            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textField.topAnchor.constraint(equalTo: contentView.topAnchor),
+            textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75)
         ])
         
@@ -263,13 +292,13 @@ final class CreateNewTrackerViewController: UIViewController {
         stackView.layer.masksToBounds = true
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
+        contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.topAnchor.constraint(equalTo: trackerNameTextField.bottomAnchor, constant: 24),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
         
         self.parametersStackView = stackView
@@ -283,13 +312,13 @@ final class CreateNewTrackerViewController: UIViewController {
         emojiCollectionView.dataSource = emojiCollectionViewDataSourceDelegate
         emojiCollectionView.delegate = emojiCollectionViewDataSourceDelegate
     
-        view.addSubview(emojiCollectionView)
+        contentView.addSubview(emojiCollectionView)
         
         NSLayoutConstraint.activate([
             emojiCollectionView.topAnchor.constraint(equalTo: parametersStackView.bottomAnchor),
-            emojiCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            emojiCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            emojiCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
+            emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            emojiCollectionView.heightAnchor.constraint(equalToConstant: 250)
         ])
 
     }
@@ -302,13 +331,13 @@ final class CreateNewTrackerViewController: UIViewController {
         colorCollectionView.dataSource = colorCollectionViewDataSourceDelegate
         colorCollectionView.delegate = colorCollectionViewDataSourceDelegate
     
-        view.addSubview(colorCollectionView)
+        contentView.addSubview(colorCollectionView)
         
         NSLayoutConstraint.activate([
             colorCollectionView.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor),
-            colorCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            colorCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            colorCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200)
+            colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            colorCollectionView.heightAnchor.constraint(equalToConstant: 250)
         ])
     }
     
@@ -355,14 +384,19 @@ final class CreateNewTrackerViewController: UIViewController {
         stackView.distribution = .fillEqually
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
+        contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            stackView.topAnchor.constraint(equalTo: colorCollectionView.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
+    }
+    
+    private func setupScrollViewBottomAnchor() {
+        let bottomConstraint = contentView.bottomAnchor.constraint(equalTo: createButton.bottomAnchor, constant: 20)
+        bottomConstraint.isActive = true
     }
     
     private func convertWeekdaysToString(_ selectedWeekdays: Set<Weekday>) -> String {
