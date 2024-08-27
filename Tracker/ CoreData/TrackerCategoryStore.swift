@@ -31,8 +31,6 @@ final class TrackerCategoryStore {
         let categoryEntity = TrackerCategoryEntity(entity: categoryEntityDescription, insertInto: context)
         categoryEntity.title = category.title
         
-        print(categoryEntity.title)
-        
         appDelegate.saveContext()
     }
     
@@ -159,5 +157,30 @@ final class TrackerCategoryStore {
         }
         return nil
     }
+    // Фильтруем категории по дате
+    public func filterTrackers(for date: Date) -> [TrackerCategory] {
+        // Получаем все категории из хранилища
+        let categories = fetchCategories()
+        // Преобразуем дату в день недели
+        guard let selectedWeekday = Weekday.fromDate(date) else {return []}
+        
+        var filteredCategories: [TrackerCategory] = []
+        
+        for category in categories {
+            // Фильтруем трекеры по дню недели
+            let filteredTrackers = category.trackers.filter { tracker in
+                return tracker.schedule.contains(selectedWeekday)
+            }
+            
+            // Если есть трекеры для этого дня, добавляем новую категорию с отфильтрованными трекерами
+            if !filteredTrackers.isEmpty {
+                let filteredCategory = TrackerCategory(title: category.title, trackers: filteredTrackers)
+                filteredCategories.append(filteredCategory)
+            }
+        }
+        
+        return filteredCategories
+    }
+
 }
 

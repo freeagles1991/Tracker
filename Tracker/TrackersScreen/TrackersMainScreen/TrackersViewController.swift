@@ -14,7 +14,6 @@ final class TrackersViewController: UIViewController {
     private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
     
     var completedTrackers: [TrackerRecord] = []
-    private var filteredCategories: [TrackerCategory] = []
     private var selectedDate: Date?
     
     let notificationName = Notification.Name("NewTrackerCreated")
@@ -151,28 +150,13 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateUI() {
-        if filteredCategories.isEmpty {
+        guard let selectedDate = selectedDate else { return }
+        if trackerCategoryStore.filterTrackers(for: selectedDate).isEmpty {
             emptyStateView.isHidden = false
             collectionView.isHidden = true
         } else {
             emptyStateView.isHidden = true
             collectionView.isHidden = false
-        }
-    }
-    
-    private func getWeekday(from date: Date) -> Weekday? {
-        let calendar = Calendar.current
-        let weekdayNumber = calendar.component(.weekday, from: date)
-        
-        switch weekdayNumber {
-        case 1: return .sunday
-        case 2: return .monday
-        case 3: return .tuesday
-        case 4: return .wednesday
-        case 5: return .thursday
-        case 6: return .friday
-        case 7: return .saturday
-        default: return nil
         }
     }
     
@@ -193,14 +177,6 @@ final class TrackersViewController: UIViewController {
         return filteredCategories
     }
     
-    private func updateTrackers(for date: Date) {
-        if let selectedWeekday = getWeekday(from: date) {
-            filteredCategories = filterTrackers(for: selectedWeekday, from: trackerCategoryStore.fetchCategories())
-            updateUI()
-            collectionView.reloadData()
-        }
-    }
-    
     private func handleNotification(_ notification: Notification) {
         if let userInfo = notification.userInfo,
            let tracker = userInfo["tracker"] as? Tracker,
@@ -217,13 +193,13 @@ final class TrackersViewController: UIViewController {
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         self.selectedDate = sender.date
-        guard let selectedDate = selectedDate else { return }
-        updateTrackers(for: selectedDate)
+        updateUI()
+        collectionView.reloadData()
     }
     
     func updateCollectionViewWithNewTracker() {
-        guard let selectedDate = selectedDate else { return }
-        updateTrackers(for: selectedDate)
+        updateUI()
+        collectionView.reloadData()
     }
     
     func getDateFromUIDatePicker() -> Date? {
@@ -294,19 +270,21 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     ///Количество секций
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return filteredCategories.count
+        guard let selectedDate = selectedDate else { return 0}
+        return trackerCategoryStore.filterTrackers(for: selectedDate).count
     }
     /// Количество элементов в секции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredCategories[section].trackers.count
+        guard let selectedDate = selectedDate else { return 0 }
+        return trackerCategoryStore.filterTrackers(for: selectedDate)[section].trackers.count
     }
     
     /// Настраиваем ячейку
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
-        let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
-        //guard let selectedDate = selectedDate else { return cell }
-        cell.configure(with: tracker, on: selectedDate ?? Date())
+        guard let selectedDate = selectedDate else { return cell}
+        let tracker = trackerCategoryStore.filterTrackers(for: selectedDate)[indexPath.section].trackers[indexPath.item]
+        cell.configure(with: tracker, on: selectedDate)
         cell.trackersVC = self
         return cell
     }
