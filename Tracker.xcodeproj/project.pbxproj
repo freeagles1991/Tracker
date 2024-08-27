@@ -25,6 +25,9 @@
 		32A45BB52C5EACDC002A97F5 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45BB42C5EACDC002A97F5 /* TrackerRecord.swift */; };
 		32A45BB72C5FE326002A97F5 /* ChooseTrackerTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45BB62C5FE326002A97F5 /* ChooseTrackerTypeViewController.swift */; };
 		32B013452C78F941004C4969 /* WeekdayArrayTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B013442C78F941004C4969 /* WeekdayArrayTransformer.swift */; };
+		32B013472C7A4626004C4969 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B013462C7A4626004C4969 /* TrackerStore.swift */; };
+		32B013492C7A4634004C4969 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B013482C7A4634004C4969 /* TrackerCategoryStore.swift */; };
+		32B0134B2C7A4640004C4969 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B0134A2C7A4640004C4969 /* TrackerRecordStore.swift */; };
 		32BABEFC2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFB2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift */; };
 		32BABEFE2C61501A00E176E2 /* ScheduleScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFD2C61501A00E176E2 /* ScheduleScreenViewController.swift */; };
 		32BABF002C65194600E176E2 /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFF2C65194600E176E2 /* TrackersCell.swift */; };
@@ -83,6 +86,9 @@
 		32A45BB42C5EACDC002A97F5 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		32A45BB62C5FE326002A97F5 /* ChooseTrackerTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseTrackerTypeViewController.swift; sourceTree = "<group>"; };
 		32B013442C78F941004C4969 /* WeekdayArrayTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdayArrayTransformer.swift; sourceTree = "<group>"; };
+		32B013462C7A4626004C4969 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
+		32B013482C7A4634004C4969 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
+		32B0134A2C7A4640004C4969 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		32BABEFB2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewTrackerViewController.swift; sourceTree = "<group>"; };
 		32BABEFD2C61501A00E176E2 /* ScheduleScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreenViewController.swift; sourceTree = "<group>"; };
 		32BABEFF2C65194600E176E2 /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
@@ -302,6 +308,9 @@
 			children = (
 				32C3B6B82C78E8D700E34DFD /* TrackersData.xcdatamodeld */,
 				32B013442C78F941004C4969 /* WeekdayArrayTransformer.swift */,
+				32B013462C7A4626004C4969 /* TrackerStore.swift */,
+				32B013482C7A4634004C4969 /* TrackerCategoryStore.swift */,
+				32B0134A2C7A4640004C4969 /* TrackerRecordStore.swift */,
 			);
 			path = " CoreData";
 			sourceTree = "<group>";
@@ -464,6 +473,7 @@
 				32C3B6B62C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift in Sources */,
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
 				32C3B6AF2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift in Sources */,
+				32B013472C7A4626004C4969 /* TrackerStore.swift in Sources */,
 				32A45BB32C5EAC34002A97F5 /* TrackerCategory.swift in Sources */,
 				32A45BB72C5FE326002A97F5 /* ChooseTrackerTypeViewController.swift in Sources */,
 				32BABEFC2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift in Sources */,
@@ -480,11 +490,13 @@
 				3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */,
 				32BABF1C2C750F1C00E176E2 /* EmojiHeader.swift in Sources */,
 				32C3B6B22C7770C500E34DFD /* ColorCell.swift in Sources */,
+				32B0134B2C7A4640004C4969 /* TrackerRecordStore.swift in Sources */,
 				32BABF1A2C750BF500E176E2 /* EmojiCell.swift in Sources */,
 				32BABF022C6699EE00E176E2 /* TrackersHeaderView.swift in Sources */,
 				32A45B652C53D549002A97F5 /* LaunchScreenViewController.swift in Sources */,
 				32C3B6B42C7770D700E34DFD /* ColorHeader.swift in Sources */,
 				32A45B682C53D9A6002A97F5 /* TabBarController.swift in Sources */,
+				32B013492C7A4634004C4969 /* TrackerCategoryStore.swift in Sources */,
 				32BABEFE2C61501A00E176E2 /* ScheduleScreenViewController.swift in Sources */,
 				3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */,
 				32C3B6BA2C78E8D700E34DFD /* TrackersData.xcdatamodeld in Sources */,

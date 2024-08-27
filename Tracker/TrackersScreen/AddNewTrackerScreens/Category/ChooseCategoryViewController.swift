@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    weak var trackersVC: TrackersViewController?
+    //weak var trackersVC: TrackersViewController?
+    private let trackersCategoryStore = TrackerCategoryStore.shared
     let createNewCategoryVC = CreateNewCategoryViewController()
     
     weak var delegate: CreateNewTrackerViewController?
@@ -93,13 +94,13 @@ final class ChooseCategoryViewController: UIViewController {
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = trackersVC?.categories.count else { return 0 }
+        let count = trackersCategoryStore.fetchCategories().count
         return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = trackersVC?.categories[indexPath.row].title
+        cell.textLabel?.text = trackersCategoryStore.fetchCategories()[indexPath.row].title
         cell.layer.cornerRadius = 16
         cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "background")
@@ -118,7 +119,7 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let choosenCategory = trackersVC?.categories[indexPath.row] else { return }
+        let choosenCategory = trackersCategoryStore.fetchCategories()[indexPath.row]
         print("Выбрана категория: \(choosenCategory.title)")
         
         isSelectedArray[indexPath.row].toggle()

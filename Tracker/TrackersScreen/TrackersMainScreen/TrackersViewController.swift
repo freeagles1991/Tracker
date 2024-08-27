@@ -9,9 +9,10 @@ import Foundation
 import UIKit
 
 final class TrackersViewController: UIViewController {
-    private let  chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
+    private let trackerStore = TrackerStore.shared
+    private let trackerCategoryStore = TrackerCategoryStore.shared
+    private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
     
-    var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     private var filteredCategories: [TrackerCategory] = []
     private var selectedDate: Date?
@@ -194,7 +195,7 @@ final class TrackersViewController: UIViewController {
     
     private func updateTrackers(for date: Date) {
         if let selectedWeekday = getWeekday(from: date) {
-            filteredCategories = filterTrackers(for: selectedWeekday, from: self.categories)
+            filteredCategories = filterTrackers(for: selectedWeekday, from: trackerCategoryStore.fetchCategories())
             updateUI()
             collectionView.reloadData()
         }
@@ -254,33 +255,27 @@ final class TrackersViewController: UIViewController {
     }
     
     func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
-        var updatedCategories = categories
-        if let index = updatedCategories.firstIndex(where: { $0.title == categoryTitle }) {
-            // Создаём новую категорию с добавленным трекером
-            let updatedTrackers = updatedCategories[index].trackers + [tracker]
-            let updatedCategory = TrackerCategory(title: categoryTitle, trackers: updatedTrackers)
-            updatedCategories[index] = updatedCategory
-        } else {
-            // Создаём новую категорию
-            let newCategory = TrackerCategory(title: categoryTitle, trackers: [tracker])
-            updatedCategories.append(newCategory)
+        guard let trackerCategoryEntity = trackerCategoryStore.fetchCategoryEntity(byTitle: categoryTitle) else {
+            print("Категория с названием \(categoryTitle) не найдена")
+            return
         }
-        categories = updatedCategories
-        print("Новый трекер добавлен \(tracker.schedule)")
+            trackerStore.createTracker(with: tracker, in: trackerCategoryEntity)
+        print("Трекер \(tracker.title) добавлен в категорию \(categoryTitle)")
     }
+
     
-    private func removeTracker(_ tracker: Tracker, from categoryTitle: String) {
-        var updatedCategories = categories
-        if let index = updatedCategories.firstIndex(where: { $0.title == categoryTitle }) {
-            // Фильтруем трекеры, исключая удаляемый трекер
-            let updatedTrackers = updatedCategories[index].trackers.filter { $0 != tracker }
-            
-            // Создаём новую категорию с обновлённым списком трекеров
-            let updatedCategory = TrackerCategory(title: categoryTitle, trackers: updatedTrackers)
-            updatedCategories[index] = updatedCategory
-        }
-        categories = updatedCategories
-    }
+//    private func removeTracker(_ tracker: Tracker, from categoryTitle: String) {
+//        var updatedCategories = categories
+//        if let index = updatedCategories.firstIndex(where: { $0.title == categoryTitle }) {
+//            // Фильтруем трекеры, исключая удаляемый трекер
+//            let updatedTrackers = updatedCategories[index].trackers.filter { $0 != tracker }
+//            
+//            // Создаём новую категорию с обновлённым списком трекеров
+//            let updatedCategory = TrackerCategory(title: categoryTitle, trackers: updatedTrackers)
+//            updatedCategories[index] = updatedCategory
+//        }
+//        categories = updatedCategories
+//    }
     
     func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
         return completedTrackers.contains { record in
@@ -318,7 +313,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! TrackersHeaderView
-        headerView.label.text = self.categories[indexPath.section].title
+        headerView.label.text = trackerCategoryStore.fetchCategories()[indexPath.section].title
         return headerView
     }
     
