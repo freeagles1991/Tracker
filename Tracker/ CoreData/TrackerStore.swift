@@ -94,6 +94,25 @@ final class TrackerStore{
         }
         return nil
     }
+    
+    //Загружаем указанный трекер Entity
+    public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerEntity")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            // Выполняем запрос к базе данных
+            guard let trackerEntities = try context.fetch(fetchRequest) as? [TrackerEntity],
+                  let trackerEntity = trackerEntities.first else {
+                return nil
+            }
+            return trackerEntity
+            
+        } catch {
+            print("Ошибка при загрузке трекера: \(error.localizedDescription)")
+        }
+        return nil
+    }
 
     //Обновляем трекер
     public func updateTracker(with updatedTracker: Tracker) {
