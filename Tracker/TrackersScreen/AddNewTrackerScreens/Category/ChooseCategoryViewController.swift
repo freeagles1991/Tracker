@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    //weak var trackersVC: TrackersViewController?
     private let trackersCategoryStore = TrackerCategoryStore.shared
     let createNewCategoryVC = CreateNewCategoryViewController()
     

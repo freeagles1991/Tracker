@@ -38,18 +38,15 @@ final class TrackerCell: UICollectionViewCell {
     }
 
     private func setupViews() {
-        // Верхний блок (titleBlockView)
         let titleBlockView = UIView()
         titleBlockView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Настройки emojiLabel
         emojiLabel.font = UIFont.systemFont(ofSize: 16)
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         
         emojiBackground.translatesAutoresizingMaskIntoConstraints = false
         emojiBackground.backgroundColor = UIColor(named: "white")?.withAlphaComponent(0.3)
         
-        // Настройки titleLabel
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.textColor = .white
@@ -57,7 +54,6 @@ final class TrackerCell: UICollectionViewCell {
         titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.numberOfLines = 2
 
-        // Настройки colorPanelView
         colorPanelView.layer.cornerRadius = 16
         colorPanelView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -68,7 +64,6 @@ final class TrackerCell: UICollectionViewCell {
         
         contentView.addSubview(titleBlockView)
         
-        // Констрейнты для верхнего блока
         NSLayoutConstraint.activate([
             titleBlockView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleBlockView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -96,11 +91,9 @@ final class TrackerCell: UICollectionViewCell {
             titleLabel.bottomAnchor.constraint(equalTo: colorPanelView.bottomAnchor, constant: -12)
         ])
         
-        // Нижний блок (bottomBlockView)
         let bottomBlockView = UIView()
         bottomBlockView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Настройки completeButton
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         completeButton.backgroundColor = .systemBlue
         completeButton.tintColor = .white
@@ -109,7 +102,6 @@ final class TrackerCell: UICollectionViewCell {
         completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
         completeButton.addTarget(self, action: #selector(completeButtonTapped(_:)), for: .touchUpInside)
         
-        // Настройки durationLabel
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
         durationLabel.font = UIFont.systemFont(ofSize: 12)
         durationLabel.textColor = .black
@@ -120,7 +112,6 @@ final class TrackerCell: UICollectionViewCell {
         bottomBlockView.addSubview(durationLabel)
         contentView.addSubview(bottomBlockView)
         
-        // Констрейнты для нижнего блока
         NSLayoutConstraint.activate([
             bottomBlockView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             bottomBlockView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -143,10 +134,8 @@ final class TrackerCell: UICollectionViewCell {
         super.layoutSubviews()
         
         contentView.layoutIfNeeded()
-        // Здесь можно подогнать содержимое, если размеры меняются динамически
-        let availableWidth = contentView.frame.width // Учитываем отступы
+        let availableWidth = contentView.frame.width
         
-        // Динамическая настройка шрифта
         let fontSizeTitle: CGFloat = availableWidth > 167 ? 16 : 14
         titleLabel.font = UIFont.systemFont(ofSize: fontSizeTitle)
         

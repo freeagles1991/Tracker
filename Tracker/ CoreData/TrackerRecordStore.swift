@@ -21,16 +21,12 @@ final class TrackerRecordStore{
         appDelegate.persistentContainer.viewContext
     }
     
-    //Загрузка всех записей для конкретного трекера по ID
     public func fetchTrackerRecords(byID trackerID: UUID) -> [TrackerRecord] {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
-        // Устанавливаем предикат для фильтрации записей по trackerID
         fetchRequest.predicate = NSPredicate(format: "trackerID == %@", trackerID as CVarArg)
         
         do {
-            // Выполняем запрос и приводим результат к массиву TrackerRecordEntity
             if let recordEntities = try context.fetch(fetchRequest) as? [TrackerRecordEntity] {
-                // Преобразуем каждый TrackerRecordEntity в TrackerRecord
                 return recordEntities.compactMap { entity in
                     guard let date = entity.date, let trackerEntity = entity.tracker else {
                         return nil
@@ -43,7 +39,7 @@ final class TrackerRecordStore{
         }
         return []
     }
-    // Проверка записи для трекера в определенную дату
+    
     func fetchTrackerRecords(byID trackerID: UUID, on date: Date) -> [TrackerRecord] {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
         let startOfDay = Calendar.current.startOfDay(for: date)
@@ -69,7 +65,6 @@ final class TrackerRecordStore{
         return []
     }
     
-    //Создание записи
     public func createTrackerRecord(with tracker: Tracker, on date: Date) {
         guard let recordEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerRecordEntity", in: context) else {
             print("Failed to make recordEntityDescription")
@@ -86,18 +81,15 @@ final class TrackerRecordStore{
         appDelegate.saveContext()
     }
     
-    // Удаление записи
     public func removeTrackerRecord(with trackerID: UUID, on date: Date) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
         
-        // Устанавливаем диапазон от начала дня до конца дня
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
         print("Удаление записи - TrackerID \(trackerID), дата \(date)")
         
-        // Предикат для поиска записей по trackerID и дате, игнорируя время
         fetchRequest.predicate = NSPredicate(
             format: "trackerID == %@ AND date >= %@ AND date < %@",
             trackerID as CVarArg, startOfDay as NSDate, endOfDay as NSDate
@@ -109,7 +101,7 @@ final class TrackerRecordStore{
                 for record in results {
                     context.delete(record as! NSManagedObject)
                 }
-                try context.save() // Сохраняем изменения в контексте после удаления записей
+                try context.save()
             } else {
                 print("Записи для удаления не найдены")
             }

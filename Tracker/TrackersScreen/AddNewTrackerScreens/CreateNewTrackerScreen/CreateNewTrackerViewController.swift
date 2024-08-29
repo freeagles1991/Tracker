@@ -454,7 +454,6 @@ final class CreateNewTrackerViewController: UIViewController {
         let newTracker = Tracker(title: trackerName, color: selectedColor, emoji: selectedEmoji, schedule: selectedWeekdaysArray)
         guard let selectedCategory = selectedCategory else { return }
         
-        // Отправляем уведомление
         let userInfo: [String: Any] = [
             "tracker": newTracker,
             "category": selectedCategory]

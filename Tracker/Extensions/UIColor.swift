@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 extension UIColor {
-    // Метод для преобразования hex строки в UIColor
     convenience init?(hexString: String) {
         var hex = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
         hex = hex.replacingOccurrences(of: "#", with: "")
@@ -26,7 +25,6 @@ extension UIColor {
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
     
-    // Метод для преобразования UIColor в hex строку
     var toHexString: String? {
         var red: CGFloat = 0
         var green: CGFloat = 0

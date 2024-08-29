@@ -235,18 +235,9 @@ final class TrackersViewController: UIViewController {
     }
 
     
-//    private func removeTracker(_ tracker: Tracker, from categoryTitle: String) {
-//        var updatedCategories = categories
-//        if let index = updatedCategories.firstIndex(where: { $0.title == categoryTitle }) {
-//            // Фильтруем трекеры, исключая удаляемый трекер
-//            let updatedTrackers = updatedCategories[index].trackers.filter { $0 != tracker }
-//            
-//            // Создаём новую категорию с обновлённым списком трекеров
-//            let updatedCategory = TrackerCategory(title: categoryTitle, trackers: updatedTrackers)
-//            updatedCategories[index] = updatedCategory
-//        }
-//        categories = updatedCategories
-//    }
+    private func removeTracker(_ tracker: Tracker, from categoryTitle: String) {
+        //TO DO: реализовать удаление трекера
+    }
 }
 
 
