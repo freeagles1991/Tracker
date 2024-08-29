@@ -469,7 +469,6 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func categoryButtonTapped(_ sender: UIButton) {
-        //chooseCategoryVC.trackersVC = self.trackersVC
         present(chooseCategoryVC, animated: true)
     }
     

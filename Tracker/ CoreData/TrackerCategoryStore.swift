@@ -122,7 +122,7 @@ final class TrackerCategoryStore {
     }
 
     // Удаление категории
-    public func deleteCategory(withTitle title: String) {
+    public func removeCategory(withTitle title: String) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerCategoryEntity")
         fetchRequest.predicate = NSPredicate(format: "title == %@", title)
         

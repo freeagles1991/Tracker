@@ -21,9 +21,11 @@ final class TrackerRecordStore{
         appDelegate.persistentContainer.viewContext
     }
     
-    //Загрузка всех записей
-    public func fetchAllTrackerRecords() -> [TrackerRecord] {
+    //Загрузка всех записей для конкретного трекера по ID
+    public func fetchTrackerRecords(byID trackerID: UUID) -> [TrackerRecord] {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
+        // Устанавливаем предикат для фильтрации записей по trackerID
+        fetchRequest.predicate = NSPredicate(format: "trackerID == %@", trackerID as CVarArg)
         
         do {
             // Выполняем запрос и приводим результат к массиву TrackerRecordEntity
@@ -37,35 +39,36 @@ final class TrackerRecordStore{
                 }
             }
         } catch {
-            print("Ошибка при загрузке всех записей трекеров: \(error.localizedDescription)")
-        }
-        
-        return []
-    }
-
-    //Загрузка записей для трекера по ID
-    public func fetchTrackerRecord(byID trackerID: UUID) -> TrackerRecord? {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
-        // Устанавливаем предикат для фильтрации записей по trackerID
-        fetchRequest.predicate = NSPredicate(format: "trackerID == %@", trackerID as CVarArg)
-        
-        do {
-            // Выполняем запрос и проверяем результат
-            if let recordEntities = try context.fetch(fetchRequest) as? [TrackerRecordEntity],
-               let entity = recordEntities.first {
-                // Используем guard для безопасного извлечения значений
-                guard let date = entity.date, let id = entity.trackerID else {
-                    return nil
-                }
-                // Возвращаем объект TrackerRecord
-                return TrackerRecord(trackerID: id, date: date)
-            }
-        } catch {
             print("Ошибка при загрузке записи трекера: \(error.localizedDescription)")
         }
-        return nil
+        return []
     }
-
+    // Проверка записи для трекера в определенную дату
+    func fetchTrackerRecords(byID trackerID: UUID, on date: Date) -> [TrackerRecord] {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
+        let startOfDay = Calendar.current.startOfDay(for: date)
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        fetchRequest.predicate = NSPredicate(
+            format: "trackerID == %@ AND date >= %@ AND date < %@",
+            trackerID as CVarArg, startOfDay as NSDate, endOfDay as NSDate
+        )
+        
+        do {
+            if let recordEntities = try context.fetch(fetchRequest) as? [TrackerRecordEntity] {
+                return recordEntities.compactMap { entity in
+                    guard let date = entity.date, let trackerEntity = entity.tracker, let trackerEntityID = trackerEntity.id else {
+                        return nil
+                    }
+                    return TrackerRecord(trackerID: trackerEntityID, date: date)
+                }
+            }
+        } catch {
+            print("Ошибка при загрузке записей трекера: \(error.localizedDescription)")
+        }
+        return []
+    }
+    
     //Создание записи
     public func createTrackerRecord(with tracker: Tracker, on date: Date) {
         guard let recordEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerRecordEntity", in: context) else {
@@ -83,10 +86,22 @@ final class TrackerRecordStore{
         appDelegate.saveContext()
     }
     
-    //Удаление записи
-    public func deleteTrackerRecord(with trackerID: UUID, on date: Date) {
+    // Удаление записи
+    public func removeTrackerRecord(with trackerID: UUID, on date: Date) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
-        fetchRequest.predicate = NSPredicate(format: "trackerID == %@ AND date == %@", trackerID as CVarArg, date as CVarArg)
+        
+        // Устанавливаем диапазон от начала дня до конца дня
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        print("Удаление записи - TrackerID \(trackerID), дата \(date)")
+        
+        // Предикат для поиска записей по trackerID и дате, игнорируя время
+        fetchRequest.predicate = NSPredicate(
+            format: "trackerID == %@ AND date >= %@ AND date < %@",
+            trackerID as CVarArg, startOfDay as NSDate, endOfDay as NSDate
+        )
         
         do {
             let results = try context.fetch(fetchRequest)
@@ -94,13 +109,12 @@ final class TrackerRecordStore{
                 for record in results {
                     context.delete(record as! NSManagedObject)
                 }
-                
-                try context.save()
+                try context.save() // Сохраняем изменения в контексте после удаления записей
             } else {
-                print("No records found for delete")
+                print("Записи для удаления не найдены")
             }
         } catch {
-            print("Error fetching records: \(error)")
+            print("Ошибка при получении записей: \(error.localizedDescription)")
         }
     }
 }

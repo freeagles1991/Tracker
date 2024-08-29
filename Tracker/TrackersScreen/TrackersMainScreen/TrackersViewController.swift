@@ -11,9 +11,9 @@ import UIKit
 final class TrackersViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
     private let trackerCategoryStore = TrackerCategoryStore.shared
+    private let trackerRecordStore = TrackerRecordStore.shared
     private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
     
-    var completedTrackers: [TrackerRecord] = []
     private var selectedDate: Date?
     
     let notificationName = Notification.Name("NewTrackerCreated")
@@ -212,10 +212,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addRecord(for tracker: Tracker, on date: Date) {
-        var updatedRecords = completedTrackers
-        let newRecord = TrackerRecord(trackerID: tracker.id, date: date)
-        updatedRecords.append(newRecord)
-        completedTrackers = updatedRecords
+        trackerRecordStore.createTrackerRecord(with: tracker, on: date)
         print("Запись трекера \(tracker.title) выполнена")
     }
     
@@ -224,9 +221,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func removeRecord(for tracker: Tracker, on date: Date) {
-        var updatedRecords = completedTrackers
-        updatedRecords.removeAll { $0.trackerID == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: date) }
-        completedTrackers = updatedRecords
+        trackerRecordStore.removeTrackerRecord(with: tracker.id, on: date)
         print("Запись трекера \(tracker.title) удалена")
     }
     
@@ -252,16 +247,6 @@ final class TrackersViewController: UIViewController {
 //        }
 //        categories = updatedCategories
 //    }
-    
-    func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
-        return completedTrackers.contains { record in
-            record.trackerID == tracker.id && Calendar.current.isDate(record.date, inSameDayAs: date)
-        }
-    }
-    
-    func numberOfRecords(for tracker: Tracker) -> Int {
-        return completedTrackers.filter { $0.trackerID == tracker.id }.count
-    }
 }
 
 

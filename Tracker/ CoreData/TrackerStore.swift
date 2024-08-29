@@ -142,7 +142,7 @@ final class TrackerStore{
         }
     }
     //Удаляем трекер
-    public func deleteTracker(with id: UUID) {
+    public func removeTracker(with id: UUID) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerEntity")
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         

@@ -12,6 +12,7 @@ import UIKit
 
 final class TrackerCell: UICollectionViewCell {
     weak var trackersVC: TrackersViewController?
+    private let trackerRecordStore = TrackerRecordStore.shared
     private var tracker: Tracker?
     
     private let emojiLabel = UILabel()
@@ -209,10 +210,21 @@ final class TrackerCell: UICollectionViewCell {
         titleLabel.text = tracker.title
         selectedDate = date
         cellColor = UIColor(hexString: tracker.color) ?? .gray
-        self.isTrackerComplete = trackersVC?.isTrackerCompleted(tracker, on: date) ?? false
+        self.isTrackerComplete = isTrackerCompleted(tracker, on: date)
         updateUI(with: cellColor)
-        self.durationCountInt = trackersVC?.numberOfRecords(for: tracker) ?? 0
+        self.durationCountInt = numberOfRecords(for: tracker)
         durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
+    }
+    
+    private func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
+        let records = trackerRecordStore.fetchTrackerRecords(byID: tracker.id, on: date)
+        return !records.isEmpty
+    }
+    
+    private func numberOfRecords(for tracker: Tracker) -> Int {
+        let records = trackerRecordStore.fetchTrackerRecords(byID: tracker.id)
+        return records.count
+        
     }
     
     private func declensionForDay(_ count: Int) -> String {
