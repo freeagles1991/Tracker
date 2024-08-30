@@ -18,8 +18,8 @@ extension UIView {
 
     var topSuperview: UIView? {
         var view = superview
-        while view?.superview != nil {
-            view = view!.superview
+        while let currentView = view, let superview = currentView.superview {
+            view = superview
         }
         return view
     }

@@ -16,7 +16,10 @@ final class TrackerStore{
     private let trackerCategoryStore = TrackerCategoryStore.shared
     
     private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
+        guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("UIApplication.shared.delegate is not of type AppDelegate")
+        }
+        return delegate
     }
     
     private var context: NSManagedObjectContext {

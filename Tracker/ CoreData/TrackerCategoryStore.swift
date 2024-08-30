@@ -14,7 +14,10 @@ final class TrackerCategoryStore {
     private init() {}
     
     private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
+        guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("UIApplication.shared.delegate is not of type AppDelegate")
+        }
+        return delegate
     }
     
     private var context: NSManagedObjectContext {
@@ -45,11 +48,15 @@ final class TrackerCategoryStore {
                     }
                     
                     let trackers = trackerEntities.compactMap { trackerEntity in
-                        return Tracker(id: trackerEntity.id!,
-                                       title: trackerEntity.title!,
-                                       color: trackerEntity.color!,
-                                       emoji: trackerEntity.emoji!,
-                                       schedule: trackerEntity.schedule as! [Weekday])
+                        if let id = trackerEntity.id,
+                           let title = trackerEntity.title,
+                           let color = trackerEntity.color,
+                           let emoji = trackerEntity.emoji,
+                           let schedule = trackerEntity.schedule as? [Weekday] {
+                            return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
+                        } else {
+                            return nil
+                        }
                     }
                     
                     return TrackerCategory(title: title, trackers: trackers)
@@ -61,6 +68,8 @@ final class TrackerCategoryStore {
         
         return []
     }
+
+
     
     public func fetchCategory(byTitle title: String) -> TrackerCategory? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerCategoryEntity")
@@ -77,14 +86,18 @@ final class TrackerCategoryStore {
             }
             
             let trackers = trackerEntities.compactMap { trackerEntity in
-                return Tracker(id: trackerEntity.id!,
-                               title: trackerEntity.title!,
-                               color: trackerEntity.color!,
-                               emoji: trackerEntity.emoji!,
-                               schedule: trackerEntity.schedule as! [Weekday])
+                if let id = trackerEntity.id,
+                   let title = trackerEntity.title,
+                   let color = trackerEntity.color,
+                   let emoji = trackerEntity.emoji,
+                   let schedule = trackerEntity.schedule as? [Weekday] {
+                    return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
+                } else {
+                    return nil
+                }
             }
             
-            return TrackerCategory(title: categoryEntity.title!, trackers: trackers)
+            return TrackerCategory(title: title, trackers: trackers)
             
         } catch {
             print("Ошибка при загрузке категории: \(error.localizedDescription)")

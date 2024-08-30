@@ -29,21 +29,24 @@ final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as! EmojiCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as? EmojiCell else {
+            return EmojiCell()
+        }
         guard let emoji = createNewTrackerVC?.emojies[indexPath.row] else { return cell }
         cell.configure(with: emoji)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "EmojiHeader", for: indexPath) as! EmojiHeaderView
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "EmojiHeader", for: indexPath) as? EmojiHeaderView else {
+            return EmojiHeaderView() }
         headerView.label.text = createNewTrackerVC?.emojiHeaderString
         return headerView
     }
     
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! EmojiCell
+        guard let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell else { return }
         if let emoji = cell.emoji {
             createNewTrackerVC?.updateSelectedEmoji(with: emoji)
         }

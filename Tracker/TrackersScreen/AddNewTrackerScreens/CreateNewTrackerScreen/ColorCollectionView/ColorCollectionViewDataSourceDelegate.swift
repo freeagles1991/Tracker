@@ -29,21 +29,21 @@ final class ColorCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as! ColorCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as? ColorCell else { return ColorCell() }
         guard let colorHex = createNewTrackerVC?.colors[indexPath.row] else { return cell }
         cell.configure(with: UIColor(hexString: colorHex) ?? .black)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "ColorHeader", for: indexPath) as! ColorHeaderView
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "ColorHeader", for: indexPath) as? ColorHeaderView else { return ColorCell() }
         headerView.label.text = createNewTrackerVC?.colorHeaderString
         return headerView
     }
     
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! ColorCell
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ColorCell else { return }
         if let colorHex = cell.color?.toHexString {
             createNewTrackerVC?.updateSelectedColor(with: colorHex)
         }

@@ -257,7 +257,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     /// Настраиваем ячейку
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as? TrackerCell else { return TrackerCell() }
         guard let selectedDate = selectedDate else { return cell}
         let tracker = trackerCategoryStore.filterTrackers(for: selectedDate)[indexPath.section].trackers[indexPath.item]
         cell.configure(with: tracker, on: selectedDate)
@@ -266,7 +266,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! TrackersHeaderView
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as? TrackersHeaderView else { return TrackersHeaderView() }
         headerView.label.text = trackerCategoryStore.fetchCategories()[indexPath.section].title
         return headerView
     }

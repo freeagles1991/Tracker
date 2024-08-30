@@ -14,7 +14,10 @@ final class TrackerRecordStore{
     private init() {}
     
     private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
+        guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("UIApplication.shared.delegate is not of type AppDelegate")
+        }
+        return delegate
     }
     
     private var context: NSManagedObjectContext {
@@ -28,10 +31,10 @@ final class TrackerRecordStore{
         do {
             if let recordEntities = try context.fetch(fetchRequest) as? [TrackerRecordEntity] {
                 return recordEntities.compactMap { entity in
-                    guard let date = entity.date, let trackerEntity = entity.tracker else {
+                    guard let date = entity.date, let trackerEntity = entity.tracker, let id = trackerEntity.id else {
                         return nil
                     }
-                    return TrackerRecord(trackerID: trackerEntity.id!, date: date)
+                    return TrackerRecord(trackerID: id, date: date)
                 }
             }
         } catch {
@@ -43,7 +46,9 @@ final class TrackerRecordStore{
     func fetchTrackerRecords(byID trackerID: UUID, on date: Date) -> [TrackerRecord] {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
         let startOfDay = Calendar.current.startOfDay(for: date)
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        guard let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay) else {
+            fatalError("Не удалось получить конец дня")
+        }
         
         fetchRequest.predicate = NSPredicate(
             format: "trackerID == %@ AND date >= %@ AND date < %@",
@@ -86,7 +91,9 @@ final class TrackerRecordStore{
         
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        guard let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay) else {
+            fatalError("Не удалось получить конец дня")
+        }
         
         print("Удаление записи - TrackerID \(trackerID), дата \(date)")
         
@@ -99,7 +106,10 @@ final class TrackerRecordStore{
             let results = try context.fetch(fetchRequest)
             if !results.isEmpty {
                 for record in results {
-                    context.delete(record as! NSManagedObject)
+                    guard let managedObject = record as? NSManagedObject else {
+                        continue
+                    }
+                    context.delete(managedObject)
                 }
                 try context.save()
             } else {
