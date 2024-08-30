@@ -23,7 +23,7 @@ final class EmojiCell: UICollectionViewCell {
     }
 
     private func setupViews() {
-        emojiLabel.font = UIFont.systemFont(ofSize: 32)
+        emojiLabel.font = UIFont(name: "SFProText-Bold", size: 32)
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         emojiLabel.textAlignment = .center
         

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		321586BA2C82309600452B99 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 321586B92C822D2000452B99 /* SF-Pro-Text-Bold.otf */; };
 		3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */; };
 		3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */; };
 		323882622C52AB0B00EE11A3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 323882612C52AB0B00EE11A3 /* Base */; };
@@ -28,6 +29,7 @@
 		32B013472C7A4626004C4969 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B013462C7A4626004C4969 /* TrackerStore.swift */; };
 		32B013492C7A4634004C4969 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B013482C7A4634004C4969 /* TrackerCategoryStore.swift */; };
 		32B0134B2C7A4640004C4969 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B0134A2C7A4640004C4969 /* TrackerRecordStore.swift */; };
+		32B0134D2C822B34004C4969 /* SF-Pro-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 32B0134C2C822B34004C4969 /* SF-Pro-Text-Medium.otf */; };
 		32BABEFC2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFB2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift */; };
 		32BABEFE2C61501A00E176E2 /* ScheduleScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFD2C61501A00E176E2 /* ScheduleScreenViewController.swift */; };
 		32BABF002C65194600E176E2 /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BABEFF2C65194600E176E2 /* TrackersCell.swift */; };
@@ -64,6 +66,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		321586B92C822D2000452B99 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
 		323882572C52AB0B00EE11A3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +92,7 @@
 		32B013462C7A4626004C4969 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		32B013482C7A4634004C4969 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		32B0134A2C7A4640004C4969 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
+		32B0134C2C822B34004C4969 /* SF-Pro-Text-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Medium.otf"; sourceTree = "<group>"; };
 		32BABEFB2C60DAAC00E176E2 /* CreateNewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewTrackerViewController.swift; sourceTree = "<group>"; };
 		32BABEFD2C61501A00E176E2 /* ScheduleScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleScreenViewController.swift; sourceTree = "<group>"; };
 		32BABEFF2C65194600E176E2 /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 		323882592C52AB0B00EE11A3 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				32B0134E2C822B41004C4969 /* Fonts */,
 				32C3B6B72C78E89700E34DFD /*  CoreData */,
 				32BABF0C2C6D11BC00E176E2 /* Extensions */,
 				32A45BAF2C5EA9B2002A97F5 /* Models */,
@@ -231,6 +236,15 @@
 				32A45BB42C5EACDC002A97F5 /* TrackerRecord.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		32B0134E2C822B41004C4969 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				321586B92C822D2000452B99 /* SF-Pro-Text-Bold.otf */,
+				32B0134C2C822B34004C4969 /* SF-Pro-Text-Medium.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		32BABF052C67670200E176E2 /* AddNewTrackerScreens */ = {
@@ -420,6 +434,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32B0134D2C822B34004C4969 /* SF-Pro-Text-Medium.otf in Resources */,
+				321586BA2C82309600452B99 /* SF-Pro-Text-Bold.otf in Resources */,
 				323882672C52AB0F00EE11A3 /* Assets.xcassets in Resources */,
 				3238826A2C52AB0F00EE11A3 /* Base in Resources */,
 				323882622C52AB0B00EE11A3 /* Base in Resources */,

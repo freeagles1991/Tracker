@@ -68,7 +68,7 @@ final class CreateNewTrackerViewController: UIViewController {
     }()
     
     private let colorCollectionViewDataSourceDelegate = ColorCollectionViewDataSourceDelegate()
-    let colorHeaderString = "Color"
+    let colorHeaderString = "Цвет"
     private var colorCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
@@ -119,7 +119,7 @@ final class CreateNewTrackerViewController: UIViewController {
     
     private func setupScreenTitle() {
         let label = UILabel()
-        let font = UIFont.systemFont(ofSize: 16)
+        let font = UIFont(name: "SFProText-Medium", size: 16)
         label.text = screenTitleString
         label.textColor = .black
         label.font = font
@@ -345,7 +345,7 @@ final class CreateNewTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.backgroundColor = .black
         button.contentHorizontalAlignment = .center
         button.layer.cornerRadius = 16

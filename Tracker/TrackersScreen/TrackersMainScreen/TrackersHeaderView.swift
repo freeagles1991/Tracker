@@ -11,7 +11,7 @@ import UIKit
 final class TrackersHeaderView: UICollectionReusableView {
     let label: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+        label.font = UIFont(name: "SFProText-Bold", size: 19)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -32,6 +32,16 @@ final class TrackersHeaderView: UICollectionReusableView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        layoutIfNeeded()
+        let availableWidth = frame.width
+        
+        //let fontSizeTitle: CGFloat = availableWidth > 167 ? 22 : 19
+        //label.font = UIFont(name: "SFProText-Bold", size: fontSizeTitle)
     }
 }
 

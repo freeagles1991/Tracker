@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreData
 
 @objc(WeekdayArrayTransformer)
 class WeekdayArrayTransformer: ValueTransformer {

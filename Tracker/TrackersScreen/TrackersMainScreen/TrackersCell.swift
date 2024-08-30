@@ -41,14 +41,15 @@ final class TrackerCell: UICollectionViewCell {
         let titleBlockView = UIView()
         titleBlockView.translatesAutoresizingMaskIntoConstraints = false
         
-        emojiLabel.font = UIFont.systemFont(ofSize: 16)
+        emojiLabel.font = UIFont(name: "SFProText-Medium", size: 16)
+        emojiLabel.textAlignment = .center
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         
         emojiBackground.translatesAutoresizingMaskIntoConstraints = false
         emojiBackground.backgroundColor = UIColor(named: "white")?.withAlphaComponent(0.3)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.font = UIFont(name: "SFProText-Medium", size: 12)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .left
         titleLabel.adjustsFontForContentSizeCategory = true
@@ -103,7 +104,7 @@ final class TrackerCell: UICollectionViewCell {
         completeButton.addTarget(self, action: #selector(completeButtonTapped(_:)), for: .touchUpInside)
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
-        durationLabel.font = UIFont.systemFont(ofSize: 12)
+        durationLabel.font = UIFont(name: "SFProText-Medium", size: 12)
         durationLabel.textColor = .black
         durationLabel.adjustsFontForContentSizeCategory = true
         durationLabel.numberOfLines = 0
@@ -136,14 +137,15 @@ final class TrackerCell: UICollectionViewCell {
         contentView.layoutIfNeeded()
         let availableWidth = contentView.frame.width
         
-        let fontSizeTitle: CGFloat = availableWidth > 167 ? 16 : 14
-        titleLabel.font = UIFont.systemFont(ofSize: fontSizeTitle)
+        //let fontSizeTitle: CGFloat = availableWidth > 167 ? 16 : 14
+        //titleLabel.font = UIFont(name: "SFProText-Medium", size: fontSizeTitle)
         
-        let fontSizeDuration: CGFloat = availableWidth > 167 ? 14 : 12
-        durationLabel.font = UIFont.systemFont(ofSize: fontSizeDuration)
+        //let fontSizeDuration: CGFloat = availableWidth > 167 ? 14 : 12
+        //durationLabel.font = UIFont(name: "SFProText-Medium", size: fontSizeDuration)
         
-        let fontSizeEmoji: CGFloat = availableWidth > 167 ? 18 : 16
-        emojiLabel.font = UIFont.systemFont(ofSize: fontSizeEmoji)
+        
+        //let fontSizeEmoji: CGFloat = availableWidth > 167 ? 18 : 16
+        //emojiLabel.font = UIFont.systemFont(ofSize: fontSizeEmoji)
         
         completeButton.layer.cornerRadius = completeButton.bounds.height / 2
         completeButton.layer.masksToBounds = true

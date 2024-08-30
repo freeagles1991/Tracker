@@ -33,7 +33,7 @@ final class CreateNewCategoryViewController: UIViewController {
     
     private func setupScreenTitle() {
         let label = UILabel()
-        let font = UIFont.systemFont(ofSize: 16)
+        let font = UIFont(name: "SFProText-Medium", size: 16)
         label.text = screenTitleString
         label.textColor = .black
         label.font = font
@@ -67,9 +67,10 @@ final class CreateNewCategoryViewController: UIViewController {
     
     private func setupDoneButton(){
         doneButton.setTitle(doneButtonString, for: .normal)
+        doneButton.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         doneButton.backgroundColor = .black
         doneButton.setTitleColor(.white, for: .normal)
-        doneButton.layer.cornerRadius = 8
+        doneButton.layer.cornerRadius = 16
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(doneButton)
