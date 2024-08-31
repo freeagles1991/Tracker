@@ -24,6 +24,8 @@ final class TrackerCategoryStore {
         appDelegate.persistentContainer.viewContext
     }
     
+    private let fetchedResultsController = FetchedResultsControllerManager.shared.fetchedResultsController
+    
     public func createCategory(with category: TrackerCategory) {
         guard let categoryEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerCategoryEntity", in: context) else {
             print("Failed to make categoryEntityDescription")
@@ -36,37 +38,31 @@ final class TrackerCategoryStore {
         appDelegate.saveContext()
     }
     
-    public func fetchCategories() -> [TrackerCategory] {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerCategoryEntity")
-        
-        do {
-            if let categoryEntities = try context.fetch(fetchRequest) as? [TrackerCategoryEntity] {
-                return categoryEntities.compactMap { entity in
-                    guard let title = entity.title,
-                          let trackerEntities = entity.trackers?.allObjects as? [TrackerEntity] else {
-                        return nil
-                    }
-                    
-                    let trackers = trackerEntities.compactMap { trackerEntity in
-                        if let id = trackerEntity.id,
-                           let title = trackerEntity.title,
-                           let color = trackerEntity.color,
-                           let emoji = trackerEntity.emoji,
-                           let schedule = trackerEntity.schedule as? [Weekday] {
-                            return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
-                        } else {
-                            return nil
-                        }
-                    }
-                    
-                    return TrackerCategory(title: title, trackers: trackers)
-                }
-            }
-        } catch {
-            print("Ошибка при загрузке категорий: \(error.localizedDescription)")
+    var categories: [TrackerCategory] {
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
         }
         
-        return []
+        return fetchedObjects.compactMap { entity in
+            guard let title = entity.title,
+                  let trackerEntities = entity.trackers?.allObjects as? [TrackerEntity] else {
+                return nil
+            }
+            
+            let trackers = trackerEntities.compactMap { trackerEntity in
+                if let id = trackerEntity.id,
+                   let title = trackerEntity.title,
+                   let color = trackerEntity.color,
+                   let emoji = trackerEntity.emoji,
+                   let schedule = trackerEntity.schedule as? [Weekday] {
+                    return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
+                } else {
+                    return nil
+                }
+            }
+            
+            return TrackerCategory(title: title, trackers: trackers)
+        }
     }
 
 
@@ -140,8 +136,8 @@ final class TrackerCategoryStore {
         return nil
     }
     
-    public func filterTrackers(for date: Date) -> [TrackerCategory] {
-        let categories = fetchCategories()
+    public func filterCategories(for date: Date) -> [TrackerCategory] {
+        let categories = categories
         guard let selectedWeekday = Weekday.fromDate(date) else {return []}
         
         var filteredCategories: [TrackerCategory] = []

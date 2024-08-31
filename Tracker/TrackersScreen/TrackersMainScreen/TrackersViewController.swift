@@ -151,7 +151,7 @@ final class TrackersViewController: UIViewController {
     
     private func updateUI() {
         guard let selectedDate = selectedDate else { return }
-        if trackerCategoryStore.filterTrackers(for: selectedDate).isEmpty {
+        if trackerCategoryStore.filterCategories(for: selectedDate).isEmpty {
             emptyStateView.isHidden = false
             collectionView.isHidden = true
         } else {
@@ -249,19 +249,19 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     ///Количество секций
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard let selectedDate = selectedDate else { return 0}
-        return trackerCategoryStore.filterTrackers(for: selectedDate).count
+        return trackerCategoryStore.filterCategories(for: selectedDate).count
     }
     /// Количество элементов в секции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let selectedDate = selectedDate else { return 0 }
-        return trackerCategoryStore.filterTrackers(for: selectedDate)[section].trackers.count
+        return trackerCategoryStore.filterCategories(for: selectedDate)[section].trackers.count
     }
     
     /// Настраиваем ячейку
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as? TrackerCell else { return TrackerCell() }
         guard let selectedDate = selectedDate else { return cell}
-        let tracker = trackerCategoryStore.filterTrackers(for: selectedDate)[indexPath.section].trackers[indexPath.item]
+        let tracker = trackerCategoryStore.filterCategories(for: selectedDate)[indexPath.section].trackers[indexPath.item]
         cell.configure(with: tracker, on: selectedDate)
         cell.trackersVC = self
         return cell
@@ -269,7 +269,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as? TrackersHeaderView else { return TrackersHeaderView() }
-        headerView.label.text = trackerCategoryStore.fetchCategories()[indexPath.section].title
+        headerView.label.text = trackerCategoryStore.categories[indexPath.section].title
         return headerView
     }
     

@@ -94,13 +94,13 @@ final class ChooseCategoryViewController: UIViewController {
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let count = trackersCategoryStore.fetchCategories().count
+        let count = trackersCategoryStore.categories.count
         return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = trackersCategoryStore.fetchCategories()[indexPath.row].title
+        cell.textLabel?.text = trackersCategoryStore.categories[indexPath.row].title
         cell.layer.cornerRadius = 16
         cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "background")
@@ -119,7 +119,7 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let choosenCategory = trackersCategoryStore.fetchCategories()[indexPath.row]
+        let choosenCategory = trackersCategoryStore.categories[indexPath.row]
         print("Выбрана категория: \(choosenCategory.title)")
         
         isSelectedArray[indexPath.row].toggle()
