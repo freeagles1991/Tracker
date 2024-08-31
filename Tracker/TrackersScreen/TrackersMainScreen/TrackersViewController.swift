@@ -187,8 +187,10 @@ final class TrackersViewController: UIViewController {
 
     
     @objc private func createNewTracker() {
+        let navigationController = UINavigationController(rootViewController: chooseTrackerTypeVC)
+        navigationController.setNavigationBarHidden(true, animated: false)
          chooseTrackerTypeVC.trackersVC = self
-        present( chooseTrackerTypeVC, animated: true)
+        present( navigationController, animated: true)
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {

@@ -98,6 +98,8 @@ final class CreateNewTrackerViewController: UIViewController {
         view.backgroundColor = .white
         view.addTapGestureToHideKeyboard()
         
+        closeChooseCategoryScreen()
+
         chooseCategoryVC.delegate = self
         scheduleScreenVC.delegate = self
         
@@ -478,10 +480,7 @@ final class CreateNewTrackerViewController: UIViewController {
     @objc private func createButtonTapped(_ sender: UIButton) {
         createNewTracker()
         
-        self.dismiss(animated: true) { [weak self] in
-            guard let delegate = self?.delegate else { return }
-            delegate.dismiss(animated: false, completion: nil)
-        }
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     @objc private func cancelButtonTapped(_ sender: UIButton) {
@@ -490,6 +489,17 @@ final class CreateNewTrackerViewController: UIViewController {
     
     @objc private func textFieldDidChange() {
         updateCreateButtonState()
+    }
+    
+    private func closeChooseCategoryScreen() {
+        if let navigationController = self.navigationController {
+            var viewControllers = navigationController.viewControllers
+
+            if viewControllers.count > 1 {
+                viewControllers.remove(at: viewControllers.count - 2)
+                navigationController.viewControllers = viewControllers
+            }
+        }
     }
     
     private func updateCreateButtonState() {
