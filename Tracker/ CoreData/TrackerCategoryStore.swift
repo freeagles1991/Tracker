@@ -9,9 +9,9 @@ import Foundation
 import CoreData
 import UIKit
 
-final class TrackerCategoryStore {
+final class TrackerCategoryStore: NSObject {
     static let shared = TrackerCategoryStore()
-    private init() {}
+    private override init() {}
     
     private var appDelegate: AppDelegate {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -24,7 +24,7 @@ final class TrackerCategoryStore {
         appDelegate.persistentContainer.viewContext
     }
     
-    private let fetchedResultsController = FetchedResultsControllerManager.shared.fetchedResultsController
+    var fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>?
     
     public func createCategory(with category: TrackerCategory) {
         guard let categoryEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerCategoryEntity", in: context) else {
@@ -36,6 +36,28 @@ final class TrackerCategoryStore {
         categoryEntity.title = category.title
         
         appDelegate.saveContext()
+    }
+    
+    // Настраиваем FRC
+    func setupFetchedResultsController() {
+        let fetchRequest: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        guard let fetchedResultsController else { return }
+        
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("Failed to fetch data: \(error)")
+        }
     }
     
     var categories: [TrackerCategory] {
@@ -156,5 +178,37 @@ final class TrackerCategoryStore {
         return filteredCategories
     }
     
+}
+
+
+extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
+    // MARK: - NSFetchedResultsControllerDelegate
+
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        // Prepare UI for updates
+    }
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            // Handle insertion
+            break
+        case .delete:
+            // Handle deletion
+            break
+        case .update:
+            // Handle update
+            break
+        case .move:
+            // Handle move
+            break
+        @unknown default:
+            fatalError("Unknown change type encountered.")
+        }
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        // Finalize UI updates
+    }
 }
 

@@ -48,4 +48,10 @@ struct Tracker: Identifiable, Codable, Equatable {
         self.emoji = emoji
         self.schedule = schedule
     }
+    
+    static let defaultTracker: Tracker = Tracker(
+        title: "Default Title",
+        color: "Default Color",
+        emoji: "😊",
+        schedule: Weekday.allCases)
 }
