@@ -53,7 +53,7 @@ final class TrackerStore: NSObject {
             let title = trackerEntity.title,
             let color = trackerEntity.color,
             let emoji = trackerEntity.emoji,
-            let schedule = trackerEntity.schedule as? [Weekday]
+            let schedule = trackerEntity.scheduleArray
         else {
             return nil
         }
@@ -70,8 +70,8 @@ final class TrackerStore: NSObject {
         guard let selectedWeekday = Weekday.fromDate(date) else { return }
         
         // Фильтруем по дню недели
-        let predicate = NSPredicate(format: "ANY trackers.schedule CONTAINS %@", selectedWeekday.rawValue)
-        fetchRequest.predicate = predicate
+        let predicate = NSPredicate(format: "scheduleString CONTAINS[cd] %@", selectedWeekday.rawValue)
+            fetchRequest.predicate = predicate
         
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -111,7 +111,7 @@ final class TrackerStore: NSObject {
         trackerEntity.id = tracker.id
         trackerEntity.title = tracker.title
         trackerEntity.emoji = tracker.emoji
-        trackerEntity.schedule = tracker.schedule as NSObject
+        trackerEntity.scheduleArray = tracker.schedule
         trackerEntity.color = tracker.color
         
         trackerEntity.category = category

@@ -76,7 +76,7 @@ final class TrackerCategoryStore: NSObject {
                    let title = trackerEntity.title,
                    let color = trackerEntity.color,
                    let emoji = trackerEntity.emoji,
-                   let schedule = trackerEntity.schedule as? [Weekday] {
+                   let schedule = trackerEntity.scheduleArray {
                     return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
                 } else {
                     return nil
@@ -108,7 +108,7 @@ final class TrackerCategoryStore: NSObject {
                    let title = trackerEntity.title,
                    let color = trackerEntity.color,
                    let emoji = trackerEntity.emoji,
-                   let schedule = trackerEntity.schedule as? [Weekday] {
+                   let schedule = trackerEntity.scheduleArray {
                     return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
                 } else {
                     return nil
