@@ -104,7 +104,6 @@ final class CreateNewCategoryViewController: UIViewController {
         let newCategory = TrackerCategory(title: categoryName, trackers: [])
         
         trackersCategoryStore.createCategory(with: newCategory)
-        delegate?.updateTableView()
         
         dismiss(animated: true, completion: nil)
     }

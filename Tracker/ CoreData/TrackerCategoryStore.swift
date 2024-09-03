@@ -16,6 +16,8 @@ final class TrackerCategoryStore: NSObject {
         setupFetchedResultsController()
     }
     
+    var chooseCategoryVC: ChooseCategoryViewController?
+    
     private var appDelegate: AppDelegate {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
             fatalError("UIApplication.shared.delegate is not of type AppDelegate")
@@ -28,6 +30,47 @@ final class TrackerCategoryStore: NSObject {
     }
     
     var fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>?
+    
+    var categories: [TrackerCategory] {
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { entity in
+            return convertEntityToTrackerCategory(entity)
+        }
+    }
+    
+    func numberOfRowsInSection(_ section: Int) -> Int {
+        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
+    }
+
+    func object(at indexPath: IndexPath) -> TrackerCategory? {
+        guard let fetchedResultsController else { return TrackerCategory.defaultTrackerCategory }
+        let trackerCategoryEntity = fetchedResultsController.object(at: indexPath)
+        return convertEntityToTrackerCategory(trackerCategoryEntity)
+    }
+    
+    private func convertEntityToTrackerCategory(_ trackerCategoryEntity: TrackerCategoryEntity) -> TrackerCategory? {
+        guard let title = trackerCategoryEntity.title,
+              let trackerEntities = trackerCategoryEntity.trackers?.allObjects as? [TrackerEntity] else {
+            return nil
+        }
+        
+        let trackers = trackerEntities.compactMap { trackerEntity in
+            if let id = trackerEntity.id,
+               let title = trackerEntity.title,
+               let color = trackerEntity.color,
+               let emoji = trackerEntity.emoji,
+               let schedule = trackerEntity.scheduleArray {
+                return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
+            } else {
+                return nil
+            }
+        }
+        
+        return TrackerCategory(title: title, trackers: trackers)
+    }
     
     // Настраиваем FRC
     func setupFetchedResultsController() {
@@ -63,35 +106,6 @@ final class TrackerCategoryStore: NSObject {
         
         appDelegate.saveContext()
     }
-    
-    var categories: [TrackerCategory] {
-        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
-            return []
-        }
-        
-        return fetchedObjects.compactMap { entity in
-            guard let title = entity.title,
-                  let trackerEntities = entity.trackers?.allObjects as? [TrackerEntity] else {
-                return nil
-            }
-            
-            let trackers = trackerEntities.compactMap { trackerEntity in
-                if let id = trackerEntity.id,
-                   let title = trackerEntity.title,
-                   let color = trackerEntity.color,
-                   let emoji = trackerEntity.emoji,
-                   let schedule = trackerEntity.scheduleArray {
-                    return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
-                } else {
-                    return nil
-                }
-            }
-            
-            return TrackerCategory(title: title, trackers: trackers)
-        }
-    }
-
-
     
     public func fetchCategory(byTitle title: String) -> TrackerCategory? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerCategoryEntity")
@@ -163,18 +177,23 @@ final class TrackerCategoryStore: NSObject {
     }
 }
 
-
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     // MARK: - NSFetchedResultsControllerDelegate
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        // Prepare UI for updates
+        chooseCategoryVC?.tableView.performBatchUpdates(nil)
     }
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
         switch type {
         case .insert:
-            // Handle insertion
+            if let newIndexPath {
+                chooseCategoryVC?.tableView.insertRows(at: [newIndexPath], with: .bottom)
+            }
             break
         case .delete:
             // Handle deletion
@@ -191,7 +210,7 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     }
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        // Finalize UI updates
+        chooseCategoryVC?.tableView.performBatchUpdates(nil)
     }
 }
 

@@ -15,4 +15,8 @@ struct TrackerCategory: Codable {
         self.title = title
         self.trackers = trackers
     }
+    
+    static let defaultTrackerCategory: TrackerCategory = TrackerCategory(
+        title: "DefaultCategory",
+        trackers: [])
 }

@@ -17,7 +17,7 @@ final class ChooseCategoryViewController: UIViewController {
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Категория"
     
-    private var tableView = UITableView()
+    var tableView = UITableView()
     
     private var addCategoryButton = UIButton()
     private let addCategoryButtonString: String = "Добавить категорию"
@@ -28,6 +28,7 @@ final class ChooseCategoryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        trackersCategoryStore.chooseCategoryVC = self
         createNewCategoryVC.delegate = self
         
         setupScreenTitle()
@@ -94,13 +95,13 @@ final class ChooseCategoryViewController: UIViewController {
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let count = trackersCategoryStore.categories.count
+        let count = trackersCategoryStore.numberOfRowsInSection(section)
         return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = trackersCategoryStore.categories[indexPath.row].title
+        cell.textLabel?.text = trackersCategoryStore.object(at: indexPath)?.title
         cell.layer.cornerRadius = 16
         cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "background")
@@ -127,9 +128,5 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         
         delegate?.updateCategory(choosenCategory)
         dismiss(animated: true, completion: nil)
-    }
-    
-    func updateTableView() {
-        tableView.reloadData()
     }
 }
