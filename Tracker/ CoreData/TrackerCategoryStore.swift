@@ -11,7 +11,10 @@ import UIKit
 
 final class TrackerCategoryStore: NSObject {
     static let shared = TrackerCategoryStore()
-    private override init() {}
+    private override init() {
+        super.init()
+        setupFetchedResultsController()
+    }
     
     private var appDelegate: AppDelegate {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -25,18 +28,6 @@ final class TrackerCategoryStore: NSObject {
     }
     
     var fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>?
-    
-    public func createCategory(with category: TrackerCategory) {
-        guard let categoryEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerCategoryEntity", in: context) else {
-            print("Failed to make categoryEntityDescription")
-            return
-        }
-        
-        let categoryEntity = TrackerCategoryEntity(entity: categoryEntityDescription, insertInto: context)
-        categoryEntity.title = category.title
-        
-        appDelegate.saveContext()
-    }
     
     // Настраиваем FRC
     func setupFetchedResultsController() {
@@ -58,6 +49,19 @@ final class TrackerCategoryStore: NSObject {
         } catch {
             print("Failed to fetch data: \(error)")
         }
+    }
+    
+    public func createCategory(with category: TrackerCategory) {
+        guard let categoryEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerCategoryEntity", in: context) else {
+            print("Failed to make categoryEntityDescription")
+            return
+        }
+        
+        let categoryEntity = TrackerCategoryEntity(entity: categoryEntityDescription, insertInto: context)
+        categoryEntity.title = category.title
+        categoryEntity.trackers = []
+        
+        appDelegate.saveContext()
     }
     
     var categories: [TrackerCategory] {
@@ -157,27 +161,6 @@ final class TrackerCategoryStore: NSObject {
         }
         return nil
     }
-    
-    public func filterCategories(for date: Date) -> [TrackerCategory] {
-        let categories = categories
-        guard let selectedWeekday = Weekday.fromDate(date) else {return []}
-        
-        var filteredCategories: [TrackerCategory] = []
-        
-        for category in categories {
-            let filteredTrackers = category.trackers.filter { tracker in
-                return tracker.schedule.contains(selectedWeekday)
-            }
-            
-            if !filteredTrackers.isEmpty {
-                let filteredCategory = TrackerCategory(title: category.title, trackers: filteredTrackers)
-                filteredCategories.append(filteredCategory)
-            }
-        }
-        
-        return filteredCategories
-    }
-    
 }
 
 
