@@ -70,7 +70,7 @@ final class TrackerStore: NSObject {
         guard let selectedWeekday = Weekday.fromDate(date) else { return }
         
         // Фильтруем по дню недели
-        let predicate = NSPredicate(format: "scheduleString CONTAINS[cd] %@", selectedWeekday.rawValue)
+        let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
             fetchRequest.predicate = predicate
         
         fetchedResultsController = NSFetchedResultsController(
