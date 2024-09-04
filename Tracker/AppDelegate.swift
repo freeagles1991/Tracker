@@ -10,11 +10,35 @@ import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+    let fileManager = FileManager.default
+    
+    func deleteCoreDataStore() {
+        if let storeURL = self.persistentContainer.persistentStoreDescriptions.first?.url {
+            do {
+                try fileManager.removeItem(at: storeURL)
+                print("Database deleted successfully.")
+            } catch {
+                print("Failed to delete database: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func resetPersistentStore() {
+        let persistentStoreCoordinator = persistentContainer.persistentStoreCoordinator
+        for store in persistentStoreCoordinator.persistentStores {
+            do {
+                try persistentStoreCoordinator.remove(store)
+                try fileManager.removeItem(at: store.url!)
+                try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: store.url, options: nil)
+            } catch {
+                print("Failed to reset persistent store: \(error.localizedDescription)")
+            }
+        }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        //deleteCoreDataStore()
+        //resetPersistentStore()
         return true
     }
 
