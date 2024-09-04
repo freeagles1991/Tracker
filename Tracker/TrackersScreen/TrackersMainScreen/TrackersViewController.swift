@@ -20,7 +20,7 @@ final class TrackersViewController: UIViewController {
 
     private var emptyStateView = UIView()
     private var searchBar = UISearchBar()
-    private var collectionView: UICollectionView = {
+    var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 9
@@ -55,7 +55,10 @@ final class TrackersViewController: UIViewController {
         }
         
         selectedDate = Date()
+        guard let selectedDate else { return }
+        trackerStore.setupFetchedResultsController(for: selectedDate)
         
+        trackerStore.trackersVC = self
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -150,32 +153,14 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateUI() {
-        guard let selectedDate = selectedDate else { return }
-        trackerStore.setupFetchedResultsController(for: selectedDate)
-        if trackerStore.filteredTrackers.isEmpty {
+        guard let objects = trackerStore.fetchedResultsController?.fetchedObjects else { return }
+        if objects.isEmpty {
             emptyStateView.isHidden = false
             collectionView.isHidden = true
         } else {
             emptyStateView.isHidden = true
             collectionView.isHidden = false
         }
-    }
-    
-    private func filterTrackers(for weekday: Weekday, from categories: [TrackerCategory]) -> [TrackerCategory] {
-        var filteredCategories: [TrackerCategory] = []
-        
-        for category in categories {
-            let filteredTrackers = category.trackers.filter { tracker in
-                return tracker.schedule.contains(weekday)
-            }
-            
-            if !filteredTrackers.isEmpty {
-                let filteredCategory = TrackerCategory(title: category.title, trackers: filteredTrackers)
-                filteredCategories.append(filteredCategory)
-            }
-        }
-        
-        return filteredCategories
     }
     
     private func handleNotification(_ notification: Notification) {
@@ -196,6 +181,8 @@ final class TrackersViewController: UIViewController {
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         self.selectedDate = sender.date
+        guard let selectedDate else {return}
+        trackerStore.setupFetchedResultsController(for: selectedDate)
         updateUI()
         collectionView.reloadData()
     }
@@ -249,14 +236,10 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     ///Количество секций
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let selectedDate = selectedDate else { return 0}
-        trackerStore.setupFetchedResultsController(for: selectedDate)
         return trackerStore.numberOfSections
     }
     /// Количество элементов в секции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let selectedDate = selectedDate else { return 0 }
-        trackerStore.setupFetchedResultsController(for: selectedDate)
         return trackerStore.numberOfRowsInSection(section)
     }
     

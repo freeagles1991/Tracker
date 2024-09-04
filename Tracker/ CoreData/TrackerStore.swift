@@ -21,6 +21,7 @@ final class TrackerStore: NSObject {
     }
     
     var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
+    var trackersVC: TrackersViewController?
     
     private var context: NSManagedObjectContext {
         appDelegate.persistentContainer.viewContext
@@ -80,8 +81,6 @@ final class TrackerStore: NSObject {
             cacheName: nil
         )
         guard let fetchedResultsController else { return }
-        
-        fetchedResultsController.delegate = self
         
         do {
             try fetchedResultsController.performFetch()
@@ -158,34 +157,4 @@ final class TrackerStore: NSObject {
         }
     }
     
-}
-extension TrackerStore: NSFetchedResultsControllerDelegate {
-    // MARK: - NSFetchedResultsControllerDelegate
-
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        // Prepare UI for updates
-    }
-
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            // Handle insertion
-            break
-        case .delete:
-            // Handle deletion
-            break
-        case .update:
-            // Handle update
-            break
-        case .move:
-            // Handle move
-            break
-        @unknown default:
-            fatalError("Unknown change type encountered.")
-        }
-    }
-
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        // Finalize UI updates
-    }
 }

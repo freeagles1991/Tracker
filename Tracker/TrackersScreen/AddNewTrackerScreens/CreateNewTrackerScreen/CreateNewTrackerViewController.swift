@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 final class CreateNewTrackerViewController: UIViewController {
+    private let trackerStore = TrackerStore.shared
+    private let trackerCategoryStore = TrackerCategoryStore.shared
     weak var trackersVC: TrackersViewController?
     private let chooseCategoryVC = ChooseCategoryViewController()
     private let scheduleScreenVC = ScheduleScreenViewController()
@@ -484,7 +486,7 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     @objc private func textFieldDidChange() {
