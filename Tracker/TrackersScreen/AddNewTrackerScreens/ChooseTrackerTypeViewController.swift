@@ -10,8 +10,6 @@ import UIKit
 
 final class  ChooseTrackerTypeViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
-    private let createNewHabitVC = CreateNewTrackerViewController()
-    private let createNewEventVC = CreateNewTrackerViewController()
     
     private var screenTitle: UILabel?
     private let screenTitleString = "Создание трекера"
@@ -99,6 +97,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
         if let navigationController = self.navigationController {
+            let createNewHabitVC = CreateNewTrackerViewController()
             createNewHabitVC.delegate = self
             createNewHabitVC.trackersVC = self.trackersVC
             createNewHabitVC.configureTrackerType(isRegularEvent: true)
@@ -109,6 +108,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     @objc private func eventButtonTapped(_ sender: UIButton) {
         if let navigationController = self.navigationController {
+            let createNewEventVC = CreateNewTrackerViewController()
             createNewEventVC.delegate = self
             createNewEventVC.trackersVC = self.trackersVC
             createNewEventVC.configureTrackerType(isRegularEvent: false)

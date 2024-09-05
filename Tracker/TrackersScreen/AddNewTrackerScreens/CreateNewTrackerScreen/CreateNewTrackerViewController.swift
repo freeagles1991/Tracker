@@ -121,6 +121,8 @@ final class CreateNewTrackerViewController: UIViewController {
         }
     }
     
+    //MARK: Верстка
+    
     private func setupScreenTitle() {
         let label = UILabel()
         let font = UIFont(name: "SFProText-Medium", size: 16)
@@ -401,6 +403,12 @@ final class CreateNewTrackerViewController: UIViewController {
     private func setupScrollViewBottomAnchor() {
         let bottomConstraint = contentView.bottomAnchor.constraint(equalTo: createButton.bottomAnchor, constant: 20)
         bottomConstraint.isActive = true
+    }
+    
+    //MARK: Логика
+    
+    private func resetScreenFields() {
+        
     }
     
     private func convertWeekdaysToString(_ selectedWeekdays: Set<Weekday>) -> String {
