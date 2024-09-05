@@ -12,8 +12,6 @@ final class CreateNewTrackerViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
     private let trackerCategoryStore = TrackerCategoryStore.shared
     weak var trackersVC: TrackersViewController?
-    private let chooseCategoryVC = ChooseCategoryViewController()
-    private let scheduleScreenVC = ScheduleScreenViewController()
     weak var delegate: ChooseTrackerTypeViewController?
     
     private var selectedCategory: TrackerCategory?
@@ -101,9 +99,6 @@ final class CreateNewTrackerViewController: UIViewController {
         view.addTapGestureToHideKeyboard()
         
         closeChooseCategoryScreen()
-
-        chooseCategoryVC.delegate = self
-        scheduleScreenVC.delegate = self
         
         setupScreenTitle()
         setupScrollView()
@@ -479,11 +474,16 @@ final class CreateNewTrackerViewController: UIViewController {
         self.isRegularEvent = isRegularEvent
     }
     
+    //MARK: Кнопки
     @objc private func categoryButtonTapped(_ sender: UIButton) {
+        let chooseCategoryVC = ChooseCategoryViewController()
+        chooseCategoryVC.delegate = self
         present(chooseCategoryVC, animated: true)
     }
     
     @objc private func scheduleButtonTapped(_ sender: UIButton) {
+        let scheduleScreenVC = ScheduleScreenViewController()
+        scheduleScreenVC.delegate = self
         present(scheduleScreenVC, animated: true)
     }
     

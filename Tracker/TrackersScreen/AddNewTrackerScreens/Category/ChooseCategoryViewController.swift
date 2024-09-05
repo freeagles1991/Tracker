@@ -10,7 +10,6 @@ import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
     private let trackersCategoryStore = TrackerCategoryStore.shared
-    let createNewCategoryVC = CreateNewCategoryViewController()
     
     weak var delegate: CreateNewTrackerViewController?
     
@@ -29,7 +28,6 @@ final class ChooseCategoryViewController: UIViewController {
         view.backgroundColor = .white
         
         trackersCategoryStore.chooseCategoryVC = self
-        createNewCategoryVC.delegate = self
         
         setupScreenTitle()
         setupTableView()
@@ -89,6 +87,7 @@ final class ChooseCategoryViewController: UIViewController {
     }
     
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
+        let createNewCategoryVC = CreateNewCategoryViewController()
         present(createNewCategoryVC, animated: true)
     }
 }
