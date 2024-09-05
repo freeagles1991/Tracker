@@ -117,28 +117,12 @@ final class CreateNewTrackerViewController: UIViewController {
     }
     
     //MARK: Верстка
-    
-    private func setupScreenTitle() {
-        let label = UILabel()
-        let font = UIFont(name: "SFProText-Medium", size: 16)
-        label.text = screenTitleString
-        label.textColor = .black
-        label.font = font
-        label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
-        
-        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 22).isActive = true
-        label.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        
-        self.screenTitle = label
-    }
-    
     private func setupScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
@@ -155,6 +139,21 @@ final class CreateNewTrackerViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
         
+    }
+    
+    private func setupScreenTitle() {
+        let label = UILabel()
+        let font = UIFont(name: "SFProText-Medium", size: 16)
+        label.text = screenTitleString
+        label.textColor = .black
+        label.font = font
+        label.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(label)
+        
+        label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22).isActive = true
+        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        
+        self.screenTitle = label
     }
     
     private func setupTextField() {
@@ -178,7 +177,7 @@ final class CreateNewTrackerViewController: UIViewController {
         
         
         NSLayoutConstraint.activate([
-            textField.topAnchor.constraint(equalTo: contentView.topAnchor),
+            textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75)
