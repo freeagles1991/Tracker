@@ -38,10 +38,6 @@ final class TrackersHeaderView: UICollectionReusableView {
         super.layoutSubviews()
         
         layoutIfNeeded()
-        let availableWidth = frame.width
-        
-        //let fontSizeTitle: CGFloat = availableWidth > 167 ? 22 : 19
-        //label.font = UIFont(name: "SFProText-Bold", size: fontSizeTitle)
     }
 }
 

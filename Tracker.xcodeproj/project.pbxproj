@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		321586BA2C82309600452B99 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 321586B92C822D2000452B99 /* SF-Pro-Text-Bold.otf */; };
-		321586BC2C8362F400452B99 /* FetchedResultsControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586BB2C8362F400452B99 /* FetchedResultsControllerManager.swift */; };
 		321586C12C873F2000452B99 /* TrackerEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586BF2C873F2000452B99 /* TrackerEntity+CoreDataClass.swift */; };
 		321586C22C873F2000452B99 /* TrackerEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586C02C873F2000452B99 /* TrackerEntity+CoreDataProperties.swift */; };
 		321586C52C87417100452B99 /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586C42C87417100452B99 /* Weekday.swift */; };
@@ -69,7 +68,6 @@
 
 /* Begin PBXFileReference section */
 		321586B92C822D2000452B99 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
-		321586BB2C8362F400452B99 /* FetchedResultsControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerManager.swift; sourceTree = "<group>"; };
 		321586BF2C873F2000452B99 /* TrackerEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		321586C02C873F2000452B99 /* TrackerEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		321586C42C87417100452B99 /* Weekday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weekday.swift; sourceTree = "<group>"; };
@@ -338,7 +336,6 @@
 				32B013462C7A4626004C4969 /* TrackerStore.swift */,
 				32B013482C7A4634004C4969 /* TrackerCategoryStore.swift */,
 				32B0134A2C7A4640004C4969 /* TrackerRecordStore.swift */,
-				321586BB2C8362F400452B99 /* FetchedResultsControllerManager.swift */,
 			);
 			path = " CoreData";
 			sourceTree = "<group>";
@@ -505,7 +502,6 @@
 				32C3B6B62C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift in Sources */,
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
 				32C3B6AF2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift in Sources */,
-				321586BC2C8362F400452B99 /* FetchedResultsControllerManager.swift in Sources */,
 				32B013472C7A4626004C4969 /* TrackerStore.swift in Sources */,
 				32A45BB32C5EAC34002A97F5 /* TrackerCategory.swift in Sources */,
 				32A45BB72C5FE326002A97F5 /* ChooseTrackerTypeViewController.swift in Sources */,

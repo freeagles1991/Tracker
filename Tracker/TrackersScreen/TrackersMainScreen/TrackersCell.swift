@@ -137,16 +137,6 @@ final class TrackerCell: UICollectionViewCell {
         contentView.layoutIfNeeded()
         let availableWidth = contentView.frame.width
         
-        //let fontSizeTitle: CGFloat = availableWidth > 167 ? 16 : 14
-        //titleLabel.font = UIFont(name: "SFProText-Medium", size: fontSizeTitle)
-        
-        //let fontSizeDuration: CGFloat = availableWidth > 167 ? 14 : 12
-        //durationLabel.font = UIFont(name: "SFProText-Medium", size: fontSizeDuration)
-        
-        
-        //let fontSizeEmoji: CGFloat = availableWidth > 167 ? 18 : 16
-        //emojiLabel.font = UIFont.systemFont(ofSize: fontSizeEmoji)
-        
         completeButton.layer.cornerRadius = completeButton.bounds.height / 2
         completeButton.layer.masksToBounds = true
         
