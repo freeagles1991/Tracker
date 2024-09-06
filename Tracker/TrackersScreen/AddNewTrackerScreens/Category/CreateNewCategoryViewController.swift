@@ -104,6 +104,9 @@ final class CreateNewCategoryViewController: UIViewController {
         let newCategory = TrackerCategory(title: categoryName, trackers: [])
         
         trackersCategoryStore.createCategory(with: newCategory)
+        if let delegate {
+            delegate.loadData()
+        }
         
         dismiss(animated: true, completion: nil)
     }

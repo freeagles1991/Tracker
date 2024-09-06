@@ -16,12 +16,17 @@ final class ChooseCategoryViewController: UIViewController {
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Категория"
     
-    var tableView = UITableView()
+    private let scrollView = UIScrollView()
+    
+    let tableView = UITableView()
+    private let tableContainerView = UIView()
+    private var tableContainerViewHeightConstraint = NSLayoutConstraint()
     
     private var addCategoryButton = UIButton()
     private let addCategoryButtonString: String = "Добавить категорию"
     
-    private var isSelectedArray = [Bool](repeating: false, count: 7)
+    private var cellHeight: CGFloat = 75
+    private var cellCount: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +35,14 @@ final class ChooseCategoryViewController: UIViewController {
         trackersCategoryStore.chooseCategoryVC = self
         
         setupScreenTitle()
-        setupTableView()
         setupAddCategoryButton()
+        setupScrollView()
+        setupTableView()
+        
+        loadData()
+        
     }
+
     
     private func setupScreenTitle() {
         let label = UILabel()
@@ -41,29 +51,82 @@ final class ChooseCategoryViewController: UIViewController {
         label.textColor = .black
         label.font = font
         label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
+        scrollView.addSubview(label)
         
-        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 22).isActive = true
-        label.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 22).isActive = true
+        label.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        label.heightAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 0.06).isActive = true
         
         self.screenTitle = label
     }
     
+    private func setupScrollView() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: addCategoryButton.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+    }
+    
     private func setupTableView() {
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.isScrollEnabled = true
+        tableContainerView.layer.cornerRadius = 16
+        tableContainerView.clipsToBounds = true
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
-        view.addSubview(tableView)
+        scrollView.addSubview(tableContainerView)
+        tableContainerView.addSubview(tableView)
+        tableContainerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableContainerView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 30),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableContainerView.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 30),
+            tableContainerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            tableContainerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            //tableContainerView.heightAnchor.constraint(equalToConstant: 100),
+            
+            tableView.topAnchor.constraint(equalTo: tableContainerView.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: tableContainerView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: tableContainerView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: tableContainerView.bottomAnchor),
         ])
+        
+        tableContainerViewHeightConstraint = tableContainerView.heightAnchor.constraint(equalToConstant: 100)
+        tableContainerViewHeightConstraint.isActive = true
+    }
+    
+    func loadData() {
+
+        self.tableView.reloadData()
+
+        adjustTableViewHeight()
+    }
+
+    private func adjustTableViewHeight() {
+        // Обновляем компоновку таблицы
+        tableView.layoutIfNeeded()
+
+        // Рассчитываем высоту таблицы на основе ее содержимого
+        let tableHeight = cellHeight * CGFloat(cellCount)
+        let maxTableHeight: CGFloat = 500  // Например, максимальная высота для таблицы
+        let finalHeight = min(tableHeight, maxTableHeight)
+
+        // Обновляем constraint высоты контейнера
+        tableContainerViewHeightConstraint.constant = finalHeight
+        
+        // Применяем изменения
+        UIView.animate(withDuration: 0.1) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     private func setupAddCategoryButton(){
@@ -88,6 +151,7 @@ final class ChooseCategoryViewController: UIViewController {
     
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
         let createNewCategoryVC = CreateNewCategoryViewController()
+        createNewCategoryVC.delegate = self
         present(createNewCategoryVC, animated: true)
     }
 }
@@ -95,37 +159,31 @@ final class ChooseCategoryViewController: UIViewController {
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = trackersCategoryStore.numberOfRowsInSection(section)
+        cellCount = count
         return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
         cell.textLabel?.text = trackersCategoryStore.object(at: indexPath)?.title
-        cell.layer.cornerRadius = 16
-        cell.layer.masksToBounds = true
         cell.backgroundColor = UIColor(named: "background")
-        
-        if isSelectedArray[indexPath.row] {
-            cell.accessoryView = UIImageView(image: UIImage(systemName: "checkmark"))
-        } else {
-            cell.accessoryView = nil
-        }
-        
+        cell.accessoryView = nil
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return cellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let choosenCategory = trackersCategoryStore.categories[indexPath.row]
         print("Выбрана категория: \(choosenCategory.title)")
         
-        isSelectedArray[indexPath.row].toggle()
         tableView.reloadRows(at: [indexPath], with: .automatic)
         
         delegate?.updateCategory(choosenCategory)
         dismiss(animated: true, completion: nil)
     }
+    
 }
+

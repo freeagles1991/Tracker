@@ -30,6 +30,7 @@ final class ScheduleScreenViewController: UIViewController {
         setupScreenTitle()
         setupDoneButton()
         setupTableView()
+    
     }
     
     private func setupScreenTitle() {
