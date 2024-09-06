@@ -97,7 +97,6 @@ final class CreateNewTrackerViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         view.addTapGestureToHideKeyboard()
-        
         closeChooseCategoryScreen()
         
         setupScreenTitle()
@@ -465,8 +464,9 @@ final class CreateNewTrackerViewController: UIViewController {
             "category": selectedCategory]
         NotificationCenter.default.post(name: notificationName, object: nil, userInfo: userInfo)
         
-        trackersVC?.addTracker(newTracker, toCategory: selectedCategory.title)
-        trackersVC?.updateCollectionViewWithNewTracker()
+        guard let trackersVC else { return }
+        trackersVC.addTracker(newTracker, toCategory: selectedCategory.title)
+        trackersVC.updateCollectionViewWithNewTracker()
     }
     
     func configureTrackerType(isRegularEvent: Bool) {

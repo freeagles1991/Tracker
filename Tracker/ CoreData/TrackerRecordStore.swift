@@ -48,7 +48,7 @@ final class TrackerRecordStore: NSObject {
     }
     
     public func fetchTrackerRecords(byID trackerID: UUID) -> [TrackerRecord] {
-        let predicate = NSPredicate(format: "trackerID == %@", trackerID as CVarArg)
+        let predicate = NSPredicate(format: "tracker.id == %@", trackerID as CVarArg)
         self.setupFetchedResultsController(predicate)
 
         
@@ -70,7 +70,7 @@ final class TrackerRecordStore: NSObject {
         }
         
         let predicate = NSPredicate(
-            format: "trackerID == %@ AND date >= %@ AND date < %@",
+            format: "tracker.id == %@ AND date >= %@ AND date < %@",
             trackerID as CVarArg, startOfDay as NSDate, endOfDay as NSDate
         )
         
@@ -87,7 +87,7 @@ final class TrackerRecordStore: NSObject {
         }
     }
     
-    public func createTrackerRecord(with tracker: Tracker, on date: Date) {
+    public func createTrackerRecord(with trackerEntity: TrackerEntity, on date: Date) {
         guard let recordEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerRecordEntity", in: context) else {
             print("Failed to make recordEntityDescription")
             return
@@ -95,9 +95,6 @@ final class TrackerRecordStore: NSObject {
         
         let recordEntity = TrackerRecordEntity(entity: recordEntityDescription, insertInto: context)
         recordEntity.date = date
-        recordEntity.trackerID = tracker.id
-        
-        guard let trackerEntity = TrackerStore.shared.fetchTrackerEntity(tracker.id) else { return }
         recordEntity.tracker = trackerEntity
         
         appDelegate.saveContext()
@@ -115,7 +112,7 @@ final class TrackerRecordStore: NSObject {
         print("Удаление записи - TrackerID \(trackerID), дата \(date)")
         
         fetchRequest.predicate = NSPredicate(
-            format: "trackerID == %@ AND date >= %@ AND date < %@",
+            format: "tracker.id == %@ AND date >= %@ AND date < %@",
             trackerID as CVarArg, startOfDay as NSDate, endOfDay as NSDate
         )
         

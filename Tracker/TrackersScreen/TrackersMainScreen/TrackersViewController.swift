@@ -10,6 +10,7 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
+    private var trackers: [Tracker]?
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
     private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
@@ -54,10 +55,6 @@ final class TrackersViewController: UIViewController {
             self?.handleNotification(notification)
         }
         
-        selectedDate = Date()
-        guard let selectedDate else { return }
-        trackerStore.setupFetchedResultsController(for: selectedDate)
-        
         trackerStore.trackersVC = self
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -67,7 +64,11 @@ final class TrackersViewController: UIViewController {
         setupEmptyStateView()
         setupCollectionView()
         
+        selectedDate = Date()
+        guard let selectedDate else { return }
+        trackers = trackerStore.fetchTrackers(by: selectedDate)
         updateUI()
+        collectionView.reloadData()
     }
     
     private func setupNavigationBar() {
@@ -153,8 +154,8 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateUI() {
-        guard let objects = trackerStore.fetchedResultsController?.fetchedObjects else { return }
-        if objects.isEmpty {
+        guard let trackers else { return }
+        if trackers.isEmpty {
             emptyStateView.isHidden = false
             collectionView.isHidden = true
         } else {
@@ -182,12 +183,14 @@ final class TrackersViewController: UIViewController {
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         self.selectedDate = sender.date
         guard let selectedDate else {return}
-        trackerStore.setupFetchedResultsController(for: selectedDate)
+        trackers = trackerStore.fetchTrackers(by: selectedDate)
         updateUI()
         collectionView.reloadData()
     }
     
     func updateCollectionViewWithNewTracker() {
+        guard let selectedDate else { return }
+        trackers = trackerStore.fetchTrackers(by: selectedDate)
         updateUI()
         collectionView.reloadData()
     }
@@ -202,7 +205,10 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addRecord(for tracker: Tracker, on date: Date) {
-        trackerRecordStore.createTrackerRecord(with: tracker, on: date)
+        guard let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id) else {
+            print("Запись трекера \(tracker.title) НЕ выполнена")
+            return }
+        trackerRecordStore.createTrackerRecord(with: trackerEntity, on: date)
         print("Запись трекера \(tracker.title) выполнена")
     }
     
@@ -236,10 +242,12 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     ///Количество секций
     func numberOfSections(in collectionView: UICollectionView) -> Int {
+        print(trackerStore.numberOfSections)
         return trackerStore.numberOfSections
     }
     /// Количество элементов в секции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(trackerStore.numberOfRowsInSection(section))
         return trackerStore.numberOfRowsInSection(section)
     }
     

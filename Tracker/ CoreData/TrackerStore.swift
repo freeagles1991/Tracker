@@ -20,8 +20,29 @@ final class TrackerStore: NSObject {
         return delegate
     }
     
-    var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
     var trackersVC: TrackersViewController?
+    var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
+    
+    // Настраиваем FRC
+    func setupFetchedResultsController(_ predicate: NSPredicate) {
+        let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        fetchRequest.predicate = predicate
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: "category.title",
+            cacheName: nil
+        )
+        guard let fetchedResultsController else { return }
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("Failed to fetch data: \(error)")
+        }
+    }
     
     private var context: NSManagedObjectContext {
         appDelegate.persistentContainer.viewContext
@@ -47,7 +68,6 @@ final class TrackerStore: NSObject {
         return trackerEntity.category?.title
     }
     
-    
     private func convertEntityToTracker(_ trackerEntity: TrackerEntity) -> Tracker? {
         guard
             let id = trackerEntity.id,
@@ -62,42 +82,35 @@ final class TrackerStore: NSObject {
         return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
     }
     
-    // Настраиваем FRC
-    func setupFetchedResultsController(for date: Date) {
-        let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    public func fetchTrackers(by date: Date) -> [Tracker]? {
+        guard let selectedWeekday = Weekday.fromDate(date) else { return [] }
         
-        // Предполагаем, что у вас есть метод Weekday.fromDate(date) и свойство schedule у TrackerEntity
-        guard let selectedWeekday = Weekday.fromDate(date) else { return }
-        
-        // Фильтруем по дню недели
         let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
-            fetchRequest.predicate = predicate
         
-        fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: "category.title",
-            cacheName: nil
-        )
-        guard let fetchedResultsController else { return }
+        self.setupFetchedResultsController(predicate)
         
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            print("Failed to fetch data: \(error)")
-        }
-    }
-    
-    //Загружаем трекеры
-    var filteredTrackers: [Tracker] {
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return []
         }
-
+        
         return fetchedObjects.compactMap { trackerEntity in
             convertEntityToTracker(trackerEntity)
         }
+    }
+
+    public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return TrackerEntity()
+        }
+
+        let trackerEntity = fetchedObjects.first
+
+        return trackerEntity
+
     }
     
     public func createTracker(with tracker: Tracker, in category: TrackerCategoryEntity) {
@@ -117,23 +130,6 @@ final class TrackerStore: NSObject {
         category.addToTrackers(trackerEntity)
         
         appDelegate.saveContext()
-    }
-    
-    public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerEntity")
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        
-        do {
-            guard let trackerEntities = try context.fetch(fetchRequest) as? [TrackerEntity],
-                  let trackerEntity = trackerEntities.first else {
-                return nil
-            }
-            return trackerEntity
-            
-        } catch {
-            print("Ошибка при загрузке трекера: \(error.localizedDescription)")
-        }
-        return nil
     }
     
     public func removeTracker(with id: UUID) {
