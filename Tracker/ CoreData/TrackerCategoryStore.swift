@@ -31,6 +31,28 @@ final class TrackerCategoryStore: NSObject {
     
     var fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>?
     
+    // Настраиваем FRC
+    func setupFetchedResultsController() {
+        let fetchRequest: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        guard let fetchedResultsController else { return }
+        
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("Failed to fetch data: \(error)")
+        }
+    }
+    
     var categories: [TrackerCategory] {
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return []
@@ -72,27 +94,7 @@ final class TrackerCategoryStore: NSObject {
         return TrackerCategory(title: title, trackers: trackers)
     }
     
-    // Настраиваем FRC
-    func setupFetchedResultsController() {
-        let fetchRequest: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        guard let fetchedResultsController else { return }
-        
-        fetchedResultsController.delegate = self
-        
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            print("Failed to fetch data: \(error)")
-        }
-    }
+
     
     public func createCategory(with category: TrackerCategory) {
         guard let categoryEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerCategoryEntity", in: context) else {

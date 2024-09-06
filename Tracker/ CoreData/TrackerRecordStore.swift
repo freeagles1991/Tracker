@@ -9,9 +9,9 @@ import Foundation
 import CoreData
 import UIKit
 
-final class TrackerRecordStore{
+final class TrackerRecordStore: NSObject {
     static let shared = TrackerRecordStore()
-    private init() {}
+    private override init() {}
     
     private var appDelegate: AppDelegate {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -24,50 +24,67 @@ final class TrackerRecordStore{
         appDelegate.persistentContainer.viewContext
     }
     
-    public func fetchTrackerRecords(byID trackerID: UUID) -> [TrackerRecord] {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
-        fetchRequest.predicate = NSPredicate(format: "trackerID == %@", trackerID as CVarArg)
+    var fetchedResultsController: NSFetchedResultsController<TrackerRecordEntity>?
+    
+    // Настраиваем FRC
+    func setupFetchedResultsController(_ predicate: NSPredicate) {
+        let fetchRequest: NSFetchRequest<TrackerRecordEntity> = TrackerRecordEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        fetchRequest.predicate = predicate
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        guard let fetchedResultsController else { return }
         
         do {
-            if let recordEntities = try context.fetch(fetchRequest) as? [TrackerRecordEntity] {
-                return recordEntities.compactMap { entity in
-                    guard let date = entity.date, let trackerEntity = entity.tracker, let id = trackerEntity.id else {
-                        return nil
-                    }
-                    return TrackerRecord(trackerID: id, date: date)
-                }
-            }
+            try fetchedResultsController.performFetch()
         } catch {
-            print("Ошибка при загрузке записи трекера: \(error.localizedDescription)")
+            print("Failed to fetch data: \(error)")
         }
-        return []
+    }
+    
+    public func fetchTrackerRecords(byID trackerID: UUID) -> [TrackerRecord] {
+        let predicate = NSPredicate(format: "trackerID == %@", trackerID as CVarArg)
+        self.setupFetchedResultsController(predicate)
+
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        return fetchedObjects.compactMap { entity in
+            guard let date = entity.date, let trackerEntity = entity.tracker, let id = trackerEntity.id else {
+                return nil
+            }
+            return TrackerRecord(trackerID: id, date: date)
+        }
     }
     
     func fetchTrackerRecords(byID trackerID: UUID, on date: Date) -> [TrackerRecord] {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerRecordEntity")
         let startOfDay = Calendar.current.startOfDay(for: date)
         guard let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay) else {
             fatalError("Не удалось получить конец дня")
         }
         
-        fetchRequest.predicate = NSPredicate(
+        let predicate = NSPredicate(
             format: "trackerID == %@ AND date >= %@ AND date < %@",
             trackerID as CVarArg, startOfDay as NSDate, endOfDay as NSDate
         )
         
-        do {
-            if let recordEntities = try context.fetch(fetchRequest) as? [TrackerRecordEntity] {
-                return recordEntities.compactMap { entity in
-                    guard let date = entity.date, let trackerEntity = entity.tracker, let trackerEntityID = trackerEntity.id else {
-                        return nil
-                    }
-                    return TrackerRecord(trackerID: trackerEntityID, date: date)
-                }
-            }
-        } catch {
-            print("Ошибка при загрузке записей трекера: \(error.localizedDescription)")
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
         }
-        return []
+        return fetchedObjects.compactMap { entity in
+            guard let date = entity.date, let trackerEntity = entity.tracker, let id = trackerEntity.id else {
+                return nil
+            }
+            return TrackerRecord(trackerID: id, date: date)
+        }
     }
     
     public func createTrackerRecord(with tracker: Tracker, on date: Date) {
@@ -120,3 +137,4 @@ final class TrackerRecordStore{
         }
     }
 }
+
