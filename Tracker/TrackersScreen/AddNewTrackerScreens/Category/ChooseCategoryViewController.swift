@@ -19,6 +19,7 @@ final class ChooseCategoryViewController: UIViewController {
     let tableView = UITableView()
     private let tableContainerView = UIView()
     private var tableContainerViewHeightConstraint = NSLayoutConstraint()
+    private var selectedIndexPath: IndexPath?
     
     private var addCategoryButton = UIButton()
     private let addCategoryButtonString: String = "Добавить категорию"
@@ -140,12 +141,12 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
-        cell.textLabel?.text = trackersCategoryStore.object(at: indexPath)?.title
-        cell.backgroundColor = UIColor(named: "background")
-        cell.accessoryView = nil
-        return cell
-    }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+            cell.textLabel?.text = trackersCategoryStore.object(at: indexPath)?.title
+            cell.backgroundColor = UIColor(named: "background")
+            cell.accessoryType = (indexPath == selectedIndexPath) ? .checkmark : .none
+            return cell
+        }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight
@@ -155,11 +156,17 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
         let choosenCategory = trackersCategoryStore.categories[indexPath.row]
         print("Выбрана категория: \(choosenCategory.title)")
         
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        if selectedIndexPath == indexPath {
+            selectedIndexPath = nil
+        } else {
+            selectedIndexPath = indexPath
+        }
+        tableView.reloadData()
         
         delegate?.updateCategory(choosenCategory)
         dismiss(animated: true, completion: nil)
     }
+
     
 }
 

@@ -52,6 +52,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     private func setupButton(with text: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.backgroundColor = .black
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16

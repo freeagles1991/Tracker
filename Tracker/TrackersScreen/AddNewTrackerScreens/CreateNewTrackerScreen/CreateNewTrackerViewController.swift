@@ -14,15 +14,20 @@ final class CreateNewTrackerViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
     weak var delegate: ChooseTrackerTypeViewController?
     
+    private let chooseCategoryVC = ChooseCategoryViewController()
+    private let scheduleScreenVC = ScheduleScreenViewController()
+    
     private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
+    
     let emojies: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
                            "😇", "😡", "🥶", "🤔", "🙌", "🍔",
                            "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var selectedEmoji: String?
     
     let colors: [String] = ["#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4",
-                            "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC",
+                            "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D",
+                            
                             "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"]
     private var selectedColor: String?
     
@@ -99,6 +104,9 @@ final class CreateNewTrackerViewController: UIViewController {
         view.addTapGestureToHideKeyboard()
         closeChooseCategoryScreen()
         
+        chooseCategoryVC.delegate = self
+        scheduleScreenVC.delegate = self
+        
         setupScreenTitle()
         setupScrollView()
         setupTextField()
@@ -122,7 +130,7 @@ final class CreateNewTrackerViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
@@ -189,7 +197,7 @@ final class CreateNewTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.contentHorizontalAlignment = .left
         button.backgroundColor = UIColor(named: "background")
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40)
@@ -475,14 +483,10 @@ final class CreateNewTrackerViewController: UIViewController {
     
     //MARK: Кнопки
     @objc private func categoryButtonTapped(_ sender: UIButton) {
-        let chooseCategoryVC = ChooseCategoryViewController()
-        chooseCategoryVC.delegate = self
         present(chooseCategoryVC, animated: true)
     }
     
     @objc private func scheduleButtonTapped(_ sender: UIButton) {
-        let scheduleScreenVC = ScheduleScreenViewController()
-        scheduleScreenVC.delegate = self
         present(scheduleScreenVC, animated: true)
     }
     

@@ -26,10 +26,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func resetPersistentStore() {
         let persistentStoreCoordinator = persistentContainer.persistentStoreCoordinator
         for store in persistentStoreCoordinator.persistentStores {
+            guard let storeURL = store.url else {
+                print("Store URL is nil, skipping this store.")
+                continue
+            }
             do {
                 try persistentStoreCoordinator.remove(store)
-                try fileManager.removeItem(at: store.url!)
-                try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: store.url, options: nil)
+                try fileManager.removeItem(at: storeURL)
+                try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
             } catch {
                 print("Failed to reset persistent store: \(error.localizedDescription)")
             }
