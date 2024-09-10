@@ -70,6 +70,7 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
     
     private func setupButton() {
         doneButton.setTitle(doneButtonString, for: .normal)
+        doneButton.addTarget(self, action: #selector(doneButtonTap(_:)), for: .touchUpInside)
         
         view.addSubview(doneButton)
         
@@ -82,10 +83,29 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         ])
     }
     
+    @objc private func doneButtonTap(_ sender: UIButton) {
+        transitionToMainScreen()
+    }
+    
+    private func transitionToMainScreen() {
+        guard let window = UIApplication.shared.connectedScenes
+                        .compactMap({ $0 as? UIWindowScene })
+                        .flatMap({ $0.windows })
+                        .first(where: { $0.isKeyWindow }) else { return }
+           
+            let tabBarController = TabBarController()
+           
+           window.rootViewController = tabBarController
+           
+           UIView.transition(with: window,
+                             duration: 0.5, // Длительность анимации
+                             options: .transitionFlipFromTop, // Анимация "плавного появления"
+                             animations: nil)
+       }
+    
     // MARK: - Public Methods
     
-    /// Setup pages for the PageViewController
-    /// - Parameter pages: Array of view controllers to be displayed
+
     func configure(with pages: [UIViewController]) {
         self.pages = pages
     }

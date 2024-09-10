@@ -20,11 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window.rootViewController = pageViewController
         
-//        let window = UIWindow(windowScene: windowScene)
-//        let tabBarController = TabBarController()
-//        
-//        window.rootViewController = tabBarController
-        
         self.window = window
         window.makeKeyAndVisible()
     }
