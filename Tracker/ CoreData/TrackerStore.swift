@@ -37,6 +37,8 @@ final class TrackerStore: NSObject {
         )
         guard let fetchedResultsController else { return }
         
+        fetchedResultsController.delegate = self
+        
         do {
             try fetchedResultsController.performFetch()
         } catch {
@@ -53,7 +55,7 @@ final class TrackerStore: NSObject {
        }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
+        fetchedResultsController?.sections?[section].numberOfObjects ?? 1
     }
 
     func object(at indexPath: IndexPath) -> Tracker? {
@@ -154,3 +156,44 @@ final class TrackerStore: NSObject {
     }
     
 }
+
+extension TrackerStore: NSFetchedResultsControllerDelegate {
+    // MARK: NSFetchedResultsControllerDelegate
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let collectionView = trackersVC?.collectionView else { return }
+        collectionView.performBatchUpdates(nil, completion: nil)
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        guard let collectionView = trackersVC?.collectionView else { return }
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                collectionView.insertItems(at: [newIndexPath])
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                collectionView.deleteItems(at: [indexPath])
+            }
+        case .update:
+            if let indexPath = indexPath {
+                collectionView.reloadItems(at: [indexPath])
+            }
+        case .move:
+            if let indexPath = indexPath, let newIndexPath = newIndexPath {
+                collectionView.moveItem(at: indexPath, to: newIndexPath)
+            }
+        @unknown default:
+            fatalError("Unexpected NSFetchedResultsChangeType")
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let collectionView = trackersVC?.collectionView else { return }
+        collectionView.performBatchUpdates(nil, completion: nil)
+    }
+    
+}
+
+

@@ -68,7 +68,7 @@ final class TrackersViewController: UIViewController {
         guard let selectedDate else { return }
         trackers = trackerStore.fetchTrackers(by: selectedDate)
         updateUI()
-        collectionView.reloadData()
+        //collectionView.reloadData()
     }
     
     private func setupNavigationBar() {
@@ -192,7 +192,7 @@ final class TrackersViewController: UIViewController {
         guard let selectedDate else { return }
         trackers = trackerStore.fetchTrackers(by: selectedDate)
         updateUI()
-        collectionView.reloadData()
+        //collectionView.reloadData()
     }
     
     func getDateFromUIDatePicker() -> Date? {
