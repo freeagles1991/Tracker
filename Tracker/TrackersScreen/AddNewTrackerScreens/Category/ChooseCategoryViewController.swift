@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    private let trackersCategoryStore = TrackerCategoryStore.shared
+    private var viewModel: ChooseCategoryViewModel
     
     weak var delegate: CreateNewTrackerViewController?
     
@@ -28,19 +28,40 @@ final class ChooseCategoryViewController: UIViewController {
     private var cellCount: Int = 0
     private let maxTableHeight: CGFloat = 580
     
+    init(viewModel: ChooseCategoryViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        trackersCategoryStore.chooseCategoryVC = self
         
         setupScreenTitle()
         setupAddCategoryButton()
         setupTableView()
         
-        loadData()
+        bindViewModel()
+        viewModel.loadCategories()
     }
 
+    private func bindViewModel() {
+        viewModel.onCategoriesUpdated = { [weak self] categories in
+            self?.cellCount = categories.count
+            self?.tableView.reloadData()
+            self?.adjustTableViewHeight()
+        }
+        
+        viewModel.onCategorySelected = { [weak self] selectedCategory in
+            guard let self, let delegate = self.delegate, let selectedCategory else { return }
+            delegate.updateCategory(selectedCategory)
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
     
     private func setupScreenTitle() {
         let label = UILabel()
@@ -62,7 +83,6 @@ final class ChooseCategoryViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.isScrollEnabled = true
         tableView.layer.cornerRadius = 16
@@ -88,25 +108,7 @@ final class ChooseCategoryViewController: UIViewController {
         tableContainerViewHeightConstraint.isActive = true
     }
     
-    func loadData() {
-        tableView.reloadData()
-        adjustTableViewHeight()
-    }
-
-    private func adjustTableViewHeight() {
-        tableView.layoutIfNeeded()
-
-        let tableHeight = cellHeight * CGFloat(cellCount)
-        let finalHeight = min(tableHeight, maxTableHeight)
-
-        tableContainerViewHeightConstraint.constant = finalHeight
-        
-        UIView.animate(withDuration: 0.1) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    private func setupAddCategoryButton(){
+    private func setupAddCategoryButton() {
         addCategoryButton.setTitle(addCategoryButtonString, for: .normal)
         addCategoryButton.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         addCategoryButton.backgroundColor = .black
@@ -128,45 +130,47 @@ final class ChooseCategoryViewController: UIViewController {
     
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
         let createNewCategoryVC = CreateNewCategoryViewController()
-        createNewCategoryVC.delegate = self
+        createNewCategoryVC.delegate = viewModel
         present(createNewCategoryVC, animated: true)
     }
+    
+    private func adjustTableViewHeight() {
+        tableView.layoutIfNeeded()
+
+        let tableHeight = cellHeight * CGFloat(cellCount)
+        let finalHeight = min(tableHeight, maxTableHeight)
+
+        tableContainerViewHeightConstraint.constant = finalHeight
+        
+        UIView.animate(withDuration: 0.1) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
 }
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let count = trackersCategoryStore.numberOfRowsInSection(section)
-        cellCount = count
-        return count
+        return viewModel.categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
-            cell.textLabel?.text = trackersCategoryStore.object(at: indexPath)?.title
-            cell.backgroundColor = UIColor(named: "background")
-            cell.accessoryType = (indexPath == selectedIndexPath) ? .checkmark : .none
-            return cell
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+        let category = viewModel.categories[indexPath.row]
+        cell.textLabel?.text = category.title
+        cell.backgroundColor = UIColor(named: "background")
+        cell.accessoryType = (indexPath == selectedIndexPath) ? .checkmark : .none
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.selectCategory(at: indexPath.row)
+        selectedIndexPath = indexPath
+        tableView.reloadData()
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let choosenCategory = trackersCategoryStore.categories[indexPath.row]
-        print("Выбрана категория: \(choosenCategory.title)")
-        
-        if selectedIndexPath == indexPath {
-            selectedIndexPath = nil
-        } else {
-            selectedIndexPath = indexPath
-        }
-        tableView.reloadData()
-        
-        delegate?.updateCategory(choosenCategory)
-        dismiss(animated: true, completion: nil)
-    }
 
-    
 }
-

@@ -9,7 +9,7 @@ import UIKit
 
 final class CreateNewCategoryViewController: UIViewController {
     private let trackersCategoryStore = TrackerCategoryStore.shared
-    weak var delegate: ChooseCategoryViewController?
+    weak var delegate: ChooseCategoryViewModel?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая категория"
@@ -105,7 +105,7 @@ final class CreateNewCategoryViewController: UIViewController {
         
         trackersCategoryStore.createCategory(with: newCategory)
         if let delegate {
-            delegate.loadData()
+            delegate.loadCategories()
         }
         
         dismiss(animated: true, completion: nil)
