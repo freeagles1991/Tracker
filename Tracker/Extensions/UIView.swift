@@ -12,13 +12,14 @@ extension UIView {
 
     func addTapGestureToHideKeyboard() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
         addGestureRecognizer(tapGesture)
     }
 
     var topSuperview: UIView? {
         var view = superview
-        while view?.superview != nil {
-            view = view!.superview
+        while let currentView = view, let superview = currentView.superview {
+            view = superview
         }
         return view
     }
@@ -27,3 +28,4 @@ extension UIView {
         topSuperview?.endEditing(true)
     }
 }
+

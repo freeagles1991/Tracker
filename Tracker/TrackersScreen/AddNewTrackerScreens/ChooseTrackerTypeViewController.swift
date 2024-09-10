@@ -10,8 +10,6 @@ import UIKit
 
 final class  ChooseTrackerTypeViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
-    private let createNewHabitVC = CreateNewTrackerViewController()
-    private let createNewEventVC = CreateNewTrackerViewController()
     
     private var screenTitle: UILabel?
     private let screenTitleString = "Создание трекера"
@@ -38,7 +36,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     private func setupScreenTitle() {
         let label = UILabel()
-        let font = UIFont.systemFont(ofSize: 16)
+        let font = UIFont(name: "SFProText-Medium", size: 16)
         label.text = screenTitleString
         label.textColor = .black
         label.font = font
@@ -54,6 +52,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     private func setupButton(with text: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.backgroundColor = .black
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
@@ -98,16 +97,24 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     }
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
-        createNewHabitVC.delegate = self
-        createNewHabitVC.trackersVC = self.trackersVC
-        createNewHabitVC.configureTrackerType(isRegularEvent: true)
-        present(createNewHabitVC, animated: true)
+        if let navigationController = self.navigationController {
+            let createNewHabitVC = CreateNewTrackerViewController()
+            createNewHabitVC.delegate = self
+            createNewHabitVC.trackersVC = self.trackersVC
+            createNewHabitVC.configureTrackerType(isRegularEvent: true)
+            
+            navigationController.pushViewController(createNewHabitVC, animated: true)
+        }
     }
     
     @objc private func eventButtonTapped(_ sender: UIButton) {
-        createNewEventVC.delegate = self
-        createNewEventVC.trackersVC = self.trackersVC
-        createNewEventVC.configureTrackerType(isRegularEvent: false)
-        present(createNewEventVC, animated: true)
+        if let navigationController = self.navigationController {
+            let createNewEventVC = CreateNewTrackerViewController()
+            createNewEventVC.delegate = self
+            createNewEventVC.trackersVC = self.trackersVC
+            createNewEventVC.configureTrackerType(isRegularEvent: false)
+            
+            navigationController.pushViewController(createNewEventVC, animated: true)
+        }
     }
 }

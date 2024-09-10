@@ -9,69 +9,109 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    weak var trackersVC: TrackersViewController?
-    let createNewCategoryVC = CreateNewCategoryViewController()
+    private let trackersCategoryStore = TrackerCategoryStore.shared
     
     weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Категория"
     
-    private var tableView = UITableView()
+    let tableView = UITableView()
+    private let tableContainerView = UIView()
+    private var tableContainerViewHeightConstraint = NSLayoutConstraint()
+    private var selectedIndexPath: IndexPath?
     
     private var addCategoryButton = UIButton()
     private let addCategoryButtonString: String = "Добавить категорию"
     
-    private var isSelectedArray = [Bool](repeating: false, count: 7)
+    private var cellHeight: CGFloat = 75
+    private var cellCount: Int = 0
+    private let maxTableHeight: CGFloat = 580
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        createNewCategoryVC.delegate = self
+        trackersCategoryStore.chooseCategoryVC = self
         
         setupScreenTitle()
-        setupTableView()
         setupAddCategoryButton()
+        setupTableView()
+        
+        loadData()
     }
+
     
     private func setupScreenTitle() {
         let label = UILabel()
-        let font = UIFont.systemFont(ofSize: 16)
+        let font = UIFont(name: "SFProText-Medium", size: 16)
         label.text = screenTitleString
         label.textColor = .black
         label.font = font
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
         
-        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 22).isActive = true
-        label.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: view.topAnchor, constant: 22).isActive = true
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.06).isActive = true
         
         self.screenTitle = label
     }
     
     private func setupTableView() {
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.isScrollEnabled = true
+        tableView.layer.cornerRadius = 16
+        tableView.clipsToBounds = true
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
-        view.addSubview(tableView)
+        tableContainerView.addSubview(tableView)
+        tableContainerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableContainerView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 30),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableContainerView.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 30),
+            tableContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            tableView.topAnchor.constraint(equalTo: tableContainerView.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: tableContainerView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: tableContainerView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: tableContainerView.bottomAnchor),
         ])
+        
+        tableContainerViewHeightConstraint = tableContainerView.heightAnchor.constraint(equalToConstant: 75)
+        tableContainerViewHeightConstraint.isActive = true
+    }
+    
+    func loadData() {
+        tableView.reloadData()
+        adjustTableViewHeight()
+    }
+
+    private func adjustTableViewHeight() {
+        tableView.layoutIfNeeded()
+
+        let tableHeight = cellHeight * CGFloat(cellCount)
+        let finalHeight = min(tableHeight, maxTableHeight)
+
+        tableContainerViewHeightConstraint.constant = finalHeight
+        
+        UIView.animate(withDuration: 0.1) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     private func setupAddCategoryButton(){
         addCategoryButton.setTitle(addCategoryButtonString, for: .normal)
+        addCategoryButton.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         addCategoryButton.backgroundColor = .black
         addCategoryButton.setTitleColor(.white, for: .normal)
-        addCategoryButton.layer.cornerRadius = 8
+        addCategoryButton.layer.cornerRadius = 16
         addCategoryButton.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(addCategoryButton)
@@ -87,48 +127,46 @@ final class ChooseCategoryViewController: UIViewController {
     }
     
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
+        let createNewCategoryVC = CreateNewCategoryViewController()
+        createNewCategoryVC.delegate = self
         present(createNewCategoryVC, animated: true)
     }
 }
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = trackersVC?.categories.count else { return 0 }
+        let count = trackersCategoryStore.numberOfRowsInSection(section)
+        cellCount = count
         return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = trackersVC?.categories[indexPath.row].title
-        cell.layer.cornerRadius = 16
-        cell.layer.masksToBounds = true
-        cell.backgroundColor = UIColor(named: "background")
-        
-        if isSelectedArray[indexPath.row] {
-            cell.accessoryView = UIImageView(image: UIImage(systemName: "checkmark"))
-        } else {
-            cell.accessoryView = nil
+            let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+            cell.textLabel?.text = trackersCategoryStore.object(at: indexPath)?.title
+            cell.backgroundColor = UIColor(named: "background")
+            cell.accessoryType = (indexPath == selectedIndexPath) ? .checkmark : .none
+            return cell
         }
-        
-        return cell
-    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return cellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let choosenCategory = trackersVC?.categories[indexPath.row] else { return }
+        let choosenCategory = trackersCategoryStore.categories[indexPath.row]
         print("Выбрана категория: \(choosenCategory.title)")
         
-        isSelectedArray[indexPath.row].toggle()
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        if selectedIndexPath == indexPath {
+            selectedIndexPath = nil
+        } else {
+            selectedIndexPath = indexPath
+        }
+        tableView.reloadData()
         
         delegate?.updateCategory(choosenCategory)
         dismiss(animated: true, completion: nil)
     }
+
     
-    func updateTableView() {
-        tableView.reloadData()
-    }
 }
+

@@ -12,7 +12,7 @@ final class ScheduleScreenViewController: UIViewController {
     weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Новая привычка"
+    private let screenTitleString: String = "Расписание"
     
     private let tableView = UITableView()
     private let tableContainerView = UIView()
@@ -30,11 +30,12 @@ final class ScheduleScreenViewController: UIViewController {
         setupScreenTitle()
         setupDoneButton()
         setupTableView()
+    
     }
     
     private func setupScreenTitle() {
         let label = UILabel()
-        let font = UIFont.systemFont(ofSize: 16)
+        let font = UIFont(name: "SFProText-Medium", size: 16)
         label.text = screenTitleString
         label.textColor = .black
         label.font = font
