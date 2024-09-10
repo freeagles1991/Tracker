@@ -13,6 +13,7 @@
 		321586C52C87417100452B99 /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586C42C87417100452B99 /* Weekday.swift */; };
 		321586EC2C8F63DD00452B99 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586EB2C8F63DD00452B99 /* OnboardingPageViewController.swift */; };
 		321586EE2C8F68C800452B99 /* OnboardingScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586ED2C8F68C800452B99 /* OnboardingScreenViewController.swift */; };
+		321586F22C90841B00452B99 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586F12C90841B00452B99 /* Constants.swift */; };
 		3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */; };
 		3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */; };
 		323882622C52AB0B00EE11A3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 323882612C52AB0B00EE11A3 /* Base */; };
@@ -75,6 +76,7 @@
 		321586C42C87417100452B99 /* Weekday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weekday.swift; sourceTree = "<group>"; };
 		321586EB2C8F63DD00452B99 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		321586ED2C8F68C800452B99 /* OnboardingScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewController.swift; sourceTree = "<group>"; };
+		321586F12C90841B00452B99 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		323882572C52AB0B00EE11A3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 				323882662C52AB0F00EE11A3 /* Assets.xcassets */,
 				323882682C52AB0F00EE11A3 /* LaunchScreen.storyboard */,
 				3238826B2C52AB0F00EE11A3 /* Info.plist */,
+				321586F12C90841B00452B99 /* Constants.swift */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -535,6 +538,7 @@
 				32C3B6B22C7770C500E34DFD /* ColorCell.swift in Sources */,
 				32B0134B2C7A4640004C4969 /* TrackerRecordStore.swift in Sources */,
 				32BABF1A2C750BF500E176E2 /* EmojiCell.swift in Sources */,
+				321586F22C90841B00452B99 /* Constants.swift in Sources */,
 				32BABF022C6699EE00E176E2 /* TrackersHeaderView.swift in Sources */,
 				32A45B652C53D549002A97F5 /* LaunchScreenViewController.swift in Sources */,
 				32C3B6B42C7770D700E34DFD /* ColorHeader.swift in Sources */,

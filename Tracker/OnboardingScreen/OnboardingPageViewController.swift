@@ -88,6 +88,7 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
     }
     
     private func transitionToMainScreen() {
+        Constants.onboardingScreenWasShown = true
         guard let window = UIApplication.shared.connectedScenes
                         .compactMap({ $0 as? UIWindowScene })
                         .flatMap({ $0.windows })
