@@ -11,6 +11,8 @@
 		321586C12C873F2000452B99 /* TrackerEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586BF2C873F2000452B99 /* TrackerEntity+CoreDataClass.swift */; };
 		321586C22C873F2000452B99 /* TrackerEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586C02C873F2000452B99 /* TrackerEntity+CoreDataProperties.swift */; };
 		321586C52C87417100452B99 /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586C42C87417100452B99 /* Weekday.swift */; };
+		321586EC2C8F63DD00452B99 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586EB2C8F63DD00452B99 /* OnboardingPageViewController.swift */; };
+		321586EE2C8F68C800452B99 /* OnboardingScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586ED2C8F68C800452B99 /* OnboardingScreenViewController.swift */; };
 		3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */; };
 		3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */; };
 		323882622C52AB0B00EE11A3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 323882612C52AB0B00EE11A3 /* Base */; };
@@ -71,6 +73,8 @@
 		321586BF2C873F2000452B99 /* TrackerEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		321586C02C873F2000452B99 /* TrackerEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		321586C42C87417100452B99 /* Weekday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weekday.swift; sourceTree = "<group>"; };
+		321586EB2C8F63DD00452B99 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
+		321586ED2C8F68C800452B99 /* OnboardingScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewController.swift; sourceTree = "<group>"; };
 		323882572C52AB0B00EE11A3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -147,6 +151,15 @@
 			path = TrackerEntity;
 			sourceTree = "<group>";
 		};
+		321586EA2C8F635400452B99 /* OnboardingScreen */ = {
+			isa = PBXGroup;
+			children = (
+				321586EB2C8F63DD00452B99 /* OnboardingPageViewController.swift */,
+				321586ED2C8F68C800452B99 /* OnboardingScreenViewController.swift */,
+			);
+			path = OnboardingScreen;
+			sourceTree = "<group>";
+		};
 		3238824E2C52AB0B00EE11A3 = {
 			isa = PBXGroup;
 			children = (
@@ -170,6 +183,7 @@
 		323882592C52AB0B00EE11A3 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				321586EA2C8F635400452B99 /* OnboardingScreen */,
 				32B0134E2C822B41004C4969 /* Fonts */,
 				32C3B6B72C78E89700E34DFD /*  CoreData */,
 				32BABF0C2C6D11BC00E176E2 /* Extensions */,
@@ -501,6 +515,7 @@
 				32BABF122C7213B300E176E2 /* UIView.swift in Sources */,
 				32C3B6B62C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift in Sources */,
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
+				321586EE2C8F68C800452B99 /* OnboardingScreenViewController.swift in Sources */,
 				32C3B6AF2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift in Sources */,
 				32B013472C7A4626004C4969 /* TrackerStore.swift in Sources */,
 				32A45BB32C5EAC34002A97F5 /* TrackerCategory.swift in Sources */,
@@ -527,6 +542,7 @@
 				32B013492C7A4634004C4969 /* TrackerCategoryStore.swift in Sources */,
 				32BABEFE2C61501A00E176E2 /* ScheduleScreenViewController.swift in Sources */,
 				3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */,
+				321586EC2C8F63DD00452B99 /* OnboardingPageViewController.swift in Sources */,
 				32C3B6BA2C78E8D700E34DFD /* TrackersData.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
