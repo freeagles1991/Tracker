@@ -129,7 +129,7 @@ final class ChooseCategoryViewController: UIViewController {
     }
     
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
-        let createNewCategoryVC = CreateNewCategoryViewController()
+        let createNewCategoryVC = CreateNewCategoryViewController(viewModel: CreateNewCategoryViewModel())
         createNewCategoryVC.delegate = viewModel
         present(createNewCategoryVC, animated: true)
     }

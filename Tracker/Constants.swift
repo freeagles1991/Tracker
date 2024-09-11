@@ -5,6 +5,8 @@
 //  Created by Дима on 10.09.2024.
 //
 
+typealias Binding<T> = (T) -> Void
+
 import Foundation
 
 public class Constants {

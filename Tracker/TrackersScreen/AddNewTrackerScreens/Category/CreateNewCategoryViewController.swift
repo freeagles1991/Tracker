@@ -8,7 +8,8 @@ import Foundation
 import UIKit
 
 final class CreateNewCategoryViewController: UIViewController {
-    private let trackersCategoryStore = TrackerCategoryStore.shared
+    private var viewModel: CreateNewCategoryViewModel
+    
     weak var delegate: ChooseCategoryViewModel?
     
     private var screenTitle = UILabel()
@@ -20,6 +21,15 @@ final class CreateNewCategoryViewController: UIViewController {
     private var doneButton = UIButton()
     private let doneButtonString: String = "Готово"
     
+    init(viewModel: CreateNewCategoryViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -28,7 +38,21 @@ final class CreateNewCategoryViewController: UIViewController {
         setupScreenTitle()
         setupCategoryNameTextField()
         setupDoneButton()
-        updateDoneButtonState()
+        
+        bindViewModel()
+        viewModel.updateDoneButtonState()
+    }
+    
+    private func bindViewModel() {
+        viewModel.onCategoryNameChanged = { [weak self] text in
+            self?.categoryNameTextField.text = text
+        }
+        
+        viewModel.onDoneButtonStateChanged = { [weak self] isEnabled in
+            guard let self else { return }
+            self.doneButton.isEnabled = isEnabled
+            self.doneButton.alpha = isEnabled ? 1.0 : 0.5
+        }
     }
     
     private func setupScreenTitle() {
@@ -85,25 +109,14 @@ final class CreateNewCategoryViewController: UIViewController {
         doneButton.addTarget(self, action: #selector(doneButtonTapped(_:)), for: .touchUpInside)
     }
     
-    private func updateDoneButtonState() {
-        let textIsEmpty = categoryNameTextField.text?.isEmpty ?? true
-        doneButton.isEnabled = !textIsEmpty
-        doneButton.alpha = textIsEmpty ? 0.5 : 1.0
-    }
-    
     @objc private func textFieldDidChange() {
-        updateDoneButtonState()
+        viewModel.categoryName = categoryNameTextField.text ?? ""
+        viewModel.updateDoneButtonState()
     }
     
     @objc private func doneButtonTapped(_ sender: UIButton) {
-        guard let categoryName = categoryNameTextField.text, !categoryName.isEmpty else {
-            print("Название категории не может быть пустым.")
-            return
-        }
+        viewModel.createNewCategory()
         
-        let newCategory = TrackerCategory(title: categoryName, trackers: [])
-        
-        trackersCategoryStore.createCategory(with: newCategory)
         if let delegate {
             delegate.loadCategories()
         }
