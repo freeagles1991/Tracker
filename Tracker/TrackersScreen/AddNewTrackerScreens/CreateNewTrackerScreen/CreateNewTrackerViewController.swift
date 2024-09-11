@@ -15,7 +15,7 @@ final class CreateNewTrackerViewController: UIViewController {
     weak var delegate: ChooseTrackerTypeViewController?
     
     private let chooseCategoryVC = ChooseCategoryViewController(viewModel: ChooseCategoryViewModel())
-    private let scheduleScreenVC = ScheduleScreenViewController()
+    private let scheduleScreenVC = ScheduleScreenViewController(viewModel: ScheduleScreenViewModel())
     
     private var selectedCategory: TrackerCategory?
     private var selectedWeekdays = Set<Weekday>()
