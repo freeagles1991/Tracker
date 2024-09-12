@@ -43,19 +43,6 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         setupPageView()
     }
     
-    private func setupPageView() {
-        if let firstViewController = pages.first {
-            setViewControllers([firstViewController], direction: .forward, animated: true, completion: nil)
-        }
-        
-        view.addSubview(pageControl)
-        
-        NSLayoutConstraint.activate([
-            pageControl.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: 230),
-            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-    }
-    
     func transitionToMainScreen() {
         Constants.onboardingScreenWasShown = true
         guard let window = UIApplication.shared.connectedScenes
@@ -72,6 +59,19 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
                              options: .transitionFlipFromTop,
                              animations: nil)
        }
+    
+    private func setupPageView() {
+        if let firstViewController = pages.first {
+            setViewControllers([firstViewController], direction: .forward, animated: true, completion: nil)
+        }
+        
+        view.addSubview(pageControl)
+        
+        NSLayoutConstraint.activate([
+            pageControl.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: 230),
+            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
     
     // MARK: - Public Methods
     
