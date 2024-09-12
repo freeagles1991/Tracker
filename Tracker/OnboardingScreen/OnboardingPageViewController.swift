@@ -15,17 +15,6 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
     private let screen1BackImageString = "onboardingBack1"
     private let screen2BackImageString = "onboardingBack2"
     
-    private let doneButtonString: String = "Вот это технологии!"
-    private var doneButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
-        button.backgroundColor = .black
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 16
-        return button
-    } ()
-    
     private lazy var pages: [UIViewController] = {
         let screen1 = OnboardingScreenViewController(backgroundImageString: screen1BackImageString, screenTextString: screen1LabelString)
         
@@ -51,7 +40,6 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         self.dataSource = self
         self.delegate = self
         
-        setupButton()
         setupPageView()
     }
     
@@ -63,31 +51,12 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         view.addSubview(pageControl)
         
         NSLayoutConstraint.activate([
-            pageControl.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: -24),
+            pageControl.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: 230),
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
-    private func setupButton() {
-        doneButton.setTitle(doneButtonString, for: .normal)
-        doneButton.addTarget(self, action: #selector(doneButtonTap(_:)), for: .touchUpInside)
-        
-        view.addSubview(doneButton)
-        
-        NSLayoutConstraint.activate([
-            doneButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -84),
-            doneButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
-        ])
-    }
-    
-    @objc private func doneButtonTap(_ sender: UIButton) {
-        transitionToMainScreen()
-    }
-    
-    private func transitionToMainScreen() {
+    func transitionToMainScreen() {
         Constants.onboardingScreenWasShown = true
         guard let window = UIApplication.shared.connectedScenes
                         .compactMap({ $0 as? UIWindowScene })
@@ -99,8 +68,8 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
            window.rootViewController = tabBarController
            
            UIView.transition(with: window,
-                             duration: 0.5, // Длительность анимации
-                             options: .transitionFlipFromTop, // Анимация "плавного появления"
+                             duration: 0.5,
+                             options: .transitionFlipFromTop,
                              animations: nil)
        }
     
