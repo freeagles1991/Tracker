@@ -73,20 +73,58 @@ final class CreateNewCategoryViewController: UIViewController {
     private func setupCategoryNameTextField() {
         let textField = UITextField()
         textField.placeholder = categoryNamePlaceholderString
-        textField.borderStyle = .roundedRect
+        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = 16
+        textField.layer.masksToBounds = true
+        textField.backgroundColor = UIColor(named: "background")
         textField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(textField)
         
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        textField.rightView = paddingView
+        textField.rightViewMode = .always
+        
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
+        
         NSLayoutConstraint.activate([
-            textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 20),
-            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            textField.heightAnchor.constraint(equalToConstant: 40)
+            textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textField.heightAnchor.constraint(equalToConstant: 75)
         ])
         
         self.categoryNameTextField = textField
+    }
+    
+    private func setupParametersBaseButton(with text: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(text, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
+        button.contentHorizontalAlignment = .left
+        button.backgroundColor = UIColor(named: "background")
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40)
+        
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        
+        let arrowImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
+        arrowImageView.tintColor = .gray
+        arrowImageView.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(arrowImageView)
+        
+        NSLayoutConstraint.activate([
+            arrowImageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            arrowImageView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16),
+            
+            button.heightAnchor.constraint(equalToConstant: 75)
+        ])
+        
+        return button
     }
     
     private func setupDoneButton(){
