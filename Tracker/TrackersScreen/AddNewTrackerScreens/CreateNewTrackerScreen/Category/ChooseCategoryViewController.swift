@@ -80,7 +80,7 @@ final class ChooseCategoryViewController: UIViewController {
     }
     
     private func setupTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
+        tableView.register(CategoryCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -155,11 +155,11 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath) as? CategoryCell else {
+            return CategoryCell()
+        }
         let category = viewModel.categories[indexPath.row]
-        cell.textLabel?.text = category.title
-        cell.backgroundColor = UIColor(named: "background")
-        cell.accessoryType = (indexPath == selectedIndexPath) ? .checkmark : .none
+        cell.configure(with: category.title, isSelected: indexPath == selectedIndexPath)
         return cell
     }
     
