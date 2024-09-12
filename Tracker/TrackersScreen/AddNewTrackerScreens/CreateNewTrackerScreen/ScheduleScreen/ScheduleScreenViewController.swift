@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 final class ScheduleScreenViewController: UIViewController {
+    private var viewModel: ScheduleScreenViewModel
+    
     weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
@@ -17,8 +19,6 @@ final class ScheduleScreenViewController: UIViewController {
     private let tableView = UITableView()
     private let tableContainerView = UIView()
     private let daysOfWeek = Weekday.allCases
-    private var selectedWeekdays = Set<Weekday>()
-    private var switchStates = [Bool](repeating: false, count: 7)
     
     private let doneButton = UIButton()
     private var doneButtonString = "Готово"
@@ -30,7 +30,31 @@ final class ScheduleScreenViewController: UIViewController {
         setupScreenTitle()
         setupDoneButton()
         setupTableView()
+        
+        bindViewModel()
+        viewModel.updateDoneButtonState()
+    }
     
+    init(viewModel: ScheduleScreenViewModel) {
+            self.viewModel = viewModel
+            super.init(nibName: nil, bundle: nil)
+        }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func bindViewModel() {
+        viewModel.onSwitchStateChenged = { [weak self] _ in
+            self?.tableView.performBatchUpdates(nil)
+            self?.viewModel.updateDoneButtonState()
+        }
+        
+        viewModel.onDoneButtonStateChanged = { [weak self] isEnabled in
+            guard let self else { return }
+            self.doneButton.isEnabled = isEnabled
+            self.doneButton.alpha = isEnabled ? 1.0 : 0.5
+        }
     }
     
     private func setupScreenTitle() {
@@ -94,18 +118,9 @@ final class ScheduleScreenViewController: UIViewController {
         ])
     }
     
-    @objc func switchChanged(_ sender: UISwitch) {
-        let weekday = daysOfWeek[sender.tag]
-        
-        if sender.isOn {
-            selectedWeekdays.insert(weekday)
-        } else {
-            selectedWeekdays.remove(weekday)
-        }
-    }
-    
     @objc func doneButtonTapped(_ sender: UIButton) {
-        delegate?.updateSelectedWeekdays(selectedWeekdays)
+        guard let delegate else { return }
+        delegate.updateSelectedWeekdays(viewModel.selectedWeekdays)
         dismiss(animated: true, completion: nil)
     }
 }
@@ -124,7 +139,7 @@ extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSour
         
         let switchView = UISwitch(frame: .zero)
         switchView.onTintColor = UIColor(named: "blue")
-        switchView.setOn(switchStates[indexPath.row], animated: true)
+        switchView.setOn(viewModel.switchStates[indexPath.row], animated: true)
         switchView.tag = indexPath.row
         switchView.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
         cell.accessoryView = switchView
@@ -134,6 +149,10 @@ extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
+    }
+    
+    @objc func switchChanged(_ sender: UISwitch) {
+        viewModel.toggleWeekday(at: sender.tag, isOn: sender.isOn)
     }
 }
 

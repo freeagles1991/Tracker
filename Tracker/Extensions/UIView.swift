@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 extension UIView {
-
     func addTapGestureToHideKeyboard() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -26,6 +25,16 @@ extension UIView {
 
     @objc func dismissKeyboard() {
         topSuperview?.endEditing(true)
+    }
+}
+
+extension UIView {
+    func setBackgroundImage(_ image: UIImage) {
+        let backgroundImageView = UIImageView(frame: self.bounds)
+        backgroundImageView.image = image
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
+        self.insertSubview(backgroundImageView, at: 0)
     }
 }
 

@@ -8,8 +8,9 @@ import Foundation
 import UIKit
 
 final class CreateNewCategoryViewController: UIViewController {
-    private let trackersCategoryStore = TrackerCategoryStore.shared
-    weak var delegate: ChooseCategoryViewController?
+    private var viewModel: CreateNewCategoryViewModel
+    
+    weak var delegate: ChooseCategoryViewModel?
     
     private var screenTitle = UILabel()
     private let screenTitleString: String = "Новая категория"
@@ -20,6 +21,15 @@ final class CreateNewCategoryViewController: UIViewController {
     private var doneButton = UIButton()
     private let doneButtonString: String = "Готово"
     
+    init(viewModel: CreateNewCategoryViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -28,7 +38,21 @@ final class CreateNewCategoryViewController: UIViewController {
         setupScreenTitle()
         setupCategoryNameTextField()
         setupDoneButton()
-        updateDoneButtonState()
+        
+        bindViewModel()
+        viewModel.updateDoneButtonState()
+    }
+    
+    private func bindViewModel() {
+        viewModel.onCategoryNameChanged = { [weak self] text in
+            self?.categoryNameTextField.text = text
+        }
+        
+        viewModel.onDoneButtonStateChanged = { [weak self] isEnabled in
+            guard let self else { return }
+            self.doneButton.isEnabled = isEnabled
+            self.doneButton.alpha = isEnabled ? 1.0 : 0.5
+        }
     }
     
     private func setupScreenTitle() {
@@ -49,20 +73,58 @@ final class CreateNewCategoryViewController: UIViewController {
     private func setupCategoryNameTextField() {
         let textField = UITextField()
         textField.placeholder = categoryNamePlaceholderString
-        textField.borderStyle = .roundedRect
+        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = 16
+        textField.layer.masksToBounds = true
+        textField.backgroundColor = UIColor(named: "background")
         textField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(textField)
         
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        textField.rightView = paddingView
+        textField.rightViewMode = .always
+        
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
+        
         NSLayoutConstraint.activate([
-            textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 20),
-            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            textField.heightAnchor.constraint(equalToConstant: 40)
+            textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textField.heightAnchor.constraint(equalToConstant: 75)
         ])
         
         self.categoryNameTextField = textField
+    }
+    
+    private func setupParametersBaseButton(with text: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(text, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
+        button.contentHorizontalAlignment = .left
+        button.backgroundColor = UIColor(named: "background")
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 40)
+        
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        
+        let arrowImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
+        arrowImageView.tintColor = .gray
+        arrowImageView.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(arrowImageView)
+        
+        NSLayoutConstraint.activate([
+            arrowImageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            arrowImageView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16),
+            
+            button.heightAnchor.constraint(equalToConstant: 75)
+        ])
+        
+        return button
     }
     
     private func setupDoneButton(){
@@ -85,27 +147,16 @@ final class CreateNewCategoryViewController: UIViewController {
         doneButton.addTarget(self, action: #selector(doneButtonTapped(_:)), for: .touchUpInside)
     }
     
-    private func updateDoneButtonState() {
-        let textIsEmpty = categoryNameTextField.text?.isEmpty ?? true
-        doneButton.isEnabled = !textIsEmpty
-        doneButton.alpha = textIsEmpty ? 0.5 : 1.0
-    }
-    
     @objc private func textFieldDidChange() {
-        updateDoneButtonState()
+        viewModel.categoryName = categoryNameTextField.text ?? ""
+        viewModel.updateDoneButtonState()
     }
     
     @objc private func doneButtonTapped(_ sender: UIButton) {
-        guard let categoryName = categoryNameTextField.text, !categoryName.isEmpty else {
-            print("Название категории не может быть пустым.")
-            return
-        }
+        viewModel.createNewCategory()
         
-        let newCategory = TrackerCategory(title: categoryName, trackers: [])
-        
-        trackersCategoryStore.createCategory(with: newCategory)
         if let delegate {
-            delegate.loadData()
+            delegate.loadCategories()
         }
         
         dismiss(animated: true, completion: nil)
