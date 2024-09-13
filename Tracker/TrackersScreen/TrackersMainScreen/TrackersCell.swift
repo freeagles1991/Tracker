@@ -162,14 +162,17 @@ final class TrackerCell: UICollectionViewCell {
     
     private func encreaseDurationLabel() {
         durationCountInt += 1
-        durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
+        durationLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt
+        )
         guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
         trackersVC?.setTrackerComplete(for: tracker, on: selectedDate)
     }
     
     private func decreaseDurationLabel() {
         durationCountInt -= 1
-        durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
+        durationLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt)
         guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
         trackersVC?.setTrackerIncomplete(for: tracker, on: selectedDate)
     }
@@ -194,7 +197,8 @@ final class TrackerCell: UICollectionViewCell {
         self.isTrackerComplete = isTrackerCompleted(tracker, on: date)
         updateUI(with: cellColor)
         self.durationCountInt = numberOfRecords(for: tracker)
-        durationLabel.text = "\(durationCountInt) \(declensionForDay(durationCountInt))"
+        durationLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt)
     }
     
     private func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
@@ -206,24 +210,6 @@ final class TrackerCell: UICollectionViewCell {
         let records = trackerRecordStore.fetchTrackerRecords(byID: tracker.id)
         return records.count
         
-    }
-    
-    private func declensionForDay(_ count: Int) -> String {
-        let lastDigit = count % 10
-        let lastTwoDigits = count % 100
-
-        if lastTwoDigits >= 11 && lastTwoDigits <= 19 {
-            return "дней"
-        }
-        
-        switch lastDigit {
-        case 1:
-            return "день"
-        case 2, 3, 4:
-            return "дня"
-        default:
-            return "дней"
-        }
     }
 }
 
