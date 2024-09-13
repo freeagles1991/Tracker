@@ -133,7 +133,7 @@ extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let weekday = daysOfWeek[indexPath.row]
-        cell.textLabel?.text = weekday.rawValue
+        cell.textLabel?.text = weekday.localized
         cell.backgroundColor = UIColor(named: "background")
         
         let switchView = UISwitch(frame: .zero)

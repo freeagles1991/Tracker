@@ -15,6 +15,8 @@ final class TrackersViewController: UIViewController {
     private let trackerRecordStore = TrackerRecordStore.shared
     private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
     
+    private let searchBarPlaceholderString = NSLocalizedString("SearchBar_placeholder", comment: "Поиск")
+    
     private var selectedDate: Date?
     
     let notificationName = Notification.Name("NewTrackerCreated")
@@ -92,7 +94,7 @@ final class TrackersViewController: UIViewController {
     private func setupSearchBar() {
         let searchBar = UISearchBar()
         searchBar.barStyle = .default
-        searchBar.placeholder = "Поиск"
+        searchBar.placeholder = searchBarPlaceholderString
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.backgroundImage = UIImage()
         view.addSubview(searchBar)

@@ -89,6 +89,8 @@
 		321586FD2C92E5B000452B99 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		321587022C9495CA00452B99 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		321587052C949B7B00452B99 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		321587072C949E0E00452B99 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		321587082C949E1F00452B99 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		323882572C52AB0B00EE11A3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -621,6 +623,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				321587022C9495CA00452B99 /* en */,
+				321587072C949E0E00452B99 /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -629,6 +632,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				321587052C949B7B00452B99 /* en */,
+				321587082C949E1F00452B99 /* ru */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";

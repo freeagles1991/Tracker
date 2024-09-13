@@ -89,10 +89,11 @@ final class CreateNewTrackerViewController: UIViewController {
     }()
     
     private var cancelButton = UIButton()
-    private let cancelButtonString: String = "Отменить"
+    private let cancelButtonString: String = NSLocalizedString("CreateNewTracker_cancelButtonString", comment: "Отменить")
     
     private var createButton = UIButton()
-    private let createButtonString: String = "Создать"
+    private let createButtonString: String = NSLocalizedString("CreateNewTracker_createButtonString", comment: "Создать")
+
     
     private var isRegularEvent = true
     
@@ -165,7 +166,7 @@ final class CreateNewTrackerViewController: UIViewController {
     
     private func setupTextField() {
         let textField = UITextField()
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = trackerNameTextFieldString
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.borderStyle = .none
         textField.layer.cornerRadius = 16

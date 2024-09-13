@@ -6,36 +6,41 @@
   
 */
 
-"monday" = "Понедельник";
-"tuesday" = "Вторник";
-"wednesday" = "Среда";
-"thursday" = "Четверг";
-"friday" = "Пятница";
-"saturday" = "Суббота";
-"sunday" = "Воскресенье";
-"ChooseTrackerType_eventButtonText" = "Нерегулярное событие";
-"ChooseTrackerType_habitButtonText" = "Привычка";
-"ChooseTrackerType_screenTitleString" = "Создание трекера";
-"ScheduleScreen_doneButtonString" = "Готово";
-"ScheduleScreen_screenTitleString" = "Расписание";
-"emptyStateViewString" = "Что будем отслеживать?";
-"navBarTitleString" = "Трекеры";
-"onboardingDoneButtonString" = "Вот это технологии!";
-"screen1LabelString" = "Отслеживайте только то, что хотите";
-"screen2LabelString" = "Даже если это не литры воды и йога";
-"CategoryScreen_addCategoryButtonString" = "Добавить категорию";
-"CategoryScreen_screenTitleString" = "Категория";
-"CreateNewCategory_screenTitleString" = "Новая категория";
-"CreateNewCategory_categoryNamePlaceholderString" = "Введите название категории";
-"CreateNewCategory_doneButtonString" = "Готово";
-"CreateNewTracker_screenTitleString" = "Новая привычка";
-"CreateNewTracker_trackerNameTextFieldString" = "Введите название трекера";
-"CreateNewTracker_categoryButtonString" = "Категория";
-"CreateNewTracker_scheduleButtonString" = "Расписание";
+"monday" = "Monday";
+"tuesday" = "Tuesday";
+"wednesday" = "Wednesday";
+"thursday" = "Thursday";
+"friday" = "Friday";
+"saturday" = "Saturday";
+"sunday" = "Sunday";
+"ChooseTrackerType_eventButtonText" = "Irregular event";
+"ChooseTrackerType_habitButtonText" = "Habit";
+"ChooseTrackerType_screenTitleString" = "Create a tracker";
+"ScheduleScreen_doneButtonString" = "Done";
+"ScheduleScreen_screenTitleString" = "Schedule";
+"emptyStateViewString" = "What will we track?";
+"navBarTitleString" = "Trackers";
+"onboardingDoneButtonString" = "That's technology!";
+"screen1LabelString" = "Track only what you want";
+"screen2LabelString" = "Even if it's not liters of water or yoga";
+"CategoryScreen_addCategoryButtonString" = "Add category";
+"CategoryScreen_screenTitleString" = "Category";
+"CreateNewCategory_screenTitleString" = "New category";
+"CreateNewCategory_categoryNamePlaceholderString" = "Enter category name";
+"CreateNewCategory_doneButtonString" = "Done";
+"CreateNewTracker_screenTitleString" = "New habit";
+"CreateNewTracker_trackerNameTextFieldString" = "Enter tracker name";
+"CreateNewTracker_categoryButtonString" = "Category";
+"CreateNewTracker_scheduleButtonString" = "Schedule";
 "CreateNewTracker_emojiHeaderString" = "Emoji";
-"CreateNewTracker_colorHeaderString" = "Цвет";
-"TabBar_trackersTabBarTitle" = "Трекеры";
-"TabBar_statisticsTabBarTitle" = "Статистика";
+"CreateNewTracker_colorHeaderString" = "Color";
+"CreateNewTracker_cancelButtonString" = "Cancel";
+"CreateNewTracker_createButtonString" = "Create";
+"TabBar_trackersTabBarTitle" = "Trackers";
+"TabBar_statisticsTabBarTitle" = "Statistics";
+"SearchBar_placeholder" = "Search";
+
+
 
 
 

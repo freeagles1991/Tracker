@@ -8,32 +8,37 @@
 import Foundation
 
 public enum Weekday: String, CaseIterable, Codable {
-    case monday = "Понедельник"
-    case tuesday = "Вторник"
-    case wednesday = "Среда"
-    case thursday = "Четверг"
-    case friday = "Пятница"
-    case saturday = "Суббота"
-    case sunday = "Воскресенье"
+    case monday = "monday"
+    case tuesday = "tuesday"
+    case wednesday = "wednesday"
+    case thursday = "thursday"
+    case friday = "friday"
+    case saturday = "saturday"
+    case sunday = "sunday"
     
     var localized: String {
-        return NSLocalizedString(self.rawValue, comment: "День недели")
+        print(NSLocalizedString(self.rawValue, comment: "Weekday name"))
+        return NSLocalizedString(self.rawValue, comment: "Weekday name")
     }
     
     static func fromDate(_ date: Date) -> Weekday? {
-        let calendar = Calendar.current
-        let weekdayIndex = calendar.component(.weekday, from: date)
-        
-        let weekdays = [
-            Weekday.sunday,
-            Weekday.monday,
-            Weekday.tuesday,
-            Weekday.wednesday,
-            Weekday.thursday,
-            Weekday.friday,
-            Weekday.saturday
-        ]
-        
-        return weekdays[weekdayIndex - 1]
-    }
+            let calendar = Calendar.current
+            let weekdayIndex = calendar.component(.weekday, from: date)
+            
+            let firstWeekday = calendar.firstWeekday
+
+            let adjustedIndex = (weekdayIndex - firstWeekday + 7) % 7
+            
+            let weekdays: [Weekday] = [
+                .monday,
+                .tuesday,
+                .wednesday,
+                .thursday,
+                .friday,
+                .saturday,
+                .sunday
+            ]
+            
+            return weekdays[adjustedIndex]
+        }
 }
