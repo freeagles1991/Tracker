@@ -13,13 +13,13 @@ final class CreateNewCategoryViewController: UIViewController {
     weak var delegate: ChooseCategoryViewModel?
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Новая категория"
+    private let screenTitleString: String = NSLocalizedString("CreateNewCategory_screenTitleString", comment: "Новая категория")
     
     private var categoryNameTextField = UITextField()
-    private let categoryNamePlaceholderString: String = "Введите название категории"
+    private let categoryNamePlaceholderString: String = NSLocalizedString("CreateNewCategory_categoryNamePlaceholderString", comment: "Введите название категории")
     
     private var doneButton = UIButton()
-    private let doneButtonString: String = "Готово"
+    private let doneButtonString: String = NSLocalizedString("CreateNewCategory_doneButtonString", comment: "Готово")
     
     init(viewModel: CreateNewCategoryViewModel) {
         self.viewModel = viewModel

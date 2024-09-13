@@ -16,6 +16,10 @@ public enum Weekday: String, CaseIterable, Codable {
     case saturday = "Суббота"
     case sunday = "Воскресенье"
     
+    var localized: String {
+        return NSLocalizedString(self.rawValue, comment: "День недели")
+    }
+    
     static func fromDate(_ date: Date) -> Weekday? {
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)

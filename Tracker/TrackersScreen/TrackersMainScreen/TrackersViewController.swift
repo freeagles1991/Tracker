@@ -36,8 +36,8 @@ final class TrackersViewController: UIViewController {
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
     
-    private let emptyStateViewString = "Что будем отслеживать?"
-    private let navBarTitleString = "Трекеры"
+    private let navBarTitleString = NSLocalizedString("navBarTitleString", comment: "Трекеры")
+    private let emptyStateViewString = NSLocalizedString("emptyStateViewString", comment: "Что будем отслеживать?")
     
     init() {
         super.init(nibName: nil, bundle: nil)

@@ -12,13 +12,13 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
     
     private var screenTitle: UILabel?
-    private let screenTitleString = "Создание трекера"
+    private let screenTitleString = NSLocalizedString("ChooseTrackerType_screenTitleString", comment: "Создание трекера")
     
     private var habitButton: UIButton?
-    private let habitButtonText = "Привычка"
+    private let habitButtonText = NSLocalizedString("ChooseTrackerType_habitButtonText", comment: "Привычка")
     
     private var eventButton: UIButton?
-    private let eventButtonText = "Нерегулярное событие"
+    private let eventButtonText = NSLocalizedString("ChooseTrackerType_eventButtonText", comment: "Нерегулярное событие")
     
     override func viewDidLoad() {
         super.viewDidLoad()

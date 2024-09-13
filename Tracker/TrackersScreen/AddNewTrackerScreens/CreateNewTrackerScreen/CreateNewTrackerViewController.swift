@@ -35,16 +35,16 @@ final class CreateNewTrackerViewController: UIViewController {
     private let contentView = UIView()
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Новая привычка"
+    private let screenTitleString: String = NSLocalizedString("CreateNewTracker_screenTitleString", comment: "Новая привычка")
     
     private var trackerNameTextField = UITextField()
-    private let trackerNameTextFieldString: String = "Введите название трекера"
+    private let trackerNameTextFieldString: String = NSLocalizedString("CreateNewTracker_trackerNameTextFieldString", comment: "Введите название трекера")
     
     private var categoryButton = UIButton()
-    private let categoryButtonString: String = "Категория"
+    private let categoryButtonString: String = NSLocalizedString("CreateNewTracker_categoryButtonString", comment: "Категория")
     
     private var scheduleButton = UIButton()
-    private let scheduleButtonString: String = "Расписание"
+    private let scheduleButtonString: String = NSLocalizedString("CreateNewTracker_scheduleButtonString", comment: "Расписание")
     
     private let separator: UIView = {
         let view = UIView()
@@ -56,7 +56,7 @@ final class CreateNewTrackerViewController: UIViewController {
     private var parametersStackView = UIStackView()
     
     private let emojiCollectionViewDataSourceDelegate = EmojiCollectionViewDataSourceDelegate()
-    let emojiHeaderString = "Emoji"
+    let emojiHeaderString = NSLocalizedString("CreateNewTracker_emojiHeaderString", comment: "Emoji")
     private var emojiCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
@@ -73,7 +73,7 @@ final class CreateNewTrackerViewController: UIViewController {
     }()
     
     private let colorCollectionViewDataSourceDelegate = ColorCollectionViewDataSourceDelegate()
-    let colorHeaderString = "Цвет"
+    let colorHeaderString = NSLocalizedString("CreateNewTracker_colorHeaderString", comment: "Цвет")
     private var colorCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0

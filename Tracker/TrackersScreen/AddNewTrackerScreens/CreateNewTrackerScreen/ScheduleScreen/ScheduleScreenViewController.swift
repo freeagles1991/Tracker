@@ -14,15 +14,14 @@ final class ScheduleScreenViewController: UIViewController {
     weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Расписание"
+    private let screenTitleString: String = NSLocalizedString("ScheduleScreen_screenTitleString", comment: "Расписание")
     
     private let tableView = UITableView()
     private let tableContainerView = UIView()
     private let daysOfWeek = Weekday.allCases
     
     private let doneButton = UIButton()
-    private var doneButtonString = "Готово"
-    
+    private var doneButtonString = NSLocalizedString("ScheduleScreen_doneButtonString", comment: "Готово")
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -11,7 +11,7 @@ import UIKit
 final class  OnboardingScreenViewController: UIViewController {
     private let backgroundImageString: String?
     
-    private let doneButtonString: String = "Вот это технологии!"
+    private let doneButtonString = NSLocalizedString("onboardingDoneButtonString", comment: "Вот это технологии!")
     private var doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false

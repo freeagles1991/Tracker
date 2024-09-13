@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 final class TabBarController: UITabBarController {
-    private let trackersTabBarTitle = "Трекеры"
-    private let statisticsTabBarTitle = "Статистика"
+    private let trackersTabBarTitle = NSLocalizedString("TabBar_trackersTabBarTitle", comment: "Трекеры")
+    private let statisticsTabBarTitle = NSLocalizedString("TabBar_statisticsTabBarTitle", comment: "Статистика")
     private let customTabBarHeight: CGFloat = 90.0
 
     override func viewDidLoad() {

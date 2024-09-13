@@ -14,7 +14,7 @@ final class ChooseCategoryViewController: UIViewController {
     weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Категория"
+    private let screenTitleString = NSLocalizedString("CategoryScreen_screenTitleString", comment: "Категория")
     
     let tableView = UITableView()
     private let tableContainerView = UIView()
@@ -22,7 +22,7 @@ final class ChooseCategoryViewController: UIViewController {
     private var selectedIndexPath: IndexPath?
     
     private var addCategoryButton = UIButton()
-    private let addCategoryButtonString: String = "Добавить категорию"
+    private let addCategoryButtonString = NSLocalizedString("CategoryScreen_addCategoryButtonString", comment: "Добавить категорию")
     
     private var cellHeight: CGFloat = 75
     private var cellCount: Int = 0
