@@ -8,6 +8,13 @@
 import Foundation
 import UIKit
 
+enum TrackersMainScreenConst {
+    static let navBarTitleString = NSLocalizedString("navBarTitleString", comment: "Трекеры")
+    static let emptyStateViewString = NSLocalizedString("emptyStateViewString", comment: "Что будем отслеживать?")
+    static let searchBarPlaceholderString = NSLocalizedString("SearchBar_placeholder", comment: "Поиск")
+    static let pinnedSectionString = "Закрепленные"
+}
+
 final class TrackersViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
     private var trackers: [Tracker]?
@@ -15,11 +22,7 @@ final class TrackersViewController: UIViewController {
     private let trackerRecordStore = TrackerRecordStore.shared
     private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
     
-    private let searchBarPlaceholderString = NSLocalizedString("SearchBar_placeholder", comment: "Поиск")
-    
     private var selectedDate: Date?
-    
-    let notificationName = Notification.Name("NewTrackerCreated")
 
     private var emptyStateView = UIView()
     private var searchBar = UISearchBar()
@@ -48,9 +51,6 @@ final class TrackersViewController: UIViewController {
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
     
-    private let navBarTitleString = NSLocalizedString("navBarTitleString", comment: "Трекеры")
-    private let emptyStateViewString = NSLocalizedString("emptyStateViewString", comment: "Что будем отслеживать?")
-    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -62,10 +62,6 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { [weak self] notification in
-            self?.handleNotification(notification)
-        }
         
         trackerStore.trackersVC = self
         collectionView.dataSource = self
@@ -88,7 +84,7 @@ final class TrackersViewController: UIViewController {
         addButton.tintColor = .black
         navigationItem.leftBarButtonItem = addButton
         
-        navigationItem.title = navBarTitleString
+        navigationItem.title = TrackersMainScreenConst.navBarTitleString
         navigationController?.navigationBar.prefersLargeTitles = true
         
         let datePicker = UIDatePicker()
@@ -104,7 +100,7 @@ final class TrackersViewController: UIViewController {
     private func setupSearchBar() {
         let searchBar = UISearchBar()
         searchBar.barStyle = .default
-        searchBar.placeholder = searchBarPlaceholderString
+        searchBar.placeholder = TrackersMainScreenConst.searchBarPlaceholderString
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.backgroundImage = UIImage()
         view.addSubview(searchBar)
@@ -128,7 +124,7 @@ final class TrackersViewController: UIViewController {
         emptyStateView.addSubview(imageView)
         
         let label = UILabel()
-        label.text = emptyStateViewString
+        label.text = TrackersMainScreenConst.emptyStateViewString
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -173,14 +169,6 @@ final class TrackersViewController: UIViewController {
         } else {
             emptyStateView.isHidden = true
             collectionView.isHidden = false
-        }
-    }
-    
-    private func handleNotification(_ notification: Notification) {
-        if let userInfo = notification.userInfo,
-           let tracker = userInfo["tracker"] as? Tracker,
-           let category = userInfo["category"] as? TrackerCategory {
-            print("Получены данные: \(tracker), \(category)")
         }
     }
     
@@ -246,7 +234,6 @@ final class TrackersViewController: UIViewController {
         print("Трекер \(tracker.title) добавлен в категорию \(categoryTitle)")
         self.updateCollectionView()
     }
-
     
     private func removeTracker(_ tracker: Tracker) {
         guard let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id), let category = trackerEntity.category else {
@@ -333,7 +320,10 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                 self.toggleTrackerPin(at: indexPath)
             }
             let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.rawValue, identifier: nil) { _ in
-                // Handle action 2
+                let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
+                guard let tracker = cell?.getTracker() else { return }
+                // Переходим на экран редактирования
+
             }
             let deleteTracker = UIAction(title: TrackerContextMenu.deleteTrackerString.rawValue, identifier: nil, attributes: .destructive) { _ in
                 let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell

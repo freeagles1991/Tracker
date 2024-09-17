@@ -132,6 +132,39 @@ final class TrackerStore: NSObject {
         appDelegate.saveContext()
     }
     
+    func updateTracker(for tracker: Tracker, to newCategory: TrackerCategoryEntity? = nil) {
+        let predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects,
+              let trackerEntity = fetchedObjects.first else {
+            print("Tracker not found")
+            return
+        }
+        
+        // Обновляем свойства трекера
+        trackerEntity.title = tracker.title
+        trackerEntity.emoji = tracker.emoji
+        trackerEntity.scheduleArray = tracker.schedule
+        trackerEntity.color = tracker.color
+        
+        if let newCategory = newCategory {
+            // Удаляем трекер из старой категории
+            if let oldCategory = trackerEntity.category {
+                oldCategory.removeFromTrackers(trackerEntity)
+            }
+
+            // Устанавливаем новую категорию
+            trackerEntity.category = newCategory
+            newCategory.addToTrackers(trackerEntity)
+        }
+        
+        // Сохраняем изменения
+        appDelegate.saveContext()
+    }
+
+    
     public func removeTracker(with id: UUID) {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         

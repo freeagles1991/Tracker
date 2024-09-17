@@ -93,11 +93,8 @@ class CreateNewTrackerViewController: UIViewController {
     
     private var createButton = UIButton()
     private let createButtonString: String = NSLocalizedString("CreateNewTracker_createButtonString", comment: "Создать")
-
     
     private var isRegularEvent = true
-    
-    let notificationName = Notification.Name("MyCustomNotification")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -468,11 +465,6 @@ class CreateNewTrackerViewController: UIViewController {
         let newTracker = Tracker(title: trackerName, color: selectedColor, emoji: selectedEmoji, schedule: selectedWeekdaysArray)
         guard let selectedCategory = selectedCategory else { return }
         
-        let userInfo: [String: Any] = [
-            "tracker": newTracker,
-            "category": selectedCategory]
-        NotificationCenter.default.post(name: notificationName, object: nil, userInfo: userInfo)
-        
         guard let trackersVC else { return }
         trackersVC.addTracker(newTracker, toCategory: selectedCategory.title)
     }
@@ -487,6 +479,58 @@ class CreateNewTrackerViewController: UIViewController {
     
     func setCreateButtonTitle(_ title: String) {
         self.createButton.titleLabel?.text = title
+    }
+    
+    //MARK: EditTracker
+    func populateFieldsWithTrackerData(_ tracker: Tracker) {
+        // Заполнение полей данными трекера для редактирования
+        self.trackerNameTextField.text = tracker.title
+        self.selectedEmoji = tracker.emoji
+        if let selectedEmoji {
+            selectEmojiCell(with: selectedEmoji)
+        }
+        self.selectedColor = tracker.color
+        if let selectedColor {
+            selectColorCell(with: selectedColor)
+        }
+        self.selectedWeekdays = Set(tracker.schedule)
+        
+        if let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id), let categoryTitle = trackerEntity.category?.title {
+            let trackerCategory = TrackerCategory(title: categoryTitle, trackers: [])
+            self.selectedCategory = trackerCategory
+            updateCategoryButton(with: trackerCategory.title)
+        }
+        
+        updateSheduleButton(with: convertWeekdaysToString(selectedWeekdays))
+        updateCreateButtonState()
+    }
+    
+    func selectEmojiCell(with emoji: String) {
+        guard let emojiIndex = emojies.firstIndex(of: emoji) else { return }
+        
+        let indexPath = IndexPath(item: emojiIndex, section: 0)
+        
+        // Выделяем ячейку
+        emojiCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredVertically)
+        
+        // Обновляем вид ячейки для визуального выделения
+        if let cell = emojiCollectionView.cellForItem(at: indexPath) as? EmojiCell {
+            cell.isSelected = true
+        }
+    }
+    
+    func selectColorCell(with color: String) {
+        guard let colorIndex = colors.firstIndex(of: color) else { return }
+        
+        let indexPath = IndexPath(item: colorIndex, section: 0)
+        
+        // Выделяем ячейку
+        colorCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredVertically)
+        
+        // Обновляем вид ячейки для визуального выделения
+        if let cell = colorCollectionView.cellForItem(at: indexPath) as? ColorCell {
+            cell.isSelected = true
+        }
     }
 
     
