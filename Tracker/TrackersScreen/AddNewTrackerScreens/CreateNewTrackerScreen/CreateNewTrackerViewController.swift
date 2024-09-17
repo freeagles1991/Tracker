@@ -12,7 +12,6 @@ class CreateNewTrackerViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
     private let trackerCategoryStore = TrackerCategoryStore.shared
     weak var trackersVC: TrackersViewController?
-    weak var delegate: ChooseTrackerTypeViewController?
     
     enum Constants {
         static let emojies: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
