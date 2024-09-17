@@ -42,3 +42,19 @@ public enum Weekday: String, CaseIterable, Codable {
             return weekdays[adjustedIndex]
         }
 }
+
+extension Set where Element == Weekday {
+    func toString() -> String {
+        let abbreviations: [Weekday: String] = [
+            .monday: "Пн",
+            .tuesday: "Вт",
+            .wednesday: "Ср",
+            .thursday: "Чт",
+            .friday: "Пт",
+            .saturday: "Сб",
+            .sunday: "Вс"
+        ]
+        let abbreviationsArray = self.compactMap { abbreviations[$0] }
+        return abbreviationsArray.joined(separator: ", ")
+    }
+}

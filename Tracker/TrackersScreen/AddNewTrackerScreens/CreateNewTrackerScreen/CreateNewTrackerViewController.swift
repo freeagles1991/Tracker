@@ -414,22 +414,8 @@ class CreateNewTrackerViewController: UIViewController {
     
     //MARK: Логика
     
-    private func resetScreenFields() {
-        
-    }
-    
     private func convertWeekdaysToString(_ selectedWeekdays: Set<Weekday>) -> String {
-        let abbreviations: [Weekday: String] = [
-            .monday: "Пн",
-            .tuesday: "Вт",
-            .wednesday: "Ср",
-            .thursday: "Чт",
-            .friday: "Пт",
-            .saturday: "Сб",
-            .sunday: "Вс"
-        ]
-        let abbreviationsArray = selectedWeekdays.compactMap { abbreviations[$0] }
-        return abbreviationsArray.joined(separator: ", ")
+        return selectedWeekdays.toString()
     }
     
     func updateCategory(_ category: TrackerCategory) {
@@ -537,7 +523,6 @@ class CreateNewTrackerViewController: UIViewController {
         }
     }
 
-    
     //MARK: Кнопки
     @objc private func categoryButtonTapped(_ sender: UIButton) {
         present(chooseCategoryVC, animated: true)
