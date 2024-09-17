@@ -475,7 +475,6 @@ class CreateNewTrackerViewController: UIViewController {
         
         guard let trackersVC else { return }
         trackersVC.addTracker(newTracker, toCategory: selectedCategory.title)
-        trackersVC.updateCollectionViewWithNewTracker()
     }
     
     func configureTrackerType(isRegularEvent: Bool) {

@@ -204,7 +204,7 @@ final class TrackersViewController: UIViewController {
         collectionView.reloadData()
     }
     
-    func updateCollectionViewWithNewTracker() {
+    func updateCollectionView() {
         guard let selectedDate else { return }
         trackers = trackerStore.fetchTrackers(by: selectedDate)
         updateUI()
@@ -244,6 +244,7 @@ final class TrackersViewController: UIViewController {
         }
             trackerStore.createTracker(with: tracker, in: trackerCategoryEntity)
         print("Трекер \(tracker.title) добавлен в категорию \(categoryTitle)")
+        self.updateCollectionView()
     }
 
     
@@ -254,6 +255,7 @@ final class TrackersViewController: UIViewController {
         }
         trackerStore.removeTracker(with: tracker.id)
         print("Трекер \(tracker.title) удален из категории \(category)")
+        self.updateCollectionView()
     }
 }
 
