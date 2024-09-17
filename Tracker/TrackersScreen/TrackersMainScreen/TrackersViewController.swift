@@ -34,6 +34,16 @@ final class TrackersViewController: UIViewController {
         return collectionView
     }()
     
+    //TO DO: добавить переводы
+    enum TrackerContextMenu: String {
+        case pinTrackerString = "Закрепить"
+        case unpinTrackerString = "Открепить"
+        case editTrackerString = "Редактировать"
+        case deleteTrackerString = "Удалить"
+    }
+    
+    var trackerContextMenuItemStates: [IndexPath: Bool] = [:]
+    
     let itemsPerRow: CGFloat = 2
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
@@ -173,6 +183,10 @@ final class TrackersViewController: UIViewController {
             print("Получены данные: \(tracker), \(category)")
         }
     }
+    
+    private func editTracker(_ tracker: Tracker) {
+       //Переходим на экран редактирования трекера
+    }
 
     
     @objc private func createNewTracker() {
@@ -233,8 +247,13 @@ final class TrackersViewController: UIViewController {
     }
 
     
-    private func removeTracker(_ tracker: Tracker, from categoryTitle: String) {
-        //TO DO: реализовать удаление трекера
+    private func removeTracker(_ tracker: Tracker) {
+        guard let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id), let category = trackerEntity.category else {
+            print("Трекер с названием \(tracker.title) не найден в базе")
+            return
+        }
+        trackerStore.removeTracker(with: tracker.id)
+        print("Трекер \(tracker.title) удален из категории \(category)")
     }
 }
 
@@ -301,6 +320,62 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     // Вертикальные отступы между строками ячеек
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    // MARK: - Context Menu Configuration
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { _ in
+            let isOn = self.isTrackerPinned(at: indexPath)
+            let pinTracker = UIAction(title: isOn ? TrackerContextMenu.unpinTrackerString.rawValue : TrackerContextMenu.pinTrackerString.rawValue, identifier: nil) { _ in
+                self.toggleTrackerPin(at: indexPath)
+            }
+            let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.rawValue, identifier: nil) { _ in
+                // Handle action 2
+            }
+            let deleteTracker = UIAction(title: TrackerContextMenu.deleteTrackerString.rawValue, identifier: nil, attributes: .destructive) { _ in
+                let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
+                guard let tracker = cell?.getTracker() else { return }
+                self.removeTracker(tracker)
+            }
+            return UIMenu(title: "", children: [pinTracker, editTracker, deleteTracker])
+        }
+        return config
+    }
+    
+    func isTrackerPinned(at indexPath: IndexPath) -> Bool {
+        return trackerContextMenuItemStates[indexPath] ?? false
+    }
+
+    func toggleTrackerPin(at indexPath: IndexPath) {
+        let currentState = isTrackerPinned(at: indexPath)
+        trackerContextMenuItemStates[indexPath] = !currentState
+        // Здесь можно обновить ячейку или другие данные
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath,
+              let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell else {
+            return nil
+        }
+
+        // Настраиваем параметры анимации подсветки
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear // Прозрачный фон для подсветки
+        parameters.visiblePath = UIBezierPath(roundedRect: cell.getCellColorRectView().bounds, cornerRadius: 16)
+        
+        // Возвращаем зону подсветки для ячейки
+        return UITargetedPreview(view: cell, parameters: parameters)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath,
+              let cell = collectionView.cellForItem(at: indexPath) else {
+            return nil
+        }
+
+        // Возвращаем зону подсветки для ячейки при закрытии меню
+        return UITargetedPreview(view: cell)
     }
 }
 

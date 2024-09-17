@@ -133,24 +133,17 @@ final class TrackerStore: NSObject {
     }
     
     public func removeTracker(with id: UUID) {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerEntity")
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         
-        do {
-            guard let trackers = try context.fetch(fetchRequest) as? [NSManagedObject],
-                  let trackerToDelete = trackers.first else {
-                print("Трекер не найден")
-                return
-            }
-            
-            context.delete(trackerToDelete)
-            
-            try context.save()
-            print("Трекер успешно удален")
-            
-        } catch {
-            print("Ошибка при удалении трекера: \(error.localizedDescription)")
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects,
+                let trackerEntity = fetchedObjects.first else {
+            return
         }
+
+        context.delete(trackerEntity)
+        appDelegate.saveContext()
     }
     
 }

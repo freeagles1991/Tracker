@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class CreateNewTrackerViewController: UIViewController {
+class CreateNewTrackerViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
     private let trackerCategoryStore = TrackerCategoryStore.shared
     weak var trackersVC: TrackersViewController?
@@ -481,6 +481,15 @@ final class CreateNewTrackerViewController: UIViewController {
     func configureTrackerType(isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
     }
+    
+    func setScreenTitle(_ title: String) {
+        self.screenTitle.text = title
+    }
+    
+    func setCreateButtonTitle(_ title: String) {
+        self.createButton.titleLabel?.text = title
+    }
+
     
     //MARK: Кнопки
     @objc private func categoryButtonTapped(_ sender: UIButton) {

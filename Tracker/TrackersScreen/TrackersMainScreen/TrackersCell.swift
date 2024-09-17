@@ -160,21 +160,8 @@ final class TrackerCell: UICollectionViewCell {
         }
     }
     
-    private func encreaseDurationLabel() {
-        durationCountInt += 1
-        durationLabel.text = String.localizedStringWithFormat(
-            NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt
-        )
-        guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
-        trackersVC?.setTrackerComplete(for: tracker, on: selectedDate)
-    }
-    
-    private func decreaseDurationLabel() {
-        durationCountInt -= 1
-        durationLabel.text = String.localizedStringWithFormat(
-            NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt)
-        guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
-        trackersVC?.setTrackerIncomplete(for: tracker, on: selectedDate)
+    func getCellColorRectView() -> UIView {
+        return colorPanelView
     }
     
     func updateUI(with color: UIColor) {
@@ -201,6 +188,11 @@ final class TrackerCell: UICollectionViewCell {
             NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt)
     }
     
+    func getTracker() -> Tracker? {
+        guard let tracker else { return nil }
+        return tracker
+    }
+    
     private func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
         let records = trackerRecordStore.fetchTrackerRecords(byID: tracker.id, on: date)
         return !records.isEmpty
@@ -210,6 +202,23 @@ final class TrackerCell: UICollectionViewCell {
         let records = trackerRecordStore.fetchTrackerRecords(byID: tracker.id)
         return records.count
         
+    }
+    
+    private func encreaseDurationLabel() {
+        durationCountInt += 1
+        durationLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt
+        )
+        guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
+        trackersVC?.setTrackerComplete(for: tracker, on: selectedDate)
+    }
+    
+    private func decreaseDurationLabel() {
+        durationCountInt -= 1
+        durationLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt)
+        guard let tracker = self.tracker, let selectedDate = selectedDate else { return }
+        trackersVC?.setTrackerIncomplete(for: tracker, on: selectedDate)
     }
 }
 

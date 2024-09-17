@@ -20,6 +20,7 @@
 		321586FE2C92E5B000452B99 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586FD2C92E5B000452B99 /* CategoryCell.swift */; };
 		321587032C9495CA00452B99 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 321587012C9495CA00452B99 /* Localizable.strings */; };
 		321587062C949B7B00452B99 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 321587042C949B7B00452B99 /* Localizable.stringsdict */; };
+		3215870A2C98B44700452B99 /* EditTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321587092C98B44700452B99 /* EditTrackerViewController.swift */; };
 		3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */; };
 		3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */; };
 		323882622C52AB0B00EE11A3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 323882612C52AB0B00EE11A3 /* Base */; };
@@ -91,6 +92,7 @@
 		321587052C949B7B00452B99 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		321587072C949E0E00452B99 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		321587082C949E1F00452B99 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		321587092C98B44700452B99 /* EditTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTrackerViewController.swift; sourceTree = "<group>"; };
 		323882572C52AB0B00EE11A3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 			children = (
 				32A45BB62C5FE326002A97F5 /* ChooseTrackerTypeViewController.swift */,
 				32BABF1D2C750FB200E176E2 /* CreateNewTrackerScreen */,
+				321587092C98B44700452B99 /* EditTrackerViewController.swift */,
 			);
 			path = AddNewTrackerScreens;
 			sourceTree = "<group>";
@@ -547,6 +550,7 @@
 				321586C12C873F2000452B99 /* TrackerEntity+CoreDataClass.swift in Sources */,
 				321586C22C873F2000452B99 /* TrackerEntity+CoreDataProperties.swift in Sources */,
 				32BABF122C7213B300E176E2 /* UIView.swift in Sources */,
+				3215870A2C98B44700452B99 /* EditTrackerViewController.swift in Sources */,
 				32C3B6B62C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift in Sources */,
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
 				321586EE2C8F68C800452B99 /* OnboardingScreenViewController.swift in Sources */,
