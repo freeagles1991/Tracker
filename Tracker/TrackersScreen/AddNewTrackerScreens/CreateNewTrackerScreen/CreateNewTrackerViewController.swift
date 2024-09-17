@@ -21,7 +21,8 @@ class CreateNewTrackerViewController: UIViewController {
                                 "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D",
                                 
                                 "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"]
-        static let screenTitleString: String = NSLocalizedString("CreateNewTracker_screenTitleString", comment: "Новая привычка")
+        static let createScreenTitleString: String = NSLocalizedString("CreateNewTracker_createScreenTitleString", comment: "Новая привычка")
+        static let editScreenTitleString: String = NSLocalizedString("CreateNewTracker_editScreenTitleString", comment: "Редактирование привычки")
         static let trackerNameTextFieldString: String = NSLocalizedString("CreateNewTracker_trackerNameTextFieldString", comment: "Введите название трекера")
         static let categoryButtonString: String = NSLocalizedString("CreateNewTracker_categoryButtonString", comment: "Категория")
         static let scheduleButtonString: String = NSLocalizedString("CreateNewTracker_scheduleButtonString", comment: "Расписание")
@@ -29,6 +30,7 @@ class CreateNewTrackerViewController: UIViewController {
         static let colorHeaderString = NSLocalizedString("CreateNewTracker_colorHeaderString", comment: "Цвет")
         static let cancelButtonString: String = NSLocalizedString("CreateNewTracker_cancelButtonString", comment: "Отменить")
         static let createButtonString: String = NSLocalizedString("CreateNewTracker_createButtonString", comment: "Создать")
+        static let saveButtonString: String = NSLocalizedString("CreateNewTracker_saveButtonString", comment: "Сохранить")
     }
     
     private let chooseCategoryVC = ChooseCategoryViewController(viewModel: ChooseCategoryViewModel())
@@ -43,17 +45,18 @@ class CreateNewTrackerViewController: UIViewController {
     private let contentView = UIView()
     
     private var screenTitle = UILabel()
+    private var durationCounterLabel = UILabel()
+    private var durationCountInt = 0
     private var trackerNameTextField = UITextField()
+    
     private var categoryButton = UIButton()
     private var scheduleButton = UIButton()
-    
     private let separator: UIView = {
         let view = UIView()
         view.backgroundColor = .darkGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     private var parametersStackView = UIStackView()
     
     private let emojiCollectionViewDataSourceDelegate = EmojiCollectionViewDataSourceDelegate()
@@ -61,7 +64,6 @@ class CreateNewTrackerViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 5
-        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         collectionView.backgroundColor = .white
@@ -77,7 +79,6 @@ class CreateNewTrackerViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 5
-        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -92,10 +93,12 @@ class CreateNewTrackerViewController: UIViewController {
     
     private let isRegularEvent: Bool
     private let isEditingTracker: Bool
+    private var editableTracker: Tracker
     
-    init(isRegularEvent: Bool, isEditingTracker: Bool) {
+    init(isRegularEvent: Bool, isEditingTracker: Bool, editableTracker: Tracker? = nil) {
         self.isRegularEvent = isRegularEvent
         self.isEditingTracker = isEditingTracker
+        self.editableTracker = editableTracker ?? Tracker.defaultTracker
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -113,6 +116,7 @@ class CreateNewTrackerViewController: UIViewController {
         scheduleScreenVC.delegate = self
         
         setupScreenTitle()
+        setupDurationCounterLabel()
         setupScrollView()
         setupTextField()
         setupParametresStackView()
@@ -125,6 +129,10 @@ class CreateNewTrackerViewController: UIViewController {
         if !isRegularEvent {
             guard let weekday = Weekday.fromDate(Date()) else { return }
             selectedWeekdays.insert(weekday)
+        }
+        
+        if isEditingTracker {
+            populateFieldsWithTrackerData(editableTracker)
         }
     }
     
@@ -156,7 +164,7 @@ class CreateNewTrackerViewController: UIViewController {
     private func setupScreenTitle() {
         let label = UILabel()
         let font = UIFont(name: "SFProText-Medium", size: 16)
-        label.text = Constants.screenTitleString
+        label.text = isEditingTracker ? Constants.editScreenTitleString : Constants.createScreenTitleString
         label.textColor = .black
         label.font = font
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -166,6 +174,33 @@ class CreateNewTrackerViewController: UIViewController {
         label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         
         self.screenTitle = label
+    }
+    
+    private func setupDurationCounterLabel() {
+        if isEditingTracker {
+            let label = UILabel()
+            let font = UIFont(name: "SFProText-Bold", size: 32)
+            label.text = String.localizedStringWithFormat(
+                NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt)
+            label.textColor = .black
+            label.font = font
+            label.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(label)
+            
+            label.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38).isActive = true
+            label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+            
+            self.durationCounterLabel = label
+        } else {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(label)
+            
+            label.topAnchor.constraint(equalTo: screenTitle.topAnchor, constant: 0).isActive = true
+            label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+            
+            self.durationCounterLabel = label
+        }
     }
     
     private func setupTextField() {
@@ -189,7 +224,7 @@ class CreateNewTrackerViewController: UIViewController {
         
         
         NSLayoutConstraint.activate([
-            textField.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 38),
+            textField.topAnchor.constraint(equalTo: durationCounterLabel.bottomAnchor, constant: 40),
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75)
@@ -368,8 +403,13 @@ class CreateNewTrackerViewController: UIViewController {
     }
     
     private func setupCreateButton() {
-        let createButton = setupBaseButton(with: Constants.createButtonString)
-        createButton.addTarget(self, action: #selector(createButtonTapped(_:)), for: .touchUpInside)
+        let buttonTitle = isEditingTracker ? Constants.saveButtonString : Constants.createButtonString
+        let createButton = setupBaseButton(with: buttonTitle)
+        if isEditingTracker {
+            createButton.addTarget(self, action: #selector(saveButtonTapped(_:)), for: .touchUpInside)
+        } else {
+            createButton.addTarget(self, action: #selector(createButtonTapped(_:)), for: .touchUpInside)
+        }
         
         self.createButton = createButton
     }
@@ -441,33 +481,35 @@ class CreateNewTrackerViewController: UIViewController {
         print("Выбранный емоджи сохранен")
     }
     
-    func createNewTracker() {
+    private func createNewTracker() -> Tracker? {
         guard let trackerName = trackerNameTextField.text, !trackerName.isEmpty else {
             print("Название трекера не может быть пустым.")
-            return
+            return nil
         }
         guard let selectedEmoji = selectedEmoji else {
             print("Выбранный emoji отсутствует")
-            return
+            return nil
         }
         guard let selectedColor = selectedColor else {
             print("Выбранный color отсутствует")
-            return
+            return nil
         }
         let selectedWeekdaysArray = Array(selectedWeekdays)
         let newTracker = Tracker(title: trackerName, color: selectedColor, emoji: selectedEmoji, schedule: selectedWeekdaysArray)
-        guard let selectedCategory = selectedCategory else { return }
-        
-        guard let trackersVC else { return }
+        return newTracker
+    }
+    
+    private func addNewTracker() {
+        guard let selectedCategory,
+              let trackersVC,
+              let newTracker = createNewTracker()
+        else { return }
         trackersVC.addTracker(newTracker, toCategory: selectedCategory.title)
     }
     
-    func setScreenTitle(_ title: String) {
-        self.screenTitle.text = title
-    }
-    
-    func setCreateButtonTitle(_ title: String) {
-        self.createButton.titleLabel?.text = title
+    private func updateTracker(with tracker: Tracker) -> Tracker? {
+        let updatedTracker = Tracker(id: editableTracker.id, title: tracker.title, color: tracker.color, emoji: tracker.emoji, schedule: tracker.schedule)
+        return updatedTracker
     }
     
     //MARK: EditTracker
@@ -532,9 +574,20 @@ class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func createButtonTapped(_ sender: UIButton) {
-        createNewTracker()
-        
+        addNewTracker()
         self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func saveButtonTapped(_ sender: UIButton) {
+        guard let newTracker = createNewTracker(),
+              let updatedTracker = updateTracker(with: newTracker),
+              let trackersVC
+        else { return }
+        trackerStore.updateTracker(for: updatedTracker)
+        trackersVC.updateCollectionView()
+        print("Обновили трекер")
+        
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func cancelButtonTapped(_ sender: UIButton) {

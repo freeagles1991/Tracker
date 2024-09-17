@@ -28,7 +28,8 @@
 "CreateNewCategory_screenTitleString" = "New category";
 "CreateNewCategory_categoryNamePlaceholderString" = "Enter category name";
 "CreateNewCategory_doneButtonString" = "Done";
-"CreateNewTracker_screenTitleString" = "New habit";
+"CreateNewTracker_createScreenTitleString" = "New Habit";
+"CreateNewTracker_editScreenTitleString" = "Edit Habit";
 "CreateNewTracker_trackerNameTextFieldString" = "Enter tracker name";
 "CreateNewTracker_categoryButtonString" = "Category";
 "CreateNewTracker_scheduleButtonString" = "Schedule";
@@ -36,6 +37,7 @@
 "CreateNewTracker_colorHeaderString" = "Color";
 "CreateNewTracker_cancelButtonString" = "Cancel";
 "CreateNewTracker_createButtonString" = "Create";
+"CreateNewTracker_saveButtonString" = "Save";
 "TabBar_trackersTabBarTitle" = "Trackers";
 "TabBar_statisticsTabBarTitle" = "Statistics";
 "SearchBar_placeholder" = "Search";

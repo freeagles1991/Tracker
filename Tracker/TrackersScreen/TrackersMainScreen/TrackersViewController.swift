@@ -322,7 +322,9 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
             let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.rawValue, identifier: nil) { _ in
                 let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
                 guard let tracker = cell?.getTracker() else { return }
-                // Переходим на экран редактирования
+                let editTrackerVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: true, editableTracker: tracker)
+                editTrackerVC.trackersVC = self
+                self.present(editTrackerVC, animated: true)
 
             }
             let deleteTracker = UIAction(title: TrackerContextMenu.deleteTrackerString.rawValue, identifier: nil, attributes: .destructive) { _ in
