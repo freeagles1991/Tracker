@@ -98,10 +98,9 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
         if let navigationController = self.navigationController {
-            let createNewHabitVC = CreateNewTrackerViewController()
+            let createNewHabitVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: false)
             createNewHabitVC.delegate = self
             createNewHabitVC.trackersVC = self.trackersVC
-            createNewHabitVC.configureTrackerType(isRegularEvent: true)
             
             navigationController.pushViewController(createNewHabitVC, animated: true)
         }
@@ -109,10 +108,9 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     @objc private func eventButtonTapped(_ sender: UIButton) {
         if let navigationController = self.navigationController {
-            let createNewEventVC = CreateNewTrackerViewController()
+            let createNewEventVC = CreateNewTrackerViewController(isRegularEvent: false, isEditingTracker: false)
             createNewEventVC.delegate = self
             createNewEventVC.trackersVC = self.trackersVC
-            createNewEventVC.configureTrackerType(isRegularEvent: false)
             
             navigationController.pushViewController(createNewEventVC, animated: true)
         }

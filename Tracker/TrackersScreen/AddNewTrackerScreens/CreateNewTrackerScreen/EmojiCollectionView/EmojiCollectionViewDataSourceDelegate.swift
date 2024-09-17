@@ -24,7 +24,7 @@ final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
     }
     /// Количество элементов в секци
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let count = createNewTrackerVC?.emojies.count else {return 0}
+        let count = CreateNewTrackerViewController.Constants.emojies.count
         return count
     }
     
@@ -32,7 +32,7 @@ final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as? EmojiCell else {
             return EmojiCell()
         }
-        guard let emoji = createNewTrackerVC?.emojies[indexPath.row] else { return cell }
+        let emoji = CreateNewTrackerViewController.Constants.emojies[indexPath.row]
         cell.configure(with: emoji)
         return cell
     }
@@ -40,7 +40,7 @@ final class EmojiCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "EmojiHeader", for: indexPath) as? EmojiHeaderView else {
             return EmojiHeaderView() }
-        headerView.label.text = createNewTrackerVC?.emojiHeaderString
+        headerView.label.text = CreateNewTrackerViewController.Constants.emojiHeaderString
         return headerView
     }
     
