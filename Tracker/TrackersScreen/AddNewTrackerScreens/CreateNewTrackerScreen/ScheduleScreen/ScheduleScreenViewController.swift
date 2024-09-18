@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ScheduleScreenViewController: UIViewController {
-    private var viewModel: ScheduleScreenViewModel
+    var viewModel: ScheduleScreenViewModel
     
     weak var delegate: CreateNewTrackerViewController?
     
@@ -32,6 +32,14 @@ final class ScheduleScreenViewController: UIViewController {
         
         bindViewModel()
         viewModel.updateDoneButtonState()
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        if !viewModel.selectedWeekdays.isEmpty {
+            viewModel.initialSelectedWeekdays(viewModel.selectedWeekdays)
+        }
     }
     
     init(viewModel: ScheduleScreenViewModel) {

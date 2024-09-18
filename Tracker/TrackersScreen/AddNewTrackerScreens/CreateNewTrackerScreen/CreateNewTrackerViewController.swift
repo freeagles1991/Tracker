@@ -567,6 +567,9 @@ class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func scheduleButtonTapped(_ sender: UIButton) {
+        if !selectedWeekdays.isEmpty {
+            scheduleScreenVC.viewModel.initialSelectedWeekdays(self.selectedWeekdays)
+        }
         present(scheduleScreenVC, animated: true)
     }
     
@@ -588,7 +591,11 @@ class CreateNewTrackerViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped(_ sender: UIButton) {
-        self.navigationController?.dismiss(animated: true, completion: nil)
+        if isEditingTracker {
+            dismiss(animated: true)
+        } else {
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc private func textFieldDidChange() {
