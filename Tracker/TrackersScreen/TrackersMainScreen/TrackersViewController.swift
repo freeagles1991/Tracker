@@ -22,8 +22,6 @@ final class TrackersViewController: UIViewController {
     private let trackerRecordStore = TrackerRecordStore.shared
     private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
     
-    private var pinnedCategory: TrackerCategory?
-    
     private var selectedDate: Date?
 
     private var emptyStateView = UIView()
@@ -244,11 +242,6 @@ final class TrackersViewController: UIViewController {
         print("Трекер \(tracker.title) удален из категории \(category)")
         self.updateCollectionView()
     }
-    
-    private func loadPinnedTrackers() {
-        guard let pinnedTrackers = trackerStore.fetchPinnedTrackers() else { return }
-        pinnedCategory = TrackerCategory(title: "Закрепленные", trackers: pinnedTrackers)
-    }
 }
 
 
@@ -329,7 +322,6 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                 identifier: nil
             ) { _ in
                 self.toggleTrackerPin(tracker)
-                collectionView.reloadData()
             }
             let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.rawValue, identifier: nil) { _ in
                 let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
@@ -359,6 +351,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         let updatedTracker = Tracker(id: tracker.id ,title: tracker.title, color: tracker.color, emoji: tracker.emoji, schedule: tracker.schedule, isPinned: !currentState)
         trackerStore.updateTracker(for: updatedTracker)
         print(updatedTracker.isPinned)
+        self.updateCollectionView()
     }
     
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {

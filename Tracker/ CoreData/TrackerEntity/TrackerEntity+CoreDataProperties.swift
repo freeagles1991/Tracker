@@ -25,6 +25,7 @@ extension TrackerEntity {
     @NSManaged public var category: TrackerCategoryEntity?
     @NSManaged public var records: NSSet?
     
+    
     // Computed property для работы с schedule как с [Weekday]
     public var scheduleArray: [Weekday]? {
         get {
@@ -44,6 +45,10 @@ extension TrackerEntity {
                 schedule = String(data: data, encoding: .utf8)
             }
         }
+    }
+    
+    @objc var pinnedOrCategory: String {
+        return isPinned ? "Pinned" : (category?.title ?? "No Category")
     }
 
 }

@@ -26,13 +26,16 @@ final class TrackerStore: NSObject {
     // Настраиваем FRC
     func setupFetchedResultsController(_ predicate: NSPredicate) {
         let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "isPinned", ascending: false),
+            NSSortDescriptor(key: "title", ascending: true)
+        ]
         fetchRequest.predicate = predicate
         
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
-            sectionNameKeyPath: "category.title",
+            sectionNameKeyPath: "pinnedOrCategory",
             cacheName: nil
         )
         guard let fetchedResultsController else { return }
@@ -66,7 +69,7 @@ final class TrackerStore: NSObject {
     func header(at indexPath: IndexPath) -> String? {
         guard let fetchedResultsController else { return "NoName" }
         let trackerEntity = fetchedResultsController.object(at: indexPath)
-        return trackerEntity.category?.title
+        return trackerEntity.pinnedOrCategory
     }
     
     private func convertEntityToTracker(_ trackerEntity: TrackerEntity) -> Tracker? {
@@ -86,21 +89,7 @@ final class TrackerStore: NSObject {
     public func fetchTrackers(by date: Date) -> [Tracker]? {
         guard let selectedWeekday = Weekday.fromDate(date) else { return [] }
         
-        let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@ AND isPinned == %@", selectedWeekday.rawValue, NSNumber(value: false))
-        
-        self.setupFetchedResultsController(predicate)
-        
-        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
-            return []
-        }
-        
-        return fetchedObjects.compactMap { trackerEntity in
-            convertEntityToTracker(trackerEntity)
-        }
-    }
-    
-    public func fetchPinnedTrackers() -> [Tracker]? {
-        let predicate = NSPredicate(format: "isPinned == %@", NSNumber(value: true))
+        let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
         
         self.setupFetchedResultsController(predicate)
         
