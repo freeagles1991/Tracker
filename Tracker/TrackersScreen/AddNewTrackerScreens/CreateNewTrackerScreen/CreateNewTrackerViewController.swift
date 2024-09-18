@@ -46,7 +46,6 @@ class CreateNewTrackerViewController: UIViewController {
     
     private var screenTitle = UILabel()
     private var durationCounterLabel = UILabel()
-    private var durationCountInt = 0
     private var trackerNameTextField = UITextField()
     
     private var categoryButton = UIButton()
@@ -180,8 +179,9 @@ class CreateNewTrackerViewController: UIViewController {
         if isEditingTracker {
             let label = UILabel()
             let font = UIFont(name: "SFProText-Bold", size: 32)
+            let count = trackerStore.fetchTrackerEntity(editableTracker.id)?.records?.count
             label.text = String.localizedStringWithFormat(
-                NSLocalizedString("daysCount", comment: "Количество дней"), durationCountInt)
+                NSLocalizedString("daysCount", comment: "Количество дней"), count ?? 0)
             label.textColor = .black
             label.font = font
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -514,7 +514,6 @@ class CreateNewTrackerViewController: UIViewController {
     
     //MARK: EditTracker
     func populateFieldsWithTrackerData(_ tracker: Tracker) {
-        // Заполнение полей данными трекера для редактирования
         self.trackerNameTextField.text = tracker.title
         self.selectedEmoji = tracker.emoji
         if let selectedEmoji {
@@ -538,13 +537,8 @@ class CreateNewTrackerViewController: UIViewController {
     
     func selectEmojiCell(with emoji: String) {
         guard let emojiIndex = Constants.emojies.firstIndex(of: emoji) else { return }
-        
         let indexPath = IndexPath(item: emojiIndex, section: 0)
-        
-        // Выделяем ячейку
         emojiCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredVertically)
-        
-        // Обновляем вид ячейки для визуального выделения
         if let cell = emojiCollectionView.cellForItem(at: indexPath) as? EmojiCell {
             cell.isSelected = true
         }
@@ -566,6 +560,9 @@ class CreateNewTrackerViewController: UIViewController {
 
     //MARK: Кнопки
     @objc private func categoryButtonTapped(_ sender: UIButton) {
+        if let selectedCategory = selectedCategory {
+            chooseCategoryVC.viewModel.selectedCategory = selectedCategory
+        }
         present(chooseCategoryVC, animated: true)
     }
     

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    private var viewModel: ChooseCategoryViewModel
+    var viewModel: ChooseCategoryViewModel
     
     weak var delegate: CreateNewTrackerViewController?
     
@@ -47,6 +47,18 @@ final class ChooseCategoryViewController: UIViewController {
         
         bindViewModel()
         viewModel.loadCategories()
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        if let selectedCategory = viewModel.selectedCategory,
+           let index = viewModel.categories.firstIndex(where: { $0.title == selectedCategory.title }) {
+            let indexPath = IndexPath(row: index, section: 0)
+            selectedIndexPath = indexPath
+            tableView.reloadData()
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        }
     }
 
     private func bindViewModel() {
@@ -146,6 +158,10 @@ final class ChooseCategoryViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
+    
+//    func selectCategory(at index: Int) {
+//        viewModel.selectCategory(at: index)
+//    }
 
 }
 
@@ -164,9 +180,17 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let previousIndexPath = selectedIndexPath
         viewModel.selectCategory(at: indexPath.row)
         selectedIndexPath = indexPath
-        tableView.reloadData()
+        
+        // Обновляем только изменённые ячейки
+        var indexPathsToReload: [IndexPath] = [indexPath]
+        if let previousIndexPath = previousIndexPath {
+            indexPathsToReload.append(previousIndexPath)
+        }
+        
+        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
