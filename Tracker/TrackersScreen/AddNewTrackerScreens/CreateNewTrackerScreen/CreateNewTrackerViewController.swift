@@ -581,9 +581,11 @@ class CreateNewTrackerViewController: UIViewController {
     @objc private func saveButtonTapped(_ sender: UIButton) {
         guard let newTracker = createNewTracker(),
               let updatedTracker = updateTracker(with: newTracker),
-              let trackersVC
+              let trackersVC,
+              let selectedCategory
         else { return }
-        trackerStore.updateTracker(for: updatedTracker)
+        let categoryEntity = trackerCategoryStore.fetchCategoryEntity(byTitle: selectedCategory.title)
+        trackerStore.updateTracker(for: updatedTracker, to: categoryEntity)
         trackersVC.updateCollectionView()
         print("Обновили трекер")
         
