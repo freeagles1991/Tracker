@@ -21,6 +21,7 @@ extension TrackerEntity {
     @NSManaged public var id: UUID?
     @NSManaged public var schedule: String?
     @NSManaged public var title: String?
+    @NSManaged public var isPinned: Bool
     @NSManaged public var category: TrackerCategoryEntity?
     @NSManaged public var records: NSSet?
     

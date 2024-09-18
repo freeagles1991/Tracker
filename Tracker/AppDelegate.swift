@@ -63,14 +63,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {
-            let container = NSPersistentContainer(name: "TrackersData")
-            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-                if let error = error as NSError? {
-                    print("persistentContainer loaing error")
-                }
-            })
-            return container
-        }()
+        let container = NSPersistentContainer(name: "TrackersData")
+        let description = container.persistentStoreDescriptions.first
+        description?.shouldMigrateStoreAutomatically = true
+        description?.shouldInferMappingModelAutomatically = true
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                print("persistentContainer loaing error")
+            }
+        })
+        return container
+    }()
 
     // MARK: - Core Data Saving support
 

@@ -53,6 +53,7 @@ final class TrackerStore: NSObject {
        }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
+        
         fetchedResultsController?.sections?[section].numberOfObjects ?? 0
     }
 
@@ -79,13 +80,27 @@ final class TrackerStore: NSObject {
             return nil
         }
 
-        return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
+        return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule, isPinned: trackerEntity.isPinned)
     }
     
     public func fetchTrackers(by date: Date) -> [Tracker]? {
         guard let selectedWeekday = Weekday.fromDate(date) else { return [] }
         
-        let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
+        let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@ AND isPinned == %@", selectedWeekday.rawValue, NSNumber(value: false))
+        
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { trackerEntity in
+            convertEntityToTracker(trackerEntity)
+        }
+    }
+    
+    public func fetchPinnedTrackers() -> [Tracker]? {
+        let predicate = NSPredicate(format: "isPinned == %@", NSNumber(value: true))
         
         self.setupFetchedResultsController(predicate)
         
@@ -125,6 +140,7 @@ final class TrackerStore: NSObject {
         trackerEntity.emoji = tracker.emoji
         trackerEntity.scheduleArray = tracker.schedule
         trackerEntity.color = tracker.color
+        trackerEntity.isPinned = tracker.isPinned
         
         trackerEntity.category = category
         category.addToTrackers(trackerEntity)
@@ -148,6 +164,7 @@ final class TrackerStore: NSObject {
         trackerEntity.emoji = tracker.emoji
         trackerEntity.scheduleArray = tracker.schedule
         trackerEntity.color = tracker.color
+        trackerEntity.isPinned = tracker.isPinned
         
         if let newCategory = newCategory {
             // Удаляем трекер из старой категории
