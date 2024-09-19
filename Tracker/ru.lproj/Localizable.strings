@@ -20,6 +20,7 @@
 "ScheduleScreen_screenTitleString" = "Расписание";
 "emptyStateViewString" = "Что будем отслеживать?";
 "navBarTitleString" = "Трекеры";
+"Filters_Button" = "Фильтры";
 "onboardingDoneButtonString" = "Вот это технологии!";
 "screen1LabelString" = "Отслеживайте только то, что хотите";
 "screen2LabelString" = "Даже если это не литры воды и йога";
@@ -41,6 +42,10 @@
 "TabBar_trackersTabBarTitle" = "Трекеры";
 "TabBar_statisticsTabBarTitle" = "Статистика";
 "SearchBar_placeholder" = "Поиск";
-
+"FilterTrackersScreen_Title" = "Фильтры";
+"FilterTrackersScreen_AllTrackers" = "Все трекеры";
+"FilterTrackersScreen_TodayTrackers" = "Трекеры на сегодня";
+"FilterTrackersScreen_CompletedTrackers" = "Завершенные";
+"FilterTrackersScreen_UncompletedTrackers" = "Не завершенные";
 
 

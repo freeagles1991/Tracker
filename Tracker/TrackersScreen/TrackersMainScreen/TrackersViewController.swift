@@ -21,8 +21,11 @@ final class TrackersViewController: UIViewController {
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
     private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
+    private let filterTrackersVC = FilterTrackersViewController()
     
+    private var datePicker = UIDatePicker()
     private var selectedDate: Date?
+    private var selectedFilter: FilterType = .allTrackers
 
     private var emptyStateView = UIView()
     private var searchBar = UISearchBar()
@@ -36,6 +39,17 @@ final class TrackersViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    
+    private let filterButton: UIButton = {
+            let button = UIButton(type: .system)
+            button.setTitle(NSLocalizedString("Filters_Button", comment: "Фильтры"), for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            button.backgroundColor = UIColor(named: "blue")
+            button.layer.cornerRadius = 16
+            button.translatesAutoresizingMaskIntoConstraints = false
+            return button
+        }()
     
     //TO DO: добавить переводы
     enum TrackerContextMenu: String {
@@ -69,14 +83,16 @@ final class TrackersViewController: UIViewController {
         setupSearchBar()
         setupEmptyStateView()
         setupCollectionView()
+        setupFilterButton()
         
         selectedDate = Date()
-        guard let selectedDate else { return }
-        trackers = trackerStore.fetchTrackers(by: selectedDate)
+        
+        trackers = trackerStore.fetchTrackers()
         updateUI()
         collectionView.reloadData()
     }
     
+    //MARK: UI
     private func setupNavigationBar() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewTracker))
         addButton.tintColor = .black
@@ -89,6 +105,8 @@ final class TrackersViewController: UIViewController {
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        
+        self.datePicker = datePicker
         
         let datePickerButton = UIBarButtonItem(customView: datePicker)
         
@@ -159,6 +177,19 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
+    private func setupFilterButton() {
+        view.addSubview(filterButton)
+
+        NSLayoutConstraint.activate([
+            filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -26),
+            filterButton.widthAnchor.constraint(equalToConstant: 150),
+            filterButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+    }
+    
     private func updateUI() {
         guard let trackers else { return }
         if trackers.isEmpty {
@@ -170,11 +201,7 @@ final class TrackersViewController: UIViewController {
         }
     }
     
-    private func editTracker(_ tracker: Tracker) {
-       //Переходим на экран редактирования трекера
-    }
-
-    
+    //MARK: Buttons
     @objc private func createNewTracker() {
         let navigationController = UINavigationController(rootViewController: chooseTrackerTypeVC)
         navigationController.setNavigationBarHidden(true, animated: false)
@@ -184,15 +211,42 @@ final class TrackersViewController: UIViewController {
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         self.selectedDate = sender.date
-        guard let selectedDate else {return}
-        trackers = trackerStore.fetchTrackers(by: selectedDate)
-        updateUI()
-        collectionView.reloadData()
+        switch selectedFilter {
+        case .allTrackers:
+            updateCollectionView(with: .allTrackers)
+        case .todayTrackers:
+            updateCollectionView(with: .allTrackers)
+            filterTrackersVC.setFilter(.allTrackers)
+        case .completedTrackers:
+            updateCollectionView()
+        case .uncompletedTrackers:
+            updateCollectionView()
+        }
     }
     
+    @objc private func filterButtonTapped() {
+        filterTrackersVC.delegate = self
+        present(filterTrackersVC, animated: true)
+    }
+    
+    //MARK: Public
     func updateCollectionView() {
-        guard let selectedDate else { return }
-        trackers = trackerStore.fetchTrackers(by: selectedDate)
+        self.updateCollectionView(with: selectedFilter)
+    }
+    
+    private func updateCollectionView(with filter: FilterType) {
+        switch filter {
+        case .allTrackers:
+            trackers = trackerStore.fetchTrackers()
+        case .todayTrackers:
+            let date = Date()
+            datePicker.date = date
+            trackers = trackerStore.fetchTrackers(by: date)
+        case .completedTrackers:
+            print()
+        case .uncompletedTrackers:
+            print()
+        }
         updateUI()
         collectionView.reloadData()
     }
@@ -206,21 +260,8 @@ final class TrackersViewController: UIViewController {
         self.addRecord(for: tracker, on: date)
     }
     
-    private func addRecord(for tracker: Tracker, on date: Date) {
-        guard let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id) else {
-            print("Запись трекера \(tracker.title) НЕ выполнена")
-            return }
-        trackerRecordStore.createTrackerRecord(with: trackerEntity, on: date)
-        print("Запись трекера \(tracker.title) выполнена")
-    }
-    
     func setTrackerIncomplete(for tracker: Tracker, on date: Date) {
         self.removeRecord(for: tracker, on: date)
-    }
-    
-    private func removeRecord(for tracker: Tracker, on date: Date) {
-        trackerRecordStore.removeTrackerRecord(with: tracker.id, on: date)
-        print("Запись трекера \(tracker.title) удалена")
     }
     
     func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
@@ -230,9 +271,33 @@ final class TrackersViewController: UIViewController {
         }
             trackerStore.createTracker(with: tracker, in: trackerCategoryEntity)
         print("Трекер \(tracker.title) добавлен в категорию \(categoryTitle)")
-        self.updateCollectionView()
+        self.updateCollectionView(with: selectedFilter)
     }
     
+    func setFilter(_ filter: FilterType) {
+        self.selectedFilter = filter
+    }
+    
+    func handleFilterSelection(_ filterType: FilterType) {
+        switch filterType {
+        case .allTrackers:
+            setFilter(.allTrackers)
+            updateCollectionView(with: selectedFilter)
+            print("All Trackers selected")
+        case .todayTrackers:
+            setFilter(.todayTrackers)
+            updateCollectionView(with: selectedFilter)
+            print("Today's Trackers selected")
+        case .completedTrackers:
+            // Add the logic for "Completed trackers" selection
+            print("Completed Trackers selected")
+        case .uncompletedTrackers:
+            // Add the logic for "Uncompleted trackers" selection
+            print("Uncompleted Trackers selected")
+        }
+    }
+    
+    //MARK: Private
     private func removeTracker(_ tracker: Tracker) {
         guard let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id), let category = trackerEntity.category else {
             print("Трекер с названием \(tracker.title) не найден в базе")
@@ -240,7 +305,20 @@ final class TrackersViewController: UIViewController {
         }
         trackerStore.removeTracker(with: tracker.id)
         print("Трекер \(tracker.title) удален из категории \(category)")
-        self.updateCollectionView()
+        self.updateCollectionView(with: selectedFilter)
+    }
+    
+    private func removeRecord(for tracker: Tracker, on date: Date) {
+        trackerRecordStore.removeTrackerRecord(with: tracker.id, on: date)
+        print("Запись трекера \(tracker.title) удалена")
+    }
+    
+    private func addRecord(for tracker: Tracker, on date: Date) {
+        guard let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id) else {
+            print("Запись трекера \(tracker.title) НЕ выполнена")
+            return }
+        trackerRecordStore.createTrackerRecord(with: trackerEntity, on: date)
+        print("Запись трекера \(tracker.title) выполнена")
     }
 }
 
@@ -351,7 +429,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         let updatedTracker = Tracker(id: tracker.id ,title: tracker.title, color: tracker.color, emoji: tracker.emoji, schedule: tracker.schedule, isPinned: !currentState)
         trackerStore.updateTracker(for: updatedTracker)
         print(updatedTracker.isPinned)
-        self.updateCollectionView()
+        self.updateCollectionView(with: selectedFilter)
     }
     
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {

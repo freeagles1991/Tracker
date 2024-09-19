@@ -20,6 +20,8 @@
 		321586FE2C92E5B000452B99 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321586FD2C92E5B000452B99 /* CategoryCell.swift */; };
 		321587032C9495CA00452B99 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 321587012C9495CA00452B99 /* Localizable.strings */; };
 		321587062C949B7B00452B99 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 321587042C949B7B00452B99 /* Localizable.stringsdict */; };
+		321587112C9C3B9C00452B99 /* FilterTrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321587102C9C3B9C00452B99 /* FilterTrackersViewController.swift */; };
+		321587132C9C6A6300452B99 /* FilterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321587122C9C6A6300452B99 /* FilterType.swift */; };
 		3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */; };
 		3238825D2C52AB0B00EE11A3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */; };
 		323882622C52AB0B00EE11A3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 323882612C52AB0B00EE11A3 /* Base */; };
@@ -92,6 +94,8 @@
 		321587072C949E0E00452B99 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		321587082C949E1F00452B99 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		3215870F2C9B164F00452B99 /* Library_2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Library_2.xcdatamodel; sourceTree = "<group>"; };
+		321587102C9C3B9C00452B99 /* FilterTrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTrackersViewController.swift; sourceTree = "<group>"; };
+		321587122C9C6A6300452B99 /* FilterType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterType.swift; sourceTree = "<group>"; };
 		323882572C52AB0B00EE11A3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3238825A2C52AB0B00EE11A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3238825C2C52AB0B00EE11A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -269,6 +273,7 @@
 			children = (
 				32BABF1E2C750FEB00E176E2 /* TrackersMainScreen */,
 				32BABF052C67670200E176E2 /* AddNewTrackerScreens */,
+				321587102C9C3B9C00452B99 /* FilterTrackersViewController.swift */,
 			);
 			path = TrackersScreen;
 			sourceTree = "<group>";
@@ -288,6 +293,7 @@
 				32A45BB22C5EAC34002A97F5 /* TrackerCategory.swift */,
 				32A45BB42C5EACDC002A97F5 /* TrackerRecord.swift */,
 				321586C42C87417100452B99 /* Weekday.swift */,
+				321587122C9C6A6300452B99 /* FilterType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -550,6 +556,7 @@
 				32BABF122C7213B300E176E2 /* UIView.swift in Sources */,
 				32C3B6B62C7770E700E34DFD /* ColorCollectionViewDataSourceDelegate.swift in Sources */,
 				32BABF082C676A9200E176E2 /* CreateNewCategoryViewController.swift in Sources */,
+				321587112C9C3B9C00452B99 /* FilterTrackersViewController.swift in Sources */,
 				321586EE2C8F68C800452B99 /* OnboardingScreenViewController.swift in Sources */,
 				32C3B6AF2C7514A800E34DFD /* EmojiCollectionViewDataSourceDelegate.swift in Sources */,
 				32B013472C7A4626004C4969 /* TrackerStore.swift in Sources */,
@@ -566,6 +573,7 @@
 				32A45BB52C5EACDC002A97F5 /* TrackerRecord.swift in Sources */,
 				32BABF002C65194600E176E2 /* TrackersCell.swift in Sources */,
 				321586F82C91E7FD00452B99 /* CreateNewCategoryViewModel.swift in Sources */,
+				321587132C9C6A6300452B99 /* FilterType.swift in Sources */,
 				3238825B2C52AB0B00EE11A3 /* AppDelegate.swift in Sources */,
 				32BABF1C2C750F1C00E176E2 /* EmojiHeader.swift in Sources */,
 				32C3B6B22C7770C500E34DFD /* ColorCell.swift in Sources */,

@@ -17,7 +17,6 @@ public enum Weekday: String, CaseIterable, Codable {
     case sunday = "sunday"
     
     var localized: String {
-        print(NSLocalizedString(self.rawValue, comment: "Weekday name"))
         return NSLocalizedString(self.rawValue, comment: "Weekday name")
     }
     

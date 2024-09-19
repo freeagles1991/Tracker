@@ -27,9 +27,10 @@ final class TrackerStore: NSObject {
     func setupFetchedResultsController(_ predicate: NSPredicate) {
         let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(key: "isPinned", ascending: false),
-            NSSortDescriptor(key: "title", ascending: true)
-        ]
+                NSSortDescriptor(key: "isPinned", ascending: false),
+                NSSortDescriptor(key: "category.title", ascending: true),
+                NSSortDescriptor(key: "title", ascending: true)
+            ]
         fetchRequest.predicate = predicate
         
         fetchedResultsController = NSFetchedResultsController(
@@ -84,6 +85,20 @@ final class TrackerStore: NSObject {
         }
 
         return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule, isPinned: trackerEntity.isPinned)
+    }
+    
+    public func fetchTrackers() -> [Tracker]? {
+        let predicate = NSPredicate(value: true)
+        
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { trackerEntity in
+            convertEntityToTracker(trackerEntity)
+        }
     }
     
     public func fetchTrackers(by date: Date) -> [Tracker]? {

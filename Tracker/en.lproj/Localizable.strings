@@ -20,6 +20,7 @@
 "ScheduleScreen_screenTitleString" = "Schedule";
 "emptyStateViewString" = "What will we track?";
 "navBarTitleString" = "Trackers";
+"Filters_Button" = "Filters";
 "onboardingDoneButtonString" = "That's technology!";
 "screen1LabelString" = "Track only what you want";
 "screen2LabelString" = "Even if it's not liters of water or yoga";
@@ -41,6 +42,12 @@
 "TabBar_trackersTabBarTitle" = "Trackers";
 "TabBar_statisticsTabBarTitle" = "Statistics";
 "SearchBar_placeholder" = "Search";
+"FilterTrackersScreen_Title" = "Filters";
+"FilterTrackersScreen_AllTrackers" = "All trackers";
+"FilterTrackersScreen_TodayTrackers" = "Today's trackers";
+"FilterTrackersScreen_CompletedTrackers" = "Completed";
+"FilterTrackersScreen_UncompletedTrackers" = "Uncompleted";
+
 
 
 
