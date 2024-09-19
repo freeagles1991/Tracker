@@ -26,13 +26,16 @@ final class TrackerStore: NSObject {
     // Настраиваем FRC
     func setupFetchedResultsController(_ predicate: NSPredicate) {
         let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "isPinned", ascending: false),
+            NSSortDescriptor(key: "title", ascending: true)
+        ]
         fetchRequest.predicate = predicate
         
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
-            sectionNameKeyPath: "category.title",
+            sectionNameKeyPath: "pinnedOrCategory",
             cacheName: nil
         )
         guard let fetchedResultsController else { return }
@@ -53,6 +56,7 @@ final class TrackerStore: NSObject {
        }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
+        
         fetchedResultsController?.sections?[section].numberOfObjects ?? 0
     }
 
@@ -65,7 +69,7 @@ final class TrackerStore: NSObject {
     func header(at indexPath: IndexPath) -> String? {
         guard let fetchedResultsController else { return "NoName" }
         let trackerEntity = fetchedResultsController.object(at: indexPath)
-        return trackerEntity.category?.title
+        return trackerEntity.pinnedOrCategory
     }
     
     private func convertEntityToTracker(_ trackerEntity: TrackerEntity) -> Tracker? {
@@ -79,7 +83,7 @@ final class TrackerStore: NSObject {
             return nil
         }
 
-        return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
+        return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule, isPinned: trackerEntity.isPinned)
     }
     
     public func fetchTrackers(by date: Date) -> [Tracker]? {
@@ -125,6 +129,7 @@ final class TrackerStore: NSObject {
         trackerEntity.emoji = tracker.emoji
         trackerEntity.scheduleArray = tracker.schedule
         trackerEntity.color = tracker.color
+        trackerEntity.isPinned = tracker.isPinned
         
         trackerEntity.category = category
         category.addToTrackers(trackerEntity)
@@ -148,6 +153,7 @@ final class TrackerStore: NSObject {
         trackerEntity.emoji = tracker.emoji
         trackerEntity.scheduleArray = tracker.schedule
         trackerEntity.color = tracker.color
+        trackerEntity.isPinned = tracker.isPinned
         
         if let newCategory = newCategory {
             // Удаляем трекер из старой категории

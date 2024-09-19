@@ -45,8 +45,6 @@ final class TrackersViewController: UIViewController {
         case deleteTrackerString = "Удалить"
     }
     
-    var trackerContextMenuItemStates: [IndexPath: Bool] = [:]
-    
     let itemsPerRow: CGFloat = 2
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
@@ -315,9 +313,15 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let config = UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { _ in
-            let isOn = self.isTrackerPinned(at: indexPath)
-            let pinTracker = UIAction(title: isOn ? TrackerContextMenu.unpinTrackerString.rawValue : TrackerContextMenu.pinTrackerString.rawValue, identifier: nil) { _ in
-                self.toggleTrackerPin(at: indexPath)
+            guard let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell,
+                  let tracker = cell.getTracker() else { return nil }
+            
+            let pinTracker = UIAction(
+                title: self.isTrackerPinned(tracker) ?
+                TrackerContextMenu.unpinTrackerString.rawValue : TrackerContextMenu.pinTrackerString.rawValue,
+                identifier: nil
+            ) { _ in
+                self.toggleTrackerPin(tracker)
             }
             let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.rawValue, identifier: nil) { _ in
                 let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
@@ -337,14 +341,17 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         return config
     }
     
-    func isTrackerPinned(at indexPath: IndexPath) -> Bool {
-        return trackerContextMenuItemStates[indexPath] ?? false
+    private func isTrackerPinned(_ tracker: Tracker) -> Bool {
+        guard let isPinned = trackerStore.fetchTrackerEntity(tracker.id)?.isPinned else { return false}
+        return isPinned
     }
 
-    func toggleTrackerPin(at indexPath: IndexPath) {
-        let currentState = isTrackerPinned(at: indexPath)
-        trackerContextMenuItemStates[indexPath] = !currentState
-        // Здесь можно обновить ячейку или другие данные
+    private func toggleTrackerPin(_ tracker: Tracker) {
+        let currentState = isTrackerPinned(tracker)
+        let updatedTracker = Tracker(id: tracker.id ,title: tracker.title, color: tracker.color, emoji: tracker.emoji, schedule: tracker.schedule, isPinned: !currentState)
+        trackerStore.updateTracker(for: updatedTracker)
+        print(updatedTracker.isPinned)
+        self.updateCollectionView()
     }
     
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
