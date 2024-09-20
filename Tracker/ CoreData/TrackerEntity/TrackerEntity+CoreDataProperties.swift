@@ -48,7 +48,7 @@ extension TrackerEntity {
     }
     
     @objc var pinnedOrCategory: String {
-        return isPinned ? "Pinned" : (category?.title ?? "No Category")
+        return isPinned ? TrackersViewController.TrackersMainScreenConst.pinnedSectionString : (category?.title ?? "No Category")
     }
 
 }

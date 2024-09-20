@@ -8,13 +8,6 @@
 import Foundation
 import UIKit
 
-enum TrackersMainScreenConst {
-    static let navBarTitleString = NSLocalizedString("navBarTitleString", comment: "Трекеры")
-    static let emptyStateViewString = NSLocalizedString("emptyStateViewString", comment: "Что будем отслеживать?")
-    static let searchBarPlaceholderString = NSLocalizedString("SearchBar_placeholder", comment: "Поиск")
-    static let pinnedSectionString = "Закрепленные"
-}
-
 final class TrackersViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
     private var trackers: [Tracker]?
@@ -28,6 +21,7 @@ final class TrackersViewController: UIViewController {
     private var selectedFilter: FilterType = .allTrackers
 
     private var emptyStateView = UIView()
+    private var nothingFoundStateView = UIView()
     private var searchBar = UISearchBar()
     var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -42,7 +36,7 @@ final class TrackersViewController: UIViewController {
     
     private let filterButton: UIButton = {
             let button = UIButton(type: .system)
-            button.setTitle(NSLocalizedString("Filters_Button", comment: "Фильтры"), for: .normal)
+        button.setTitle(TrackersMainScreenConst.filtersButtonString, for: .normal)
             button.setTitleColor(.white, for: .normal)
             button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             button.backgroundColor = UIColor(named: "blue")
@@ -51,12 +45,24 @@ final class TrackersViewController: UIViewController {
             return button
         }()
     
-    //TO DO: добавить переводы
     enum TrackerContextMenu: String {
-        case pinTrackerString = "Закрепить"
-        case unpinTrackerString = "Открепить"
-        case editTrackerString = "Редактировать"
-        case deleteTrackerString = "Удалить"
+        case pinTrackerString = "TrackerContextMenu_PinTracker"
+        case unpinTrackerString = "TrackerContextMenu_UnpinTracker"
+        case editTrackerString = "TrackerContextMenu_EditTracker"
+        case deleteTrackerString = "TrackerContextMenu_DeleteTracker"
+
+        var localized: String {
+            return NSLocalizedString(self.rawValue, comment: "")
+        }
+    }
+    
+    enum TrackersMainScreenConst {
+        static let navBarTitleString = NSLocalizedString("TrackersMainScreen_NavBarTitle", comment: "Трекеры")
+        static let emptyStateViewString = NSLocalizedString("TrackersMainScreen_EmptyStateView", comment: "Что будем отслеживать?")
+        static let searchBarPlaceholderString = NSLocalizedString("TrackersMainScreen_SearchBarPlaceholder", comment: "Поиск")
+        static let filtersButtonString = NSLocalizedString("TrackersMainScreen_FiltersButton", comment: "Фильтры")
+        static let pinnedSectionString = NSLocalizedString("TrackersMainScreen_PinnedSection", comment: "Закрепленные")
+        static let nothingFoundString = NSLocalizedString("TrackersMainScreen_NothingFound", comment: "Ничего не найдено")
     }
     
     let itemsPerRow: CGFloat = 2
@@ -82,6 +88,7 @@ final class TrackersViewController: UIViewController {
         setupNavigationBar()
         setupSearchBar()
         setupEmptyStateView()
+        setupNothingFoundStateView()
         setupCollectionView()
         setupFilterButton()
         
@@ -139,7 +146,7 @@ final class TrackersViewController: UIViewController {
         
         let label = UILabel()
         label.text = TrackersMainScreenConst.emptyStateViewString
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont(name: "SFProText-Medium", size: 12)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.addSubview(label)
@@ -159,6 +166,39 @@ final class TrackersViewController: UIViewController {
         ])
         
         self.emptyStateView = emptyStateView
+    }
+    
+    private func setupNothingFoundStateView() {
+        let nothingFoundStateView = UIView()
+        nothingFoundStateView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(nothingFoundStateView)
+        
+        let imageView = UIImageView(image: UIImage(named: "nothingFoundIcon"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        nothingFoundStateView.addSubview(imageView)
+        
+        let label = UILabel()
+        label.text = TrackersMainScreenConst.nothingFoundString
+        label.font = UIFont(name: "SFProText-Medium", size: 12)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        nothingFoundStateView.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            nothingFoundStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            nothingFoundStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            imageView.centerXAnchor.constraint(equalTo: nothingFoundStateView.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: nothingFoundStateView.topAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 80),
+            imageView.heightAnchor.constraint(equalToConstant: 80),
+            
+            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            label.centerXAnchor.constraint(equalTo: nothingFoundStateView.centerXAnchor),
+            label.bottomAnchor.constraint(equalTo: nothingFoundStateView.bottomAnchor)
+        ])
+        
+        self.nothingFoundStateView = nothingFoundStateView
     }
     
     private func setupCollectionView() {
@@ -190,12 +230,20 @@ final class TrackersViewController: UIViewController {
     
     private func updateUI() {
         guard let trackers else { return }
-        if trackers.isEmpty {
+        if trackers.isEmpty && selectedFilter == .allTrackers {
             emptyStateView.isHidden = false
+            nothingFoundStateView.isHidden = true
             collectionView.isHidden = true
         } else {
-            emptyStateView.isHidden = true
-            collectionView.isHidden = false
+            if trackers.isEmpty {
+                emptyStateView.isHidden = true
+                nothingFoundStateView.isHidden = false
+                collectionView.isHidden = true
+            } else {
+                emptyStateView.isHidden = true
+                nothingFoundStateView.isHidden = true
+                collectionView.isHidden = false
+            }
         }
     }
     

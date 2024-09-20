@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Tracker
 
@@ -13,22 +13,40 @@
 "friday" = "Friday";
 "saturday" = "Saturday";
 "sunday" = "Sunday";
-"ChooseTrackerType_eventButtonText" = "Irregular event";
+
+"TrackersMainScreen_NavBarTitle" = "Trackers";
+"TrackersMainScreen_EmptyStateView" = "What do we want to track?";
+"TrackersMainScreen_SearchBarPlaceholder" = "Search";
+"TrackersMainScreen_FiltersButton" = "Filters";
+"TrackersMainScreen_PinnedSection" = "Pinned";
+"TrackersMainScreen_NothingFound" = "Nothing found";
+
+"TrackerContextMenu_PinTracker" = "Pin";
+"TrackerContextMenu_UnpinTracker" = "Unpin";
+"TrackerContextMenu_EditTracker" = "Edit";
+"TrackerContextMenu_DeleteTracker" = "Delete";
+
+"ChooseTrackerType_eventButtonText" = "Irregular Event";
 "ChooseTrackerType_habitButtonText" = "Habit";
-"ChooseTrackerType_screenTitleString" = "Create a tracker";
+"ChooseTrackerType_screenTitleString" = "Create Tracker";
+
 "ScheduleScreen_doneButtonString" = "Done";
 "ScheduleScreen_screenTitleString" = "Schedule";
-"emptyStateViewString" = "What will we track?";
-"navBarTitleString" = "Trackers";
-"Filters_Button" = "Filters";
-"onboardingDoneButtonString" = "That's technology!";
+
+"onboardingDoneButtonString" = "What a technology!";
 "screen1LabelString" = "Track only what you want";
-"screen2LabelString" = "Even if it's not liters of water or yoga";
-"CategoryScreen_addCategoryButtonString" = "Add category";
+"screen2LabelString" = "Even if it's not liters of water and yoga";
+
+"TabBar_trackersTabBarTitle" = "Trackers";
+"TabBar_statisticsTabBarTitle" = "Statistics";
+
+"CategoryScreen_addCategoryButtonString" = "Add Category";
 "CategoryScreen_screenTitleString" = "Category";
-"CreateNewCategory_screenTitleString" = "New category";
+
+"CreateNewCategory_screenTitleString" = "New Category";
 "CreateNewCategory_categoryNamePlaceholderString" = "Enter category name";
 "CreateNewCategory_doneButtonString" = "Done";
+
 "CreateNewTracker_createScreenTitleString" = "New Habit";
 "CreateNewTracker_editScreenTitleString" = "Edit Habit";
 "CreateNewTracker_trackerNameTextFieldString" = "Enter tracker name";
@@ -39,17 +57,9 @@
 "CreateNewTracker_cancelButtonString" = "Cancel";
 "CreateNewTracker_createButtonString" = "Create";
 "CreateNewTracker_saveButtonString" = "Save";
-"TabBar_trackersTabBarTitle" = "Trackers";
-"TabBar_statisticsTabBarTitle" = "Statistics";
-"SearchBar_placeholder" = "Search";
+
 "FilterTrackersScreen_Title" = "Filters";
-"FilterTrackersScreen_AllTrackers" = "All trackers";
-"FilterTrackersScreen_TodayTrackers" = "Today's trackers";
+"FilterTrackersScreen_AllTrackers" = "All Trackers";
+"FilterTrackersScreen_TodayTrackers" = "Today's Trackers";
 "FilterTrackersScreen_CompletedTrackers" = "Completed";
 "FilterTrackersScreen_UncompletedTrackers" = "Uncompleted";
-
-
-
-
-
-
