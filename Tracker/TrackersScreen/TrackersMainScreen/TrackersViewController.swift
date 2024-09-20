@@ -24,7 +24,7 @@ final class TrackersViewController: UIViewController {
     private let filterTrackersVC = FilterTrackersViewController()
     
     private var datePicker = UIDatePicker()
-    private var selectedDate: Date?
+    private var selectedDate: Date? = Date()
     private var selectedFilter: FilterType = .allTrackers
 
     private var emptyStateView = UIView()
@@ -84,8 +84,6 @@ final class TrackersViewController: UIViewController {
         setupEmptyStateView()
         setupCollectionView()
         setupFilterButton()
-        
-        selectedDate = Date()
         
         trackers = trackerStore.fetchTrackers()
         updateUI()
@@ -218,9 +216,9 @@ final class TrackersViewController: UIViewController {
             updateCollectionView(with: .allTrackers)
             filterTrackersVC.setFilter(.allTrackers)
         case .completedTrackers:
-            updateCollectionView()
+            updateCollectionView(with: .completedTrackers)
         case .uncompletedTrackers:
-            updateCollectionView()
+            updateCollectionView(with: .uncompletedTrackers)
         }
     }
     
@@ -243,9 +241,11 @@ final class TrackersViewController: UIViewController {
             datePicker.date = date
             trackers = trackerStore.fetchTrackers(by: date)
         case .completedTrackers:
-            print()
+            guard let selectedDate else {return}
+            trackers = trackerStore.fetchCompleteTrackers(by: selectedDate)
         case .uncompletedTrackers:
-            print()
+            guard let selectedDate else {return}
+            trackers = trackerStore.fetchIncompleteTrackers(by: selectedDate)
         }
         updateUI()
         collectionView.reloadData()
@@ -258,10 +258,12 @@ final class TrackersViewController: UIViewController {
     
     func setTrackerComplete(for tracker: Tracker, on date: Date) {
         self.addRecord(for: tracker, on: date)
+        updateCollectionView(with: selectedFilter)
     }
     
     func setTrackerIncomplete(for tracker: Tracker, on date: Date) {
         self.removeRecord(for: tracker, on: date)
+        updateCollectionView(with: selectedFilter)
     }
     
     func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
@@ -279,22 +281,8 @@ final class TrackersViewController: UIViewController {
     }
     
     func handleFilterSelection(_ filterType: FilterType) {
-        switch filterType {
-        case .allTrackers:
-            setFilter(.allTrackers)
-            updateCollectionView(with: selectedFilter)
-            print("All Trackers selected")
-        case .todayTrackers:
-            setFilter(.todayTrackers)
-            updateCollectionView(with: selectedFilter)
-            print("Today's Trackers selected")
-        case .completedTrackers:
-            // Add the logic for "Completed trackers" selection
-            print("Completed Trackers selected")
-        case .uncompletedTrackers:
-            // Add the logic for "Uncompleted trackers" selection
-            print("Uncompleted Trackers selected")
-        }
+        setFilter(filterType)
+        updateCollectionView(with: filterType)
     }
     
     //MARK: Private

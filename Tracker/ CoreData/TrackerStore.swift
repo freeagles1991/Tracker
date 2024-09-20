@@ -116,6 +116,50 @@ final class TrackerStore: NSObject {
             convertEntityToTracker(trackerEntity)
         }
     }
+    
+    public func fetchCompleteTrackers(by date: Date) -> [Tracker]? {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        let predicate = NSPredicate(format: "ANY records.date >= %@ AND ANY records.date < %@", startOfDay as NSDate, endOfDay as NSDate)
+        
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { trackerEntity in
+            convertEntityToTracker(trackerEntity)
+        }
+    }
+    
+    public func fetchIncompleteTrackers(by date: Date) -> [Tracker]? {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        let noRecordForDatePredicate = NSPredicate(format: "SUBQUERY(records, $record, $record.date >= %@ AND $record.date < %@).@count == 0", startOfDay as NSDate, endOfDay as NSDate)
+
+        let noRecordsPredicate = NSPredicate(format: "records.@count == 0")
+
+        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [noRecordsPredicate, noRecordForDatePredicate])
+
+        self.setupFetchedResultsController(compoundPredicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { trackerEntity in
+            return convertEntityToTracker(trackerEntity)
+        }
+    }
+
+
+
+
 
     public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
