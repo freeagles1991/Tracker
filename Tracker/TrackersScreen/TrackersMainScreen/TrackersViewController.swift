@@ -31,6 +31,7 @@ final class TrackersViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = UIColor(named: "white")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.alwaysBounceVertical = true
         return collectionView
     }()
     
@@ -355,6 +356,15 @@ final class TrackersViewController: UIViewController {
             return }
         trackerRecordStore.createTrackerRecord(with: trackerEntity, on: date)
         print("Запись трекера \(tracker.title) выполнена")
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let bottomOffset = scrollView.contentOffset.y + scrollView.frame.size.height
+        if bottomOffset >= scrollView.contentSize.height {
+            filterButton.isHidden = true // Скрыть кнопку "Фильтры" в конце списка
+        } else {
+            filterButton.isHidden = false // Показать кнопку, если до конца списка не доскроллили
+        }
     }
 }
 
