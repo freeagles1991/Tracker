@@ -25,7 +25,7 @@ final class ScheduleScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         setupScreenTitle()
         setupDoneButton()
         setupTableView()
@@ -110,7 +110,7 @@ final class ScheduleScreenViewController: UIViewController {
     private func setupDoneButton(){
         doneButton.setTitle(doneButtonString, for: .normal)
         doneButton.backgroundColor = .black
-        doneButton.setTitleColor(.white, for: .normal)
+        doneButton.setTitleColor(UIColor(named: "white"), for: .normal)
         doneButton.layer.cornerRadius = 8
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.addTarget(self, action: #selector(doneButtonTapped(_:)), for: .touchUpInside)

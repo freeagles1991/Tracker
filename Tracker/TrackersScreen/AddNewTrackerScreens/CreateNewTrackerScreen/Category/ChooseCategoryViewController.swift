@@ -39,7 +39,7 @@ final class ChooseCategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         
         setupScreenTitle()
         setupAddCategoryButton()
@@ -124,7 +124,7 @@ final class ChooseCategoryViewController: UIViewController {
         addCategoryButton.setTitle(addCategoryButtonString, for: .normal)
         addCategoryButton.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         addCategoryButton.backgroundColor = .black
-        addCategoryButton.setTitleColor(.white, for: .normal)
+        addCategoryButton.setTitleColor(UIColor(named: "white"), for: .normal)
         addCategoryButton.layer.cornerRadius = 16
         addCategoryButton.translatesAutoresizingMaskIntoConstraints = false
         

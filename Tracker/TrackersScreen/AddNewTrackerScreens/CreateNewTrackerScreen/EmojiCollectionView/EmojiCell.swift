@@ -28,7 +28,7 @@ final class EmojiCell: UICollectionViewCell {
         emojiLabel.textAlignment = .center
         
         selectionRect.translatesAutoresizingMaskIntoConstraints = false
-        selectionRect.backgroundColor = .white
+        selectionRect.backgroundColor = UIColor(named: "white")
         selectionRect.layer.cornerRadius = 16
         selectionRect.layer.masksToBounds = true
         
@@ -50,7 +50,7 @@ final class EmojiCell: UICollectionViewCell {
         if isSelected {
             selectionRect.backgroundColor = UIColor(named: "lightGray")
         } else {
-            selectionRect.backgroundColor = .white
+            selectionRect.backgroundColor = UIColor(named: "white")
         }
     }
     

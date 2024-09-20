@@ -20,6 +20,7 @@ final class TrackersHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        label.textColor = UIColor(named: "black")
         addSubview(label)
         
         NSLayoutConstraint.activate([

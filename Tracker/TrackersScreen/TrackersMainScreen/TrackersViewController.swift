@@ -29,7 +29,7 @@ final class TrackersViewController: UIViewController {
         layout.minimumInteritemSpacing = 9
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = UIColor(named: "white")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -37,7 +37,7 @@ final class TrackersViewController: UIViewController {
     private let filterButton: UIButton = {
             let button = UIButton(type: .system)
         button.setTitle(TrackersMainScreenConst.filtersButtonString, for: .normal)
-            button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.white, for: .normal)
             button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             button.backgroundColor = UIColor(named: "blue")
             button.layer.cornerRadius = 16
@@ -79,7 +79,7 @@ final class TrackersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         
         trackerStore.trackersVC = self
         collectionView.dataSource = self
@@ -100,7 +100,7 @@ final class TrackersViewController: UIViewController {
     //MARK: UI
     private func setupNavigationBar() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewTracker))
-        addButton.tintColor = .black
+        addButton.tintColor = UIColor(named: "black")
         navigationItem.leftBarButtonItem = addButton
         
         navigationItem.title = TrackersMainScreenConst.navBarTitleString

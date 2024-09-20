@@ -17,7 +17,7 @@ final class  OnboardingScreenViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.backgroundColor = .black
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "white"), for: .normal)
         button.layer.cornerRadius = 16
         return button
     } ()

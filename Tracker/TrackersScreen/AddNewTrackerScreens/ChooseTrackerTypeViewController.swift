@@ -22,7 +22,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         
         setupScreenTitle()
         setupHabitButton()
@@ -54,7 +54,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
         button.setTitle(text, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.backgroundColor = .black
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "white"), for: .normal)
         button.layer.cornerRadius = 16
         return button
     }

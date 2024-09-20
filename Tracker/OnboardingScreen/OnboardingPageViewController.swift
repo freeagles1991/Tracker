@@ -29,7 +29,7 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         pageControl.currentPage = 0
         
         pageControl.currentPageIndicatorTintColor = UIColor(named: "black")
-        pageControl.pageIndicatorTintColor = UIColor(named: "black_alpha30")
+        pageControl.pageIndicatorTintColor = UIColor(named: "pageIndicatorTintColor")
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl

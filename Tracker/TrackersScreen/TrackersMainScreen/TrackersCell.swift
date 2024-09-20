@@ -97,7 +97,7 @@ final class TrackerCell: UICollectionViewCell {
         
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         completeButton.backgroundColor = .systemBlue
-        completeButton.tintColor = .white
+        completeButton.tintColor = UIColor(named: "white")
         completeButton.layer.cornerRadius = 17
         completeButton.clipsToBounds = true
         completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
@@ -105,7 +105,7 @@ final class TrackerCell: UICollectionViewCell {
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
         durationLabel.font = UIFont(name: "SFProText-Medium", size: 12)
-        durationLabel.textColor = .black
+        durationLabel.textColor = UIColor(named: "black")
         durationLabel.adjustsFontForContentSizeCategory = true
         durationLabel.numberOfLines = 0
         

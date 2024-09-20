@@ -32,7 +32,7 @@ final class CreateNewCategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         view.addTapGestureToHideKeyboard()
         
         setupScreenTitle()
@@ -131,7 +131,7 @@ final class CreateNewCategoryViewController: UIViewController {
         doneButton.setTitle(doneButtonString, for: .normal)
         doneButton.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         doneButton.backgroundColor = .black
-        doneButton.setTitleColor(.white, for: .normal)
+        doneButton.setTitleColor(UIColor(named: "white"), for: .normal)
         doneButton.layer.cornerRadius = 16
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         

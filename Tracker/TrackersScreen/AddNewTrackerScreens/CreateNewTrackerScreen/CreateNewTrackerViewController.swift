@@ -65,7 +65,7 @@ class CreateNewTrackerViewController: UIViewController {
         layout.minimumInteritemSpacing = 5
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = UIColor(named: "white")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsSelection = true
         collectionView.isUserInteractionEnabled = true
@@ -79,7 +79,7 @@ class CreateNewTrackerViewController: UIViewController {
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 5
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = UIColor(named: "white")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsSelection = true
         collectionView.isUserInteractionEnabled = true
@@ -107,7 +107,7 @@ class CreateNewTrackerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         view.addTapGestureToHideKeyboard()
         closeChooseCategoryScreen()
         
@@ -391,7 +391,7 @@ class CreateNewTrackerViewController: UIViewController {
     private func setupBaseButton(with text: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "white"), for: .normal)
         button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.backgroundColor = .black
         button.contentHorizontalAlignment = .center
@@ -417,7 +417,7 @@ class CreateNewTrackerViewController: UIViewController {
     private func setupCancelButton() {
         let cancelButton = setupBaseButton(with: Constants.cancelButtonString)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
-        cancelButton.backgroundColor = .white
+        cancelButton.backgroundColor = UIColor(named: "white")
         cancelButton.setTitleColor(.red, for: .normal)
         cancelButton.layer.borderWidth = 1
         cancelButton.layer.borderColor = UIColor.red.cgColor
