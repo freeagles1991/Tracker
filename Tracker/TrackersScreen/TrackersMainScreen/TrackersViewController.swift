@@ -432,12 +432,12 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
             
             let pinTracker = UIAction(
                 title: self.isTrackerPinned(tracker) ?
-                TrackerContextMenu.unpinTrackerString.rawValue : TrackerContextMenu.pinTrackerString.rawValue,
+                TrackerContextMenu.unpinTrackerString.localized : TrackerContextMenu.pinTrackerString.localized,
                 identifier: nil
             ) { _ in
                 self.toggleTrackerPin(tracker)
             }
-            let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.rawValue, identifier: nil) { _ in
+            let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.localized, identifier: nil) { _ in
                 let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
                 guard let tracker = cell?.getTracker() else { return }
                 let editTrackerVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: true, editableTracker: tracker)
@@ -445,7 +445,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                 self.present(editTrackerVC, animated: true)
 
             }
-            let deleteTracker = UIAction(title: TrackerContextMenu.deleteTrackerString.rawValue, identifier: nil, attributes: .destructive) { _ in
+            let deleteTracker = UIAction(title: TrackerContextMenu.deleteTrackerString.localized, identifier: nil, attributes: .destructive) { _ in
                 let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
                 guard let tracker = cell?.getTracker() else { return }
                 self.removeTracker(tracker)

@@ -18,8 +18,8 @@ final class FilterTrackersViewController: UIViewController {
     private var selectedFilter: FilterType = .allTrackers
     
     private var screenTitleLabel = UILabel()
-    private let cellHeight: CGFloat = 50
-    private let maxTableHeight: CGFloat = 300
+    private let cellHeight: CGFloat = 75
+    private let maxTableHeight: CGFloat = 500
     
     // Localized strings for the filter options
     private let filters = [
@@ -81,7 +81,7 @@ final class FilterTrackersViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: tableContainerView.bottomAnchor),
         ])
         
-        tableContainerViewHeightConstraint = tableContainerView.heightAnchor.constraint(equalToConstant: 200)
+        tableContainerViewHeightConstraint = tableContainerView.heightAnchor.constraint(equalToConstant: 300)
         tableContainerViewHeightConstraint.isActive = true
     }
     
@@ -129,7 +129,6 @@ extension FilterTrackersViewController: UITableViewDelegate, UITableViewDataSour
         let previousIndexPath = selectedIndexPath
         selectedIndexPath = indexPath
         
-        // Determine the selected filter and handle accordingly
         let filterType: FilterType
         switch indexPath.row {
         case 0:
@@ -147,7 +146,6 @@ extension FilterTrackersViewController: UITableViewDelegate, UITableViewDataSour
         selectedFilter = filterType
         delegate?.handleFilterSelection(filterType)
         
-        // Reload only changed rows
         var indexPathsToReload: [IndexPath] = [indexPath]
         if let previousIndexPath = previousIndexPath {
             indexPathsToReload.append(previousIndexPath)
@@ -176,8 +174,9 @@ final class FilterCell: UITableViewCell {
     }
     
     private func setupCell() {
+        backgroundColor = UIColor(named: "background")
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = UIFont.systemFont(ofSize: 16)
+        titleLabel.font = UIFont.systemFont(ofSize: 17)
         contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
