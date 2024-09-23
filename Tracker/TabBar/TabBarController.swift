@@ -35,9 +35,11 @@ final class TabBarController: UITabBarController {
         trackersViewController.tabBarItem = UITabBarItem(title: trackersTabBarTitle, image: UIImage(systemName: "record.circle.fill"), tag: 0)
         statisticsViewController.tabBarItem = UITabBarItem(title: statisticsTabBarTitle, image: UIImage(systemName: "hare"), tag: 1)
         
-        let navigationController = UINavigationController(rootViewController: trackersViewController)
+        let navigationControllerTrackers = UINavigationController(rootViewController: trackersViewController)
+        let navigationControllerStatistics = UINavigationController(rootViewController: statisticsViewController)
         
-        viewControllers = [navigationController, statisticsViewController]
+        
+        viewControllers = [navigationControllerTrackers, navigationControllerStatistics]
     }
     
     private func setupTabBarAppearance() {
