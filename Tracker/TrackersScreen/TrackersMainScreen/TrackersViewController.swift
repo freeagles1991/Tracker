@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 final class TrackersViewController: UIViewController {
+    let analiticsService: AnalyticsService
     private let trackerStore = TrackerStore.shared
     private var trackers: [Tracker]?
     private let trackerCategoryStore = TrackerCategoryStore.shared
@@ -70,7 +71,8 @@ final class TrackersViewController: UIViewController {
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
     
-    init() {
+    init(analiticsService: AnalyticsService) {
+        self.analiticsService = analiticsService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -96,6 +98,13 @@ final class TrackersViewController: UIViewController {
         trackers = trackerStore.fetchTrackers()
         updateUI()
         collectionView.reloadData()
+        
+        let analyticsEvent = AnalyticsEvent(
+            eventType: .open,
+            screen: "Main",
+            item: nil
+        )
+        analiticsService.sendEvent(analyticsEvent)
     }
     
     //MARK: UI
@@ -253,6 +262,14 @@ final class TrackersViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: chooseTrackerTypeVC)
         navigationController.setNavigationBarHidden(true, animated: false)
          chooseTrackerTypeVC.trackersVC = self
+        
+        let analyticsEvent = AnalyticsEvent(
+            eventType: .click,
+            screen: "Main",
+            item: .add_track
+        )
+        analiticsService.sendEvent(analyticsEvent)
+        
         present( navigationController, animated: true)
     }
     
@@ -273,6 +290,14 @@ final class TrackersViewController: UIViewController {
     
     @objc private func filterButtonTapped() {
         filterTrackersVC.delegate = self
+        
+        let analyticsEvent = AnalyticsEvent(
+            eventType: .click,
+            screen: "Main",
+            item: .filter
+        )
+        analiticsService.sendEvent(analyticsEvent)
+        
         present(filterTrackersVC, animated: true)
     }
     
@@ -447,15 +472,31 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
             ) { _ in
                 self.toggleTrackerPin(tracker)
             }
-            let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.localized, identifier: nil) { _ in
-                guard let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell, let tracker = cell.getTracker() else { return }
+            let editTracker = UIAction(title: TrackerContextMenu.editTrackerString.localized, identifier: nil) { [weak self] _ in
+                guard let self, let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell, let tracker = cell.getTracker() else { return }
+                
+                let analyticsEvent = AnalyticsEvent(
+                    eventType: .click,
+                    screen: "Main",
+                    item: .edit
+                )
+                self.analiticsService.sendEvent(analyticsEvent)
+                
                 let editTrackerVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: true, editableTracker: tracker)
                 editTrackerVC.trackersVC = self
                 self.present(editTrackerVC, animated: true)
 
             }
-            let deleteTracker = UIAction(title: TrackerContextMenu.deleteTrackerString.localized, identifier: nil, attributes: .destructive) { _ in
-                guard let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell, let tracker = cell.getTracker() else { return }
+            let deleteTracker = UIAction(title: TrackerContextMenu.deleteTrackerString.localized, identifier: nil, attributes: .destructive) { [weak self] _ in
+                guard let self, let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell, let tracker = cell.getTracker() else { return }
+                
+                let analyticsEvent = AnalyticsEvent(
+                    eventType: .click,
+                    screen: "Main",
+                    item: .delete
+                )
+                self.analiticsService.sendEvent(analyticsEvent)
+                
                 self.removeTracker(tracker)
             }
             return UIMenu(title: "", children: [pinTracker, editTracker, deleteTracker])

@@ -146,7 +146,8 @@ final class TrackerCell: UICollectionViewCell {
 
     @objc private func completeButtonTapped(_ sender: UIButton){
         self.isTrackerComplete = !isTrackerComplete
-        guard let selectedDate = trackersVC?.getDateFromUIDatePicker() else { return }
+        guard let trackersVC, let selectedDate = trackersVC.getDateFromUIDatePicker() else { return }
+        
         let currentDate = Date()
         if selectedDate > currentDate {
             print("Выбрана дата позднее текущей")
@@ -158,6 +159,13 @@ final class TrackerCell: UICollectionViewCell {
             }
             updateUI(with: cellColor)
         }
+        
+        let analyticsEvent = AnalyticsEvent(
+            eventType: .click,
+            screen: "Main",
+            item: .track
+        )
+        trackersVC.analiticsService.sendEvent(analyticsEvent)
     }
     
     func getCellColorRectView() -> UIView {
