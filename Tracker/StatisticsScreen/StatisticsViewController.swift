@@ -8,24 +8,61 @@
 import Foundation
 import UIKit
 
-final class StatisticsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+final class StatisticsViewController: UIViewController {
+    
+    private let trackersStore = TrackerStore.shared
+    private let trackerRecordStore = TrackerRecordStore.shared
     
     private let screenTitleString = "Статистика"
     private let tableView = UITableView()
     private let emptyStateView = UIView()
     
-    let data = [
-        ("6", "Лучший период"),
-        ("2", "Идеальные дни"),
-        ("5", "Трекеров завершено"),
-        ("4", "Среднее значение")
-    ]
+    enum StatisticListString: String, CaseIterable {
+        case best_period
+        case perfect_days
+        case trackers_complete
+        case average
+
+        var localized: String {
+            switch self {
+            case .best_period:
+                return NSLocalizedString("StatisticsScreen_best_period", comment: "Лучший период")
+            case .perfect_days:
+                return NSLocalizedString("StatisticsScreen_perfect_days", comment: "Идеальные дни")
+            case .trackers_complete:
+                return NSLocalizedString("StatisticsScreen_trackers_complete", comment: "Трекеров завершено")
+            case .average:
+                return NSLocalizedString("StatisticsScreen_average", comment: "Среднее значение")
+            }
+        }
+    }
+    
+    private var perfectDaysCount = 0
+    private var trackersCompleteCount = 0
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "white")
         setupNavigationBar()
         setupTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+        
+        guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { return }
+        perfectDaysCount = trackersStore.fetchPerfectDaysCount(from: erliestRecord)
+        
+        trackersCompleteCount = trackersStore.fetchAllRecordsCount()
     }
     
     private func setupNavigationBar() {
@@ -50,14 +87,42 @@ final class StatisticsViewController: UIViewController, UITableViewDataSource, U
         ])
     }
     
+    //MARK: Private
+    
+    private func getTrackersCompleteCount() -> Int {
+        let records = trackersStore.fetchAllRecordsCount()
+        return records
+    }
+}
+
+extension StatisticsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return StatisticListString.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SatisticsCell", for: indexPath) as! SatisticsCell
-        let (number, description) = data[indexPath.row]
-        cell.configure(with: number, description: description)
+        let statisticType: StatisticListString
+        var counter = 0
+        switch indexPath.row {
+        case 0:
+            statisticType = .best_period
+        case 1:
+            statisticType = .perfect_days
+            counter = perfectDaysCount
+        case 2:
+            statisticType = .trackers_complete
+            counter = trackersCompleteCount
+        case 3:
+            statisticType = .average
+        default:
+            statisticType = .average
+            counter = 0
+        }
+        
+        let description = statisticType.localized
+        let number = counter
+        cell.configure(with: String(describing: number), description: description)
         return cell
     }
     

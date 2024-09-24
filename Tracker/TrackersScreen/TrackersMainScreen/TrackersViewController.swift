@@ -10,7 +10,7 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     let analiticsService: AnalyticsService
-    private let trackerStore = TrackerStore.shared
+    let trackerStore = TrackerStore.shared
     private var trackers: [Tracker]?
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared

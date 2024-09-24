@@ -64,4 +64,9 @@
 "FilterTrackersScreen_CompletedTrackers" = "Завершенные";
 "FilterTrackersScreen_UncompletedTrackers" = "Не завершенные";
 
+"StatisticsScreen_best_period" = "Лучший период";
+"StatisticsScreen_perfect_days" = "Идеальные дни";
+"StatisticsScreen_trackers_complete" = "Трекеров завершено";
+"StatisticsScreen_average" = "Среднее значение";
+
 

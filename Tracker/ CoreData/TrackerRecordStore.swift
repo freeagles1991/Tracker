@@ -133,5 +133,28 @@ final class TrackerRecordStore: NSObject {
             print("Ошибка при получении записей: \(error.localizedDescription)")
         }
     }
+    
+    public func fetchEarliestTrackerRecord() -> TrackerRecord? {
+        // Создаем предикат для всех трекеров
+        let predicate = NSPredicate(format: "TRUEPREDICATE")
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return nil
+        }
+        
+        // Сортируем записи по дате, чтобы найти самую раннюю
+        let earliestEntity = fetchedObjects
+            .compactMap { entity -> TrackerRecord? in
+                guard let date = entity.date, let trackerEntity = entity.tracker, let id = trackerEntity.id else {
+                    return nil
+                }
+                return TrackerRecord(trackerID: id, date: date)
+            }
+            .sorted { $0.date < $1.date } // Сортируем по дате
+        
+        // Возвращаем самую раннюю запись
+        return earliestEntity.first
+    }
 }
 

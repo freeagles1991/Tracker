@@ -156,10 +156,87 @@ final class TrackerStore: NSObject {
             return convertEntityToTracker(trackerEntity)
         }
     }
-
-
-
-
+    
+    public func fetchAllRecordsCount() -> Int {
+        let allRecordsPredicate = NSPredicate(format: "records.@count > 0")
+        
+        self.setupFetchedResultsController(allRecordsPredicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            print("No fetched objects found")
+            return 0
+        }
+        
+        print("Fetched \(fetchedObjects.count) tracker entities with records")
+        
+        var totalRecordsCount = 0
+        for trackerEntity in fetchedObjects {
+            if let records = trackerEntity.records?.count {
+                totalRecordsCount += records
+            } else {
+                print("No records found for tracker entity: \(trackerEntity)")
+            }
+        }
+        
+        print("Total records count: \(totalRecordsCount)")
+        return totalRecordsCount
+    }
+    
+    public func fetchPerfectDaysCount(from earliestDate: Date) -> Int {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date()) // Начало текущего дня
+        
+        print("=== Старт расчета идеальных дней ===")
+        print("Рассматриваем даты от: \(earliestDate) до: \(today)")
+        
+        // 1. Создаем массив дат в диапазоне от earliestDate до сегодняшнего дня
+        var dates: [Date] = []
+        var currentDate = calendar.startOfDay(for: earliestDate)
+        
+        while currentDate <= today {
+            dates.append(currentDate)
+            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+        
+        print("Создано \(dates.count) дат для проверки.")
+        
+        // 2. Фильтруем даты, на которые запланированы трекеры
+        let scheduledDates = dates.filter { date in
+            guard let selectedWeekday = Weekday.fromDate(date) else { return false }
+            let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
+            self.setupFetchedResultsController(predicate)
+            
+            let hasScheduledTrackers = fetchedResultsController?.fetchedObjects?.isEmpty == false
+            print("Дата: \(date), Запланированные трекеры: \(hasScheduledTrackers ? "Есть" : "Нет")")
+            return hasScheduledTrackers
+        }
+        
+        print("Найдено \(scheduledDates.count) дат с запланированными трекерами.")
+        
+        // 3. Проверяем, является ли день "идеальным" (нет незавершенных трекеров)
+        var perfectDays = scheduledDates.filter { date in
+            let incompleteTrackers = fetchIncompleteTrackers(by: date)?.isEmpty ?? false
+            print("Дата: \(date), Незавершенные трекеры: \(incompleteTrackers ? "Нет" : "Есть")")
+            return incompleteTrackers
+        }
+        
+        // 4. Добавляем текущий день в расчет
+        if !scheduledDates.contains(today) {
+            let incompleteTrackersToday = fetchIncompleteTrackers(by: today)?.isEmpty ?? false
+            print("Текущая дата: \(today), Незавершенные трекеры: \(incompleteTrackersToday ? "Нет" : "Есть")")
+            
+            if incompleteTrackersToday {
+                print("Текущий день добавлен как идеальный.")
+                perfectDays.append(today)
+            }
+        }
+        
+        print("Найдено \(perfectDays.count) идеальных дней.")
+        
+        // 5. Возвращаем количество "идеальных дней"
+        print("=== Конец расчета идеальных дней ===")
+        return perfectDays.count
+    }
 
     public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
@@ -207,7 +284,6 @@ final class TrackerStore: NSObject {
             return
         }
         
-        // Обновляем свойства трекера
         trackerEntity.title = tracker.title
         trackerEntity.emoji = tracker.emoji
         trackerEntity.scheduleArray = tracker.schedule
@@ -215,17 +291,14 @@ final class TrackerStore: NSObject {
         trackerEntity.isPinned = tracker.isPinned
         
         if let newCategory = newCategory {
-            // Удаляем трекер из старой категории
             if let oldCategory = trackerEntity.category {
                 oldCategory.removeFromTrackers(trackerEntity)
             }
 
-            // Устанавливаем новую категорию
             trackerEntity.category = newCategory
             newCategory.addToTrackers(trackerEntity)
         }
         
-        // Сохраняем изменения
         appDelegate.saveContext()
     }
 

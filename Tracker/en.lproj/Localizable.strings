@@ -63,3 +63,8 @@
 "FilterTrackersScreen_TodayTrackers" = "Today's Trackers";
 "FilterTrackersScreen_CompletedTrackers" = "Completed";
 "FilterTrackersScreen_UncompletedTrackers" = "Uncompleted";
+
+"StatisticsScreen_best_period" = "Best Period";
+"StatisticsScreen_perfect_days" = "Perfect Days";
+"StatisticsScreen_trackers_complete" = "Trackers Complete";
+"StatisticsScreen_average" = "Average";
