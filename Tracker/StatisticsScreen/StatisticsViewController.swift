@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 final class StatisticsViewController: UIViewController {
-    
     private let trackersStore = TrackerStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
     

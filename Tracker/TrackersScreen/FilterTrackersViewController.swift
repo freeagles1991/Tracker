@@ -15,8 +15,6 @@ final class FilterTrackersViewController: UIViewController {
     private var selectedIndexPath: IndexPath?
     var delegate: TrackersViewController?
     
-    private var selectedFilter: FilterType = .allTrackers
-    
     private var screenTitleLabel = UILabel()
     private let cellHeight: CGFloat = 75
     private let maxTableHeight: CGFloat = 500
@@ -86,14 +84,14 @@ final class FilterTrackersViewController: UIViewController {
     }
     
     func setFilter(_ filter: FilterType) {
-        self.selectedFilter = filter
+        FilterStore.selectedFilter = filter
         updateTableView()
     }
     
     //MARK: Private
     
     private func updateTableView() {
-        switch selectedFilter {
+        switch FilterStore.selectedFilter {
         case .allTrackers:
             selectedIndexPath = IndexPath(row: 0, section: 0)
         case .todayTrackers:
@@ -143,7 +141,7 @@ extension FilterTrackersViewController: UITableViewDelegate, UITableViewDataSour
             return
         }
         
-        selectedFilter = filterType
+        FilterStore.selectedFilter = filterType
         delegate?.handleFilterSelection(filterType)
         
         var indexPathsToReload: [IndexPath] = [indexPath]

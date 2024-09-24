@@ -19,7 +19,6 @@ final class TrackersViewController: UIViewController {
     
     private var datePicker = UIDatePicker()
     private var selectedDate: Date? = Date()
-    private var selectedFilter: FilterType = .allTrackers
 
     private var emptyStateView = UIView()
     private var nothingFoundStateView = UIView()
@@ -95,9 +94,7 @@ final class TrackersViewController: UIViewController {
         setupCollectionView()
         setupFilterButton()
         
-        trackers = trackerStore.fetchTrackers()
-        updateUI()
-        collectionView.reloadData()
+        updateCollectionView(with: FilterStore.selectedFilter)
         
         let analyticsEvent = AnalyticsEvent(
             eventType: .open,
@@ -240,7 +237,7 @@ final class TrackersViewController: UIViewController {
     
     private func updateUI() {
         guard let trackers else { return }
-        if trackers.isEmpty && selectedFilter == .allTrackers {
+        if trackers.isEmpty && FilterStore.selectedFilter == .allTrackers {
             emptyStateView.isHidden = false
             nothingFoundStateView.isHidden = true
             collectionView.isHidden = true
@@ -275,7 +272,7 @@ final class TrackersViewController: UIViewController {
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         self.selectedDate = sender.date
-        switch selectedFilter {
+        switch FilterStore.selectedFilter {
         case .allTrackers:
             updateCollectionView(with: .allTrackers)
         case .todayTrackers:
@@ -303,7 +300,7 @@ final class TrackersViewController: UIViewController {
     
     //MARK: Public
     func updateCollectionView() {
-        self.updateCollectionView(with: selectedFilter)
+        self.updateCollectionView(with: FilterStore.selectedFilter)
     }
     
     private func updateCollectionView(with filter: FilterType) {
@@ -332,12 +329,12 @@ final class TrackersViewController: UIViewController {
     
     func setTrackerComplete(for tracker: Tracker, on date: Date) {
         self.addRecord(for: tracker, on: date)
-        updateCollectionView(with: selectedFilter)
+        updateCollectionView(with: FilterStore.selectedFilter)
     }
     
     func setTrackerIncomplete(for tracker: Tracker, on date: Date) {
         self.removeRecord(for: tracker, on: date)
-        updateCollectionView(with: selectedFilter)
+        updateCollectionView(with: FilterStore.selectedFilter)
     }
     
     func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
@@ -347,15 +344,10 @@ final class TrackersViewController: UIViewController {
         }
             trackerStore.createTracker(with: tracker, in: trackerCategoryEntity)
         print("Трекер \(tracker.title) добавлен в категорию \(categoryTitle)")
-        self.updateCollectionView(with: selectedFilter)
-    }
-    
-    func setFilter(_ filter: FilterType) {
-        self.selectedFilter = filter
+        self.updateCollectionView(with: FilterStore.selectedFilter)
     }
     
     func handleFilterSelection(_ filterType: FilterType) {
-        setFilter(filterType)
         updateCollectionView(with: filterType)
     }
     
@@ -367,7 +359,7 @@ final class TrackersViewController: UIViewController {
         }
         trackerStore.removeTracker(with: tracker.id)
         print("Трекер \(tracker.title) удален из категории \(category)")
-        self.updateCollectionView(with: selectedFilter)
+        self.updateCollectionView(with: FilterStore.selectedFilter)
     }
     
     private func removeRecord(for tracker: Tracker, on date: Date) {
@@ -383,14 +375,14 @@ final class TrackersViewController: UIViewController {
         print("Запись трекера \(tracker.title) выполнена")
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let bottomOffset = scrollView.contentOffset.y + scrollView.frame.size.height
-        if bottomOffset >= scrollView.contentSize.height {
-            filterButton.isHidden = true // Скрыть кнопку "Фильтры" в конце списка
-        } else {
-            filterButton.isHidden = false // Показать кнопку, если до конца списка не доскроллили
-        }
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let bottomOffset = scrollView.contentOffset.y + scrollView.frame.size.height
+//        if bottomOffset >= scrollView.contentSize.height {
+//            filterButton.isHidden = true // Скрыть кнопку "Фильтры" в конце списка
+//        } else {
+//            filterButton.isHidden = false // Показать кнопку, если до конца списка не доскроллили
+//        }
+//    }
 }
 
 
@@ -514,7 +506,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         let updatedTracker = Tracker(id: tracker.id ,title: tracker.title, color: tracker.color, emoji: tracker.emoji, schedule: tracker.schedule, isPinned: !currentState)
         trackerStore.updateTracker(for: updatedTracker)
         print(updatedTracker.isPinned)
-        self.updateCollectionView(with: selectedFilter)
+        self.updateCollectionView(with: FilterStore.selectedFilter)
     }
     
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {

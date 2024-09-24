@@ -122,17 +122,46 @@ final class TrackerStore: NSObject {
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
-        let predicate = NSPredicate(format: "ANY records.date >= %@ AND ANY records.date < %@", startOfDay as NSDate, endOfDay as NSDate)
+        print("=== Поиск завершенных трекеров за дату ===")
+        print("Дата начала: \(startOfDay), Дата конца: \(endOfDay)")
         
-        self.setupFetchedResultsController(predicate)
+        // Предикат для трекеров с записями за указанную дату
+        let hasRecordForDatePredicate = NSPredicate(format: "ANY records.date >= %@ AND ANY records.date < %@", startOfDay as NSDate, endOfDay as NSDate)
+        print("Создан предикат для трекеров с записями за указанную дату")
         
+        // Предикат для трекеров, запланированных на день недели
+        guard let selectedWeekday = Weekday.fromDate(date) else {
+            print("Не удалось определить день недели для даты")
+            return []
+        }
+        let scheduledOnDayPredicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
+        print("Создан предикат для трекеров, запланированных на \(selectedWeekday.rawValue)")
+        
+        // Комбинированный предикат (и трекер имеет запись, и запланирован на день недели)
+        let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [hasRecordForDatePredicate, scheduledOnDayPredicate])
+        print("Создан объединенный предикат для трекеров, имеющих записи и запланированных на день недели")
+        
+        // Настройка FetchedResultsController с комбинированным предикатом
+        self.setupFetchedResultsController(combinedPredicate)
+        print("FetchedResultsController настроен с комбинированным предикатом")
+        
+        // Получаем результаты
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            print("Не найдено завершенных трекеров")
             return []
         }
         
-        return fetchedObjects.compactMap { trackerEntity in
+        print("Найдено \(fetchedObjects.count) завершенных трекеров за указанную дату")
+        
+        // Конвертация сущностей трекеров в объекты Tracker
+        let completeTrackers = fetchedObjects.compactMap { trackerEntity in
             convertEntityToTracker(trackerEntity)
         }
+        
+        print("Возвращено \(completeTrackers.count) завершенных трекеров")
+        print("=== Конец поиска трекеров ===")
+        
+        return completeTrackers
     }
     
     public func fetchIncompleteTrackers(by date: Date) -> [Tracker]? {
@@ -140,21 +169,46 @@ final class TrackerStore: NSObject {
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
-        let noRecordForDatePredicate = NSPredicate(format: "SUBQUERY(records, $record, $record.date >= %@ AND $record.date < %@).@count == 0", startOfDay as NSDate, endOfDay as NSDate)
-
-        let noRecordsPredicate = NSPredicate(format: "records.@count == 0")
-
-        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [noRecordsPredicate, noRecordForDatePredicate])
-
-        self.setupFetchedResultsController(compoundPredicate)
+        print("=== Поиск незавершенных трекеров за дату ===")
+        print("Дата начала: \(startOfDay), Дата конца: \(endOfDay)")
         
+        // Предикат для отсутствия записей за указанную дату
+        let noRecordForDatePredicate = NSPredicate(format: "SUBQUERY(records, $record, $record.date >= %@ AND $record.date < %@).@count == 0", startOfDay as NSDate, endOfDay as NSDate)
+        print("Создан предикат для отсутствия записей за указанную дату")
+        
+        // Предикат для того, чтобы трекеры были запланированы на конкретный день
+        guard let selectedWeekday = Weekday.fromDate(date) else {
+            print("Не удалось определить день недели для даты")
+            return []
+        }
+        let scheduledOnDayPredicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
+        print("Создан предикат для трекеров, запланированных на \(selectedWeekday.rawValue)")
+        
+        // Комбинированный предикат (и трекер запланирован, и нет записей за указанную дату)
+        let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [noRecordForDatePredicate, scheduledOnDayPredicate])
+        print("Создан объединенный предикат для трекеров, запланированных на день и не имеющих записей за этот день")
+        
+        // Настройка FetchedResultsController с комбинированным предикатом
+        self.setupFetchedResultsController(combinedPredicate)
+        print("FetchedResultsController настроен с комбинированным предикатом")
+        
+        // Получаем результаты
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            print("Не найдено незавершенных трекеров")
             return []
         }
         
-        return fetchedObjects.compactMap { trackerEntity in
-            return convertEntityToTracker(trackerEntity)
+        print("Найдено \(fetchedObjects.count) незавершенных трекеров за указанную дату")
+        
+        // Конвертация сущностей трекеров в объекты Tracker
+        let incompleteTrackers = fetchedObjects.compactMap { trackerEntity in
+            convertEntityToTracker(trackerEntity)
         }
+        
+        print("Возвращено \(incompleteTrackers.count) незавершенных трекеров")
+        print("=== Конец поиска трекеров ===")
+        
+        return incompleteTrackers
     }
     
     public func fetchAllRecordsCount() -> Int {

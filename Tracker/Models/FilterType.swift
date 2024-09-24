@@ -7,9 +7,24 @@
 
 import Foundation
 
-public enum FilterType {
-    case allTrackers
-    case todayTrackers
-    case completedTrackers
-    case uncompletedTrackers
+public enum FilterType: String {
+    case allTrackers = "allTrackers"
+    case todayTrackers = "todayTrackers"
+    case completedTrackers = "completedTrackers"
+    case uncompletedTrackers = "uncompletedTrackers"
+}
+
+public class FilterStore {
+    static var selectedFilter: FilterType {
+        get {
+            if let savedValue = UserDefaults.standard.string(forKey: "selectedFilter") {
+                return FilterType(rawValue: savedValue) ?? .todayTrackers
+            } else {
+                return .todayTrackers
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: "selectedFilter")
+        }
+    }
 }
