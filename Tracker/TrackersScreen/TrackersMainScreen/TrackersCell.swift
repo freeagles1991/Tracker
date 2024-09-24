@@ -189,6 +189,11 @@ final class TrackerCell: UICollectionViewCell {
         titleLabel.text = tracker.title
         selectedDate = date
         cellColor = UIColor(hexString: tracker.color) ?? .gray
+        if FilterStore.selectedFilter == .allTrackers {
+            completeButton.isEnabled = false
+        } else {
+            completeButton.isEnabled = true
+            }
         self.isTrackerComplete = isTrackerCompleted(tracker, on: date)
         updateUI(with: cellColor)
         self.durationCountInt = numberOfRecords(for: tracker)
