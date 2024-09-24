@@ -22,16 +22,27 @@ final class TrackerStore: NSObject {
     
     var trackersVC: TrackersViewController?
     var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
+    private var lastUsedPredicate: NSPredicate = NSPredicate()
     
     // Настраиваем FRC
-    func setupFetchedResultsController(_ predicate: NSPredicate) {
+    func setupFetchedResultsController(_ predicate: NSPredicate, with trackerTitlePredicate: NSPredicate? = nil) {
         let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
+        
         fetchRequest.sortDescriptors = [
-                NSSortDescriptor(key: "isPinned", ascending: false),
-                NSSortDescriptor(key: "category.title", ascending: true),
-                NSSortDescriptor(key: "title", ascending: true)
-            ]
-        fetchRequest.predicate = predicate
+            NSSortDescriptor(key: "isPinned", ascending: false),
+            NSSortDescriptor(key: "category.title", ascending: true),
+            NSSortDescriptor(key: "title", ascending: true)
+        ]
+        
+        lastUsedPredicate = predicate
+        // Если есть предикат для tracker.title, объединяем его с основным предикатом
+        if let titlePredicate = trackerTitlePredicate {
+            let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, titlePredicate])
+            fetchRequest.predicate = combinedPredicate
+        } else {
+            // Если нет предиката для title, используем только основной предикат
+            fetchRequest.predicate = predicate
+        }
         
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -39,6 +50,7 @@ final class TrackerStore: NSObject {
             sectionNameKeyPath: "pinnedOrCategory",
             cacheName: nil
         )
+        
         guard let fetchedResultsController else { return }
         
         do {
@@ -46,6 +58,29 @@ final class TrackerStore: NSObject {
         } catch {
             print("Failed to fetch data: \(error)")
         }
+    }
+    
+    func searchTracker(with title: String) -> [Tracker]? {
+        let titlePredicate = NSPredicate(format: "title CONTAINS[cd] %@", title)
+        
+        if title != "" {
+            setupFetchedResultsController(lastUsedPredicate, with: titlePredicate)
+        } else {
+            setupFetchedResultsController(lastUsedPredicate)
+        }
+        
+        
+        // Получаем результаты из FetchedResultsController
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        // Преобразуем результаты в объекты Tracker
+        let trackers = fetchedObjects.compactMap { trackerEntity in
+            return convertEntityToTracker(trackerEntity)
+        }
+        
+        return trackers
     }
     
     private var context: NSManagedObjectContext {

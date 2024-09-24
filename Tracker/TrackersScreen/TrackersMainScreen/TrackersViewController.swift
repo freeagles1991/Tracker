@@ -131,6 +131,7 @@ final class TrackersViewController: UIViewController {
         searchBar.placeholder = TrackersMainScreenConst.searchBarPlaceholderString
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.backgroundImage = UIImage()
+        searchBar.delegate = self
         view.addSubview(searchBar)
         
         NSLayoutConstraint.activate([
@@ -532,6 +533,17 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
 
         // Возвращаем зону подсветки для ячейки при закрытии меню
         return UITargetedPreview(view: cell)
+    }
+}
+
+//MARK: UISearchBarDelegate
+extension TrackersViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Вызываем метод для поиска трекеров с введенным названием
+        trackers = trackerStore.searchTracker(with: searchText)
+        updateUI()
+        collectionView.reloadData()
+        
     }
 }
 
