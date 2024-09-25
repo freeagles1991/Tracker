@@ -31,9 +31,9 @@ final class StatisticsStore {
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key: "title", ascending: true)
         ]
-
+        
         fetchRequest.predicate = predicate
-    
+        
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
@@ -61,8 +61,6 @@ final class StatisticsStore {
             return 0
         }
         
-        print("Fetched \(fetchedObjects.count) tracker entities with records")
-        
         var totalRecordsCount = 0
         for trackerEntity in fetchedObjects {
             if let records = trackerEntity.records?.count {
@@ -72,7 +70,6 @@ final class StatisticsStore {
             }
         }
         
-        print("Total records count: \(totalRecordsCount)")
         return totalRecordsCount
     }
     
@@ -136,9 +133,8 @@ final class StatisticsStore {
     //MARK: Среднее значение
     public func fetchAverageTrackersPerDay(from earliestDate: Date) -> Int {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date()) // Начало текущего дня
+        let today = calendar.startOfDay(for: Date())
         
-        // 1. Создаем массив дат в диапазоне от earliestDate до сегодняшнего дня
         var dates: [Date] = []
         var currentDate = calendar.startOfDay(for: earliestDate)
         
@@ -147,16 +143,61 @@ final class StatisticsStore {
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
         }
         
-        // 2. Подсчитываем количество всех выполненных трекеров
         let totalRecordsCount = fetchAllRecordsCount()
         
-        // 3. Вычисляем среднее значение выполненных трекеров за 1 день
         let daysCount = dates.count
         guard daysCount > 0 else { return 0 } // Защита от деления на ноль
         
         let averageTrackersPerDay = Double(totalRecordsCount) / Double(daysCount)
         
-        // Округляем результат до ближайшего целого числа и возвращаем как Int
         return Int(round(averageTrackersPerDay))
+    }
+    
+    //MARK: Лучший период
+    public func fetchBestPeriod(from earliestDate: Date) -> Int {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        
+        var dates: [Date] = []
+        var currentDate = calendar.startOfDay(for: earliestDate)
+        
+        while currentDate <= today {
+            dates.append(currentDate)
+            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+        
+        var bestPeriod = 0
+        var currentStreak = 0
+        
+        for date in dates {
+            guard let completedTrackers = trackerStore.fetchCompleteTrackers(by: date) else {
+                currentStreak = 0
+                continue
+            }
+            
+            guard !completedTrackers.isEmpty else {
+                continue
+            }
+            
+            var allTrackersMatch = true
+            for tracker in completedTrackers {
+                let schedule = tracker.schedule
+                guard let selectedWeekday = Weekday.fromDate(date) else { return 0 }
+                
+                if !schedule.contains(selectedWeekday) {
+                    allTrackersMatch = false
+                    break
+                }
+            }
+            
+            if allTrackersMatch {
+                currentStreak += 1
+                bestPeriod = max(bestPeriod, currentStreak)
+            } else {
+                currentStreak = 0
+            }
+        }
+        
+        return bestPeriod
     }
 }

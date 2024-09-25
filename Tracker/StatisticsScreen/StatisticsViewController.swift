@@ -40,6 +40,7 @@ final class StatisticsViewController: UIViewController {
     private var perfectDaysCount = 0
     private var trackersCompleteCount = 0
     private var averageCount = 0
+    private var bestPeriodCount = 0
     
     init(statisticStore: StatisticsStore) {
         self.statisticsStore = statisticStore
@@ -65,6 +66,7 @@ final class StatisticsViewController: UIViewController {
         
         perfectDaysCount = statisticsStore.fetchPerfectDaysCount(from: erliestRecord)
         averageCount = statisticsStore.fetchAverageTrackersPerDay(from: erliestRecord)
+        bestPeriodCount = statisticsStore.fetchBestPeriod(from: erliestRecord)
         
         trackersCompleteCount = statisticsStore.fetchAllRecordsCount()
         
@@ -108,6 +110,7 @@ extension StatisticsViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             statisticType = .best_period
+            counter = bestPeriodCount
         case 1:
             statisticType = .perfect_days
             counter = perfectDaysCount
