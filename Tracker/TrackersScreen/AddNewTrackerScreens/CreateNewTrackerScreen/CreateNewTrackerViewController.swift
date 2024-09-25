@@ -36,10 +36,29 @@ class CreateNewTrackerViewController: UIViewController {
     private let chooseCategoryVC = ChooseCategoryViewController(viewModel: ChooseCategoryViewModel())
     private let scheduleScreenVC = ScheduleScreenViewController(viewModel: ScheduleScreenViewModel())
     
-    private var selectedCategory: TrackerCategory?
-    private var selectedWeekdays = Set<Weekday>()
-    private var selectedEmoji: String?
-    private var selectedColor: String?
+    private var selectedCategory: TrackerCategory? {
+        didSet {
+            updateCreateButtonState()
+        }
+    }
+
+    private var selectedWeekdays = Set<Weekday>() {
+        didSet {
+            updateCreateButtonState()
+        }
+    }
+
+    private var selectedEmoji: String? {
+        didSet {
+            updateCreateButtonState()
+        }
+    }
+
+    private var selectedColor: String? {
+        didSet {
+            updateCreateButtonState()
+        }
+    }
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
