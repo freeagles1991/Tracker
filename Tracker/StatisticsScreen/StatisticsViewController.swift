@@ -39,6 +39,7 @@ final class StatisticsViewController: UIViewController {
     
     private var perfectDaysCount = 0
     private var trackersCompleteCount = 0
+    private var averageCount = 0
     
     init(statisticStore: StatisticsStore) {
         self.statisticsStore = statisticStore
@@ -61,9 +62,12 @@ final class StatisticsViewController: UIViewController {
         tableView.reloadData()
         
         guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { return }
+        
         perfectDaysCount = statisticsStore.fetchPerfectDaysCount(from: erliestRecord)
+        averageCount = statisticsStore.fetchAverageTrackersPerDay(from: erliestRecord)
         
         trackersCompleteCount = statisticsStore.fetchAllRecordsCount()
+        
     }
     
     private func setupNavigationBar() {
@@ -112,6 +116,7 @@ extension StatisticsViewController: UITableViewDataSource, UITableViewDelegate {
             counter = trackersCompleteCount
         case 3:
             statisticType = .average
+            counter = averageCount
         default:
             statisticType = .average
             counter = 0

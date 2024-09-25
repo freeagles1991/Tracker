@@ -132,5 +132,31 @@ final class StatisticsStore {
         print("=== Конец расчета идеальных дней ===")
         return perfectDays.count
     }
-
+    
+    //MARK: Среднее значение
+    public func fetchAverageTrackersPerDay(from earliestDate: Date) -> Int {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date()) // Начало текущего дня
+        
+        // 1. Создаем массив дат в диапазоне от earliestDate до сегодняшнего дня
+        var dates: [Date] = []
+        var currentDate = calendar.startOfDay(for: earliestDate)
+        
+        while currentDate <= today {
+            dates.append(currentDate)
+            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+        
+        // 2. Подсчитываем количество всех выполненных трекеров
+        let totalRecordsCount = fetchAllRecordsCount()
+        
+        // 3. Вычисляем среднее значение выполненных трекеров за 1 день
+        let daysCount = dates.count
+        guard daysCount > 0 else { return 0 } // Защита от деления на ноль
+        
+        let averageTrackersPerDay = Double(totalRecordsCount) / Double(daysCount)
+        
+        // Округляем результат до ближайшего целого числа и возвращаем как Int
+        return Int(round(averageTrackersPerDay))
+    }
 }
