@@ -39,12 +39,10 @@ final class TrackerStore: NSObject {
         ]
         
         lastUsedPredicate = predicate
-        // Если есть предикат для tracker.title, объединяем его с основным предикатом
         if let titlePredicate = trackerTitlePredicate {
             let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, titlePredicate])
             fetchRequest.predicate = combinedPredicate
         } else {
-            // Если нет предиката для title, используем только основной предикат
             fetchRequest.predicate = predicate
         }
         
@@ -73,13 +71,10 @@ final class TrackerStore: NSObject {
             setupFetchedResultsController(lastUsedPredicate)
         }
         
-        
-        // Получаем результаты из FetchedResultsController
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return []
         }
         
-        // Преобразуем результаты в объекты Tracker
         let trackers = fetchedObjects.compactMap { trackerEntity in
             return convertEntityToTracker(trackerEntity)
         }
@@ -151,13 +146,13 @@ final class TrackerStore: NSObject {
             convertEntityToTracker(trackerEntity)
         }
     }
-    
+    //MARK: Завершенные трекеры
     public func fetchCompleteTrackers(by date: Date) -> [Tracker]? {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
-        let hasRecordForDatePredicate = NSPredicate(format: "ANY records.date >= %@ AND ANY records.date < %@", startOfDay as NSDate, endOfDay as NSDate)
+        let hasRecordForExactDatePredicate = NSPredicate(format: "SUBQUERY(records, $record, $record.date >= %@ AND $record.date < %@).@count > 0", startOfDay as NSDate, endOfDay as NSDate)
         
         guard let selectedWeekday = Weekday.fromDate(date) else {
             return []
@@ -165,7 +160,7 @@ final class TrackerStore: NSObject {
         
         let scheduledOnDayPredicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
         
-        let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [hasRecordForDatePredicate, scheduledOnDayPredicate])
+        let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [hasRecordForExactDatePredicate, scheduledOnDayPredicate])
         
         self.setupFetchedResultsController(combinedPredicate)
         
@@ -178,6 +173,7 @@ final class TrackerStore: NSObject {
         }
     }
     
+    //MARK: Незавершенные трекеры
     public func fetchIncompleteTrackers(by date: Date) -> [Tracker]? {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)

@@ -366,6 +366,7 @@ final class TrackersViewController: UIViewController {
     private func removeRecord(for tracker: Tracker, on date: Date) {
         trackerRecordStore.removeTrackerRecord(with: tracker.id, on: date)
         print("Запись трекера \(tracker.title) удалена")
+        print(trackerRecordStore.fetchTrackerRecords(byID: tracker.id))
     }
     
     private func addRecord(for tracker: Tracker, on date: Date) {

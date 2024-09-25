@@ -146,7 +146,6 @@ final class StatisticsStore {
         var dates: [Date] = []
         var currentDate = calendar.startOfDay(for: earliestDate)
         
-        // Создаем массив дат от earliestDate до текущего дня
         while currentDate <= today {
             dates.append(currentDate)
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
@@ -155,40 +154,30 @@ final class StatisticsStore {
         var bestPeriod = 0
         var currentStreak = 0
         
-        // Проверяем каждый день на соответствие расписанию и выполненные трекеры
         for date in dates {
-            guard let completedTrackers = trackerStore.fetchCompleteTrackers(by: date) else {
-                // Если нет выполненных трекеров, сбрасываем текущую последовательность
-                currentStreak = 0
+            guard let scheduledTrackers = trackerStore.fetchTrackers(by: date), !scheduledTrackers.isEmpty else {
                 continue
             }
             
-            // Если на день нет запланированных трекеров, пропускаем день
-            guard !completedTrackers.isEmpty else {
-                continue
-            }
-            
+            let completedTrackers = trackerStore.fetchCompleteTrackers(by: date) ?? []
             var allTrackersMatch = true
-            for tracker in completedTrackers {
-                let schedule = tracker.schedule
-                guard let selectedWeekday = Weekday.fromDate(date) else { return 0 }
-                
-                // Если трекер запланирован на этот день, но не выполнен, сбрасываем последовательность
-                if !schedule.contains(selectedWeekday) {
+            
+            for tracker in scheduledTrackers {
+                if !completedTrackers.contains(where: { $0.id == tracker.id }) {
                     allTrackersMatch = false
                     break
                 }
             }
             
             if allTrackersMatch {
-                // Если все запланированные трекеры выполнены, увеличиваем текущую последовательность
                 currentStreak += 1
-                bestPeriod = max(bestPeriod, currentStreak)
             } else {
-                // Сбрасываем последовательность, если трекеры не выполнены
+                bestPeriod = max(bestPeriod, currentStreak)
                 currentStreak = 0
             }
         }
+        
+        bestPeriod = max(bestPeriod, currentStreak)
         
         return bestPeriod
     }
