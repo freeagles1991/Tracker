@@ -68,3 +68,5 @@
 "StatisticsScreen_perfect_days" = "Perfect Days";
 "StatisticsScreen_trackers_complete" = "Trackers Complete";
 "StatisticsScreen_average" = "Average";
+"StatisticsScreen_title" = "Statistics";
+"StatisticsScreen_emptyState" = "Nothing to analyze yet";

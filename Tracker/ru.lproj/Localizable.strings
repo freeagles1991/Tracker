@@ -68,5 +68,7 @@
 "StatisticsScreen_perfect_days" = "Идеальные дни";
 "StatisticsScreen_trackers_complete" = "Трекеров завершено";
 "StatisticsScreen_average" = "Среднее значение";
+"StatisticsScreen_title" = "Статистика";
+"StatisticsScreen_emptyState" = "Анализировать пока нечего";
 
 

@@ -13,8 +13,8 @@ final class StatisticsViewController: UIViewController {
     private let trackerRecordStore = TrackerRecordStore.shared
     private let statisticsStore: StatisticsStore
     
-    private let screenTitleString = "Статистика"
-    private let emptyStateString = "Анализировать пока нечего"
+    private let screenTitleString = NSLocalizedString("StatisticsScreen_title", comment: "Статистика")
+    private let emptyStateString = NSLocalizedString("StatisticsScreen_emptyState", comment: "Анализировать пока нечего")
     
     private let tableView = UITableView()
     private var emptyStateView = UIView()
