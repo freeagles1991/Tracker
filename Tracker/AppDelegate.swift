@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 //        deleteCoreDataStore()
 //        resetPersistentStore()
-        let configuration = AppMetricaConfiguration(apiKey: "4221aa8a-f0e7-4534-b6a0-7b8af0a0c786")
+        let configuration = AppMetricaConfiguration(apiKey: "")
             AppMetrica.activate(with: configuration!)
         return true
     }
