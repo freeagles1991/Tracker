@@ -11,6 +11,7 @@ import UIKit
 final class StatisticsViewController: UIViewController {
     private let trackersStore = TrackerStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
+    private let statisticsStore: StatisticsStore
     
     private let screenTitleString = "Статистика"
     private let tableView = UITableView()
@@ -39,7 +40,8 @@ final class StatisticsViewController: UIViewController {
     private var perfectDaysCount = 0
     private var trackersCompleteCount = 0
     
-    init() {
+    init(statisticStore: StatisticsStore) {
+        self.statisticsStore = statisticStore
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,9 +61,9 @@ final class StatisticsViewController: UIViewController {
         tableView.reloadData()
         
         guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { return }
-        perfectDaysCount = trackersStore.fetchPerfectDaysCount(from: erliestRecord)
+        perfectDaysCount = statisticsStore.fetchPerfectDaysCount(from: erliestRecord)
         
-        trackersCompleteCount = trackersStore.fetchAllRecordsCount()
+        trackersCompleteCount = statisticsStore.fetchAllRecordsCount()
     }
     
     private func setupNavigationBar() {
@@ -87,11 +89,7 @@ final class StatisticsViewController: UIViewController {
     }
     
     //MARK: Private
-    
-    private func getTrackersCompleteCount() -> Int {
-        let records = trackersStore.fetchAllRecordsCount()
-        return records
-    }
+
 }
 
 extension StatisticsViewController: UITableViewDataSource, UITableViewDelegate {

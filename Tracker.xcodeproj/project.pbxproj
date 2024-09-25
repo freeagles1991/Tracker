@@ -38,6 +38,7 @@
 		325E5F7F2CA19D1200272AC6 /* Pods_Tracker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 00A6EB4823BC127B891E8504 /* Pods_Tracker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		325E5F822CA1A70100272AC6 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325E5F812CA1A70100272AC6 /* AnalyticsService.swift */; };
 		325E5F842CA1DDFF00272AC6 /* StatisticsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325E5F832CA1DDFF00272AC6 /* StatisticsCell.swift */; };
+		325E5F882CA42DF700272AC6 /* StatisticsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325E5F872CA42DF700272AC6 /* StatisticsStore.swift */; };
 		32A45B652C53D549002A97F5 /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45B642C53D549002A97F5 /* LaunchScreenViewController.swift */; };
 		32A45B682C53D9A6002A97F5 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45B672C53D9A6002A97F5 /* TabBarController.swift */; };
 		32A45B6B2C53DA2E002A97F5 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A45B6A2C53DA2E002A97F5 /* TrackersViewController.swift */; };
@@ -136,6 +137,7 @@
 		323882802C52AB0F00EE11A3 /* TrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		325E5F812CA1A70100272AC6 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		325E5F832CA1DDFF00272AC6 /* StatisticsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsCell.swift; sourceTree = "<group>"; };
+		325E5F872CA42DF700272AC6 /* StatisticsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsStore.swift; sourceTree = "<group>"; };
 		32A45B642C53D549002A97F5 /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		32A45B672C53D9A6002A97F5 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		32A45B6A2C53DA2E002A97F5 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 				32B013462C7A4626004C4969 /* TrackerStore.swift */,
 				32B013482C7A4634004C4969 /* TrackerCategoryStore.swift */,
 				32B0134A2C7A4640004C4969 /* TrackerRecordStore.swift */,
+				325E5F872CA42DF700272AC6 /* StatisticsStore.swift */,
 			);
 			path = " CoreData";
 			sourceTree = "<group>";
@@ -757,6 +760,7 @@
 				32C3B6B22C7770C500E34DFD /* ColorCell.swift in Sources */,
 				325E5F822CA1A70100272AC6 /* AnalyticsService.swift in Sources */,
 				32B0134B2C7A4640004C4969 /* TrackerRecordStore.swift in Sources */,
+				325E5F882CA42DF700272AC6 /* StatisticsStore.swift in Sources */,
 				32BABF1A2C750BF500E176E2 /* EmojiCell.swift in Sources */,
 				321586FE2C92E5B000452B99 /* CategoryCell.swift in Sources */,
 				321586F22C90841B00452B99 /* Constants.swift in Sources */,
