@@ -76,12 +76,8 @@ final class StatisticsStore {
     //MARK: Идеальные дни
     public func fetchPerfectDaysCount(from earliestDate: Date) -> Int {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date()) // Начало текущего дня
+        let today = calendar.startOfDay(for: Date())
         
-        print("=== Старт расчета идеальных дней ===")
-        print("Рассматриваем даты от: \(earliestDate) до: \(today)")
-        
-        // 1. Создаем массив дат в диапазоне от earliestDate до сегодняшнего дня
         var dates: [Date] = []
         var currentDate = calendar.startOfDay(for: earliestDate)
         
@@ -90,43 +86,32 @@ final class StatisticsStore {
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
         }
         
-        print("Создано \(dates.count) дат для проверки.")
-        
-        // 2. Фильтруем даты, на которые запланированы трекеры
         let scheduledDates = dates.filter { date in
             guard let selectedWeekday = Weekday.fromDate(date) else { return false }
             let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
             self.setupFetchedResultsController(predicate)
             
             let hasScheduledTrackers = fetchedResultsController?.fetchedObjects?.isEmpty == false
-            print("Дата: \(date), Запланированные трекеры: \(hasScheduledTrackers ? "Есть" : "Нет")")
             return hasScheduledTrackers
         }
         
-        print("Найдено \(scheduledDates.count) дат с запланированными трекерами.")
-        
-        // 3. Проверяем, является ли день "идеальным" (нет незавершенных трекеров)
         var perfectDays = scheduledDates.filter { date in
-            let incompleteTrackers = trackerStore.fetchIncompleteTrackers(by: date)?.isEmpty ?? false
-            print("Дата: \(date), Незавершенные трекеры: \(incompleteTrackers ? "Нет" : "Есть")")
-            return incompleteTrackers
+            return trackerStore.fetchIncompleteTrackers(by: date)?.isEmpty ?? false
         }
         
-        // 4. Добавляем текущий день в расчет
-        if !scheduledDates.contains(today) {
-            let incompleteTrackersToday = trackerStore.fetchIncompleteTrackers(by: today)?.isEmpty ?? false
-            print("Текущая дата: \(today), Незавершенные трекеры: \(incompleteTrackersToday ? "Нет" : "Есть")")
+        if let selectedWeekday = Weekday.fromDate(today) {
+            let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
+            self.setupFetchedResultsController(predicate)
             
-            if incompleteTrackersToday {
-                print("Текущий день добавлен как идеальный.")
-                perfectDays.append(today)
+            let hasScheduledTrackers = fetchedResultsController?.fetchedObjects?.isEmpty == false
+            if hasScheduledTrackers {
+                let incompleteTrackersToday = trackerStore.fetchIncompleteTrackers(by: today)?.isEmpty ?? false
+                if incompleteTrackersToday {
+                    perfectDays.append(today)
+                }
             }
         }
         
-        print("Найдено \(perfectDays.count) идеальных дней.")
-        
-        // 5. Возвращаем количество "идеальных дней"
-        print("=== Конец расчета идеальных дней ===")
         return perfectDays.count
     }
     
@@ -161,6 +146,7 @@ final class StatisticsStore {
         var dates: [Date] = []
         var currentDate = calendar.startOfDay(for: earliestDate)
         
+        // Создаем массив дат от earliestDate до текущего дня
         while currentDate <= today {
             dates.append(currentDate)
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
@@ -169,12 +155,15 @@ final class StatisticsStore {
         var bestPeriod = 0
         var currentStreak = 0
         
+        // Проверяем каждый день на соответствие расписанию и выполненные трекеры
         for date in dates {
             guard let completedTrackers = trackerStore.fetchCompleteTrackers(by: date) else {
+                // Если нет выполненных трекеров, сбрасываем текущую последовательность
                 currentStreak = 0
                 continue
             }
             
+            // Если на день нет запланированных трекеров, пропускаем день
             guard !completedTrackers.isEmpty else {
                 continue
             }
@@ -184,6 +173,7 @@ final class StatisticsStore {
                 let schedule = tracker.schedule
                 guard let selectedWeekday = Weekday.fromDate(date) else { return 0 }
                 
+                // Если трекер запланирован на этот день, но не выполнен, сбрасываем последовательность
                 if !schedule.contains(selectedWeekday) {
                     allTrackersMatch = false
                     break
@@ -191,9 +181,11 @@ final class StatisticsStore {
             }
             
             if allTrackersMatch {
+                // Если все запланированные трекеры выполнены, увеличиваем текущую последовательность
                 currentStreak += 1
                 bestPeriod = max(bestPeriod, currentStreak)
             } else {
+                // Сбрасываем последовательность, если трекеры не выполнены
                 currentStreak = 0
             }
         }
