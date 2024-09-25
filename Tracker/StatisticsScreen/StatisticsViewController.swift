@@ -14,8 +14,10 @@ final class StatisticsViewController: UIViewController {
     private let statisticsStore: StatisticsStore
     
     private let screenTitleString = "Статистика"
+    private let emptyStateString = "Анализировать пока нечего"
+    
     private let tableView = UITableView()
-    private let emptyStateView = UIView()
+    private var emptyStateView = UIView()
     
     enum StatisticListString: String, CaseIterable {
         case best_period
@@ -56,20 +58,48 @@ final class StatisticsViewController: UIViewController {
         view.backgroundColor = UIColor(named: "white")
         setupNavigationBar()
         setupTableView()
+        setupEmptyStateView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
         
-        guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { return }
+        getStatisticsData()
+        updateUI()
+    }
+    
+    private func setupEmptyStateView() {
+        let emptyStateView = UIView()
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyStateView)
         
-        perfectDaysCount = statisticsStore.fetchPerfectDaysCount(from: erliestRecord)
-        averageCount = statisticsStore.fetchAverageTrackersPerDay(from: erliestRecord)
-        bestPeriodCount = statisticsStore.fetchBestPeriod(from: erliestRecord)
+        let imageView = UIImageView(image: UIImage(named: "emptyStatisticsIcon"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateView.addSubview(imageView)
         
-        trackersCompleteCount = statisticsStore.fetchAllRecordsCount()
+        let label = UILabel()
+        label.text = emptyStateString
+        label.font = UIFont(name: "SFProText-Medium", size: 12)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateView.addSubview(label)
         
+        NSLayoutConstraint.activate([
+            emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            imageView.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: emptyStateView.topAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 80),
+            imageView.heightAnchor.constraint(equalToConstant: 80),
+            
+            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            label.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
+            label.bottomAnchor.constraint(equalTo: emptyStateView.bottomAnchor)
+        ])
+        
+        self.emptyStateView = emptyStateView
     }
     
     private func setupNavigationBar() {
@@ -95,7 +125,37 @@ final class StatisticsViewController: UIViewController {
     }
     
     //MARK: Private
-
+    
+    private func getStatisticsData() {
+        guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { 
+            perfectDaysCount = 0
+            averageCount = 0
+            bestPeriodCount = 0
+            trackersCompleteCount = 0
+            return }
+        
+        perfectDaysCount = statisticsStore.fetchPerfectDaysCount(from: erliestRecord)
+        averageCount = statisticsStore.fetchAverageTrackersPerDay(from: erliestRecord)
+        bestPeriodCount = statisticsStore.fetchBestPeriod(from: erliestRecord)
+        trackersCompleteCount = statisticsStore.fetchAllRecordsCount()
+    }
+    
+    private func updateUI() {
+        emptyStateView.isHidden = isStatisticsEmpty() ? false : true
+        tableView.isHidden = isStatisticsEmpty() ? true : false
+        print(isStatisticsEmpty())
+    }
+    
+    private func isStatisticsEmpty() -> Bool {
+        if perfectDaysCount == 0,
+           trackersCompleteCount == 0,
+           averageCount == 0,
+           bestPeriodCount == 0 {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 extension StatisticsViewController: UITableViewDataSource, UITableViewDelegate {
