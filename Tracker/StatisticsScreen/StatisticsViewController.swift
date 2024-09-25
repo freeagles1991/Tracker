@@ -39,11 +39,6 @@ final class StatisticsViewController: UIViewController {
         }
     }
     
-    private var perfectDaysCount = 0
-    private var trackersCompleteCount = 0
-    private var averageCount = 0
-    private var bestPeriodCount = 0
-    
     init(statisticStore: StatisticsStore) {
         self.statisticsStore = statisticStore
         super.init(nibName: nil, bundle: nil)
@@ -64,6 +59,7 @@ final class StatisticsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+        
         
         getStatisticsData()
         updateUI()
@@ -127,17 +123,8 @@ final class StatisticsViewController: UIViewController {
     //MARK: Private
     
     private func getStatisticsData() {
-        guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { 
-            perfectDaysCount = 0
-            averageCount = 0
-            bestPeriodCount = 0
-            trackersCompleteCount = 0
-            return }
-        
-        perfectDaysCount = statisticsStore.fetchPerfectDaysCount(from: erliestRecord)
-        averageCount = statisticsStore.fetchAverageTrackersPerDay(from: erliestRecord)
-        bestPeriodCount = statisticsStore.fetchBestPeriod(from: erliestRecord)
-        trackersCompleteCount = statisticsStore.fetchAllRecordsCount()
+        guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { return }
+        statisticsStore.updateStatistics(with: erliestRecord)
     }
     
     private func updateUI() {
@@ -147,10 +134,10 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func isStatisticsEmpty() -> Bool {
-        if perfectDaysCount == 0,
-           trackersCompleteCount == 0,
-           averageCount == 0,
-           bestPeriodCount == 0 {
+        if statisticsStore.perfectDaysCount == 0,
+           statisticsStore.trackersCompleteCount == 0,
+           statisticsStore.averageCount == 0,
+           statisticsStore.bestPeriodCount == 0 {
             return true
         } else {
             return false
@@ -170,16 +157,16 @@ extension StatisticsViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             statisticType = .best_period
-            counter = bestPeriodCount
+            counter = statisticsStore.bestPeriodCount
         case 1:
             statisticType = .perfect_days
-            counter = perfectDaysCount
+            counter = statisticsStore.perfectDaysCount
         case 2:
             statisticType = .trackers_complete
-            counter = trackersCompleteCount
+            counter = statisticsStore.trackersCompleteCount
         case 3:
             statisticType = .average
-            counter = averageCount
+            counter = statisticsStore.averageCount
         default:
             statisticType = .average
             counter = 0

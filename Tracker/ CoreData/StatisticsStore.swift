@@ -13,6 +13,54 @@ final class StatisticsStore {
     var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
     private let trackerStore = TrackerStore.shared
     
+    public var perfectDaysCount: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "StatisticsScreen.perfectDaysCount")
+        }
+        set {
+            let currentStoredValue = UserDefaults.standard.integer(forKey: "StatisticsScreen.perfectDaysCount")
+            if newValue > currentStoredValue {
+                UserDefaults.standard.set(newValue, forKey: "StatisticsScreen.perfectDaysCount")
+            }
+        }
+    }
+
+    public var trackersCompleteCount: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "StatisticsScreen.trackersCompleteCount")
+        }
+        set {
+            let currentStoredValue = UserDefaults.standard.integer(forKey: "StatisticsScreen.trackersCompleteCount")
+            if newValue > currentStoredValue {
+                UserDefaults.standard.set(newValue, forKey: "StatisticsScreen.trackersCompleteCount")
+            }
+        }
+    }
+
+    public var averageCount: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "StatisticsScreen.averageCount")
+        }
+        set {
+            let currentStoredValue = UserDefaults.standard.integer(forKey: "StatisticsScreen.averageCount")
+            if newValue > currentStoredValue {
+                UserDefaults.standard.set(newValue, forKey: "StatisticsScreen.averageCount")
+            }
+        }
+    }
+
+    public var bestPeriodCount: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "StatisticsScreen.bestPeriodCount")
+        }
+        set {
+            let currentStoredValue = UserDefaults.standard.integer(forKey: "StatisticsScreen.bestPeriodCount")
+            if newValue > currentStoredValue {
+                UserDefaults.standard.set(newValue, forKey: "StatisticsScreen.bestPeriodCount")
+            }
+        }
+    }
+    
     private var appDelegate: AppDelegate {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
             fatalError("UIApplication.shared.delegate is not of type AppDelegate")
@@ -180,5 +228,21 @@ final class StatisticsStore {
         bestPeriod = max(bestPeriod, currentStreak)
         
         return bestPeriod
+    }
+    
+    //MARK: Public
+    
+    public func updateStatistics(with erliestRecordDate: Date) {
+        perfectDaysCount = self.fetchPerfectDaysCount(from: erliestRecordDate)
+        averageCount = self.fetchAverageTrackersPerDay(from: erliestRecordDate)
+        bestPeriodCount = self.fetchBestPeriod(from: erliestRecordDate)
+        trackersCompleteCount = self.fetchAllRecordsCount()
+    }
+    
+    public func clearStatistics() {
+        perfectDaysCount = 0
+        averageCount = 0
+        bestPeriodCount = 0
+        trackersCompleteCount = 0
     }
 }
