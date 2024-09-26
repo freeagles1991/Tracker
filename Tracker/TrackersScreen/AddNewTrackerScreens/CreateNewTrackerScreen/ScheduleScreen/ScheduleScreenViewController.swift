@@ -111,7 +111,7 @@ final class ScheduleScreenViewController: UIViewController {
         doneButton.setTitle(doneButtonString, for: .normal)
         doneButton.backgroundColor = .black
         doneButton.setTitleColor(UIColor(named: "white"), for: .normal)
-        doneButton.layer.cornerRadius = 8
+        doneButton.layer.cornerRadius = 16
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.addTarget(self, action: #selector(doneButtonTapped(_:)), for: .touchUpInside)
         
@@ -142,6 +142,7 @@ extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let weekday = daysOfWeek[indexPath.row]
         cell.textLabel?.text = weekday.localized
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
         cell.backgroundColor = UIColor(named: "background")
         
         let switchView = UISwitch(frame: .zero)
