@@ -154,7 +154,7 @@ final class TrackersViewController: UIViewController {
         let label = UILabel()
         label.text = TrackersMainScreenConst.emptyStateViewString
         label.font = UIFont(name: "SFProText-Medium", size: 12)
-        label.textColor = .black
+        label.textColor = UIColor(named: "Black")
         label.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.addSubview(label)
         
