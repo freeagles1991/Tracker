@@ -309,9 +309,10 @@ final class TrackersViewController: UIViewController {
             guard let selectedDate else { return }
             trackers = trackerStore.fetchTrackers(by: selectedDate)
         case .todayTrackers:
-            let date = Date()
-            datePicker.date = date
-            trackers = trackerStore.fetchTrackers(by: date)
+            selectedDate = Date()
+            guard let selectedDate else { return }
+            datePicker.date = selectedDate
+            trackers = trackerStore.fetchTrackers(by: selectedDate)
         case .completedTrackers:
             guard let selectedDate else {return}
             trackers = trackerStore.fetchCompleteTrackers(by: selectedDate)
