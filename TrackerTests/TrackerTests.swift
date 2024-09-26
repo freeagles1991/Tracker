@@ -8,7 +8,7 @@ final class SnapshotTests: XCTestCase {
     
     func testTrackerMainScreenSnapshot() {
         // Given
-        let viewController = TrackersViewController()
+        let viewController = TrackersViewController(analiticsService: AnalyticsService())
         viewController.loadViewIfNeeded()
         
         // Then
