@@ -147,7 +147,7 @@ final class TrackersViewController: UIViewController {
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyStateView)
         
-        let imageView = UIImageView(image: UIImage(named: "EmptyTrackersIcon"))
+        let imageView = UIImageView(image: UIImage(named: "emptyTrackersIcon"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         emptyStateView.addSubview(imageView)
         
