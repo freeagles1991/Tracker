@@ -69,12 +69,6 @@ class CreateNewTrackerViewController: UIViewController {
     
     private var categoryButton = UIButton()
     private var scheduleButton = UIButton()
-    private let separator: UIView = {
-        let view = UIView()
-        view.backgroundColor = .darkGray
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     private var parametersStackView = UIStackView()
     
     private let emojiCollectionViewDataSourceDelegate = EmojiCollectionViewDataSourceDelegate()
@@ -343,7 +337,24 @@ class CreateNewTrackerViewController: UIViewController {
         setupCategoryButton()
         setupScheduleButton()
         
-        var arrangedSubviews = [categoryButton, separator, scheduleButton]
+        let separatorContainerView = UIView()
+        separatorContainerView.translatesAutoresizingMaskIntoConstraints = false
+        separatorContainerView.backgroundColor = .clear
+        
+        let separatorView = UIView()
+        separatorView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        separatorContainerView.addSubview(separatorView)
+        
+        NSLayoutConstraint.activate([
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+            separatorView.leadingAnchor.constraint(equalTo: separatorContainerView.leadingAnchor, constant: 16),
+            separatorView.trailingAnchor.constraint(equalTo: separatorContainerView.trailingAnchor, constant: -16),
+            separatorView.topAnchor.constraint(equalTo: separatorContainerView.topAnchor),
+            separatorView.bottomAnchor.constraint(equalTo: separatorContainerView.bottomAnchor)
+        ])
+        
+        var arrangedSubviews = [categoryButton, separatorContainerView, scheduleButton]
         
         if !isRegularEvent {
             arrangedSubviews = [categoryButton]
@@ -356,15 +367,19 @@ class CreateNewTrackerViewController: UIViewController {
         stackView.distribution = .fill
         stackView.layer.cornerRadius = 16
         stackView.layer.masksToBounds = true
-        
         stackView.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.topAnchor.constraint(equalTo: trackerNameTextField.bottomAnchor, constant: 24),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+        ])
+        
+        NSLayoutConstraint.activate([
+            separatorContainerView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            separatorContainerView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
         
         self.parametersStackView = stackView
@@ -412,7 +427,7 @@ class CreateNewTrackerViewController: UIViewController {
         button.setTitle(text, for: .normal)
         button.setTitleColor(UIColor(named: "white"), for: .normal)
         button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
-        button.backgroundColor = .black
+        button.backgroundColor = UIColor(named: "black")
         button.contentHorizontalAlignment = .center
         button.layer.cornerRadius = 16
         
@@ -437,9 +452,9 @@ class CreateNewTrackerViewController: UIViewController {
         let cancelButton = setupBaseButton(with: Constants.cancelButtonString)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
         cancelButton.backgroundColor = UIColor(named: "white")
-        cancelButton.setTitleColor(.red, for: .normal)
+        cancelButton.setTitleColor(UIColor(named: "red"), for: .normal)
         cancelButton.layer.borderWidth = 1
-        cancelButton.layer.borderColor = UIColor.red.cgColor
+        cancelButton.layer.borderColor = UIColor(named: "red")?.cgColor
         
         self.cancelButton = cancelButton
     }
@@ -645,18 +660,18 @@ class CreateNewTrackerViewController: UIViewController {
         if isRegularEvent {
             if isAllParametresSelected && !selectedWeekdays.isEmpty {
                 createButton.isEnabled = true
-                createButton.alpha = 1.0
+                createButton.backgroundColor = UIColor(named: "black")
             } else {
                 createButton.isEnabled = false
-                createButton.alpha = 0.5
+                createButton.backgroundColor = UIColor(named: "gray")
             }
         } else {
             if isAllParametresSelected {
                 createButton.isEnabled = true
-                createButton.alpha = 1.0
+                createButton.backgroundColor = UIColor(named: "black")
             } else {
                 createButton.isEnabled = false
-                createButton.alpha = 0.5
+                createButton.backgroundColor = UIColor(named: "gray")
             }
             
         }
