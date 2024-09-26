@@ -583,10 +583,8 @@ class CreateNewTrackerViewController: UIViewController {
         
         let indexPath = IndexPath(item: colorIndex, section: 0)
         
-        // Выделяем ячейку
         colorCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredVertically)
         
-        // Обновляем вид ячейки для визуального выделения
         if let cell = colorCollectionView.cellForItem(at: indexPath) as? ColorCell {
             cell.isSelected = true
         }

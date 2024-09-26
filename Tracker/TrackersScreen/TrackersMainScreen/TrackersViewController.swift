@@ -19,7 +19,7 @@ final class TrackersViewController: UIViewController {
     
     private var datePicker = UIDatePicker()
     private var selectedDate: Date? = Date()
-
+    
     private var emptyStateView = UIView()
     private var nothingFoundStateView = UIView()
     private var searchBar = UISearchBar()
@@ -36,22 +36,22 @@ final class TrackersViewController: UIViewController {
     }()
     
     private let filterButton: UIButton = {
-            let button = UIButton(type: .system)
+        let button = UIButton(type: .system)
         button.setTitle(TrackersMainScreenConst.filtersButtonString, for: .normal)
         button.setTitleColor(.white, for: .normal)
-            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-            button.backgroundColor = UIColor(named: "blue")
-            button.layer.cornerRadius = 16
-            button.translatesAutoresizingMaskIntoConstraints = false
-            return button
-        }()
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.backgroundColor = UIColor(named: "blue")
+        button.layer.cornerRadius = 16
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     enum TrackerContextMenu: String {
         case pinTrackerString = "TrackerContextMenu_PinTracker"
         case unpinTrackerString = "TrackerContextMenu_UnpinTracker"
         case editTrackerString = "TrackerContextMenu_EditTracker"
         case deleteTrackerString = "TrackerContextMenu_DeleteTracker"
-
+        
         var localized: String {
             return NSLocalizedString(self.rawValue, comment: "")
         }
@@ -102,6 +102,7 @@ final class TrackersViewController: UIViewController {
         )
         analiticsService.sendEvent(analyticsEvent)
     }
+    
     
     //MARK: UI
     private func setupNavigationBar() {
@@ -211,7 +212,7 @@ final class TrackersViewController: UIViewController {
     private func setupCollectionView() {
         collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: "TrackerCell")
         collectionView.register(TrackersHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-    
+        
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
@@ -224,7 +225,7 @@ final class TrackersViewController: UIViewController {
     
     private func setupFilterButton() {
         view.addSubview(filterButton)
-
+        
         NSLayoutConstraint.activate([
             filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -26),
@@ -258,7 +259,7 @@ final class TrackersViewController: UIViewController {
     @objc private func createNewTracker() {
         let navigationController = UINavigationController(rootViewController: chooseTrackerTypeVC)
         navigationController.setNavigationBarHidden(true, animated: false)
-         chooseTrackerTypeVC.trackersVC = self
+        chooseTrackerTypeVC.trackersVC = self
         
         let analyticsEvent = AnalyticsEvent(
             eventType: .click,
@@ -344,7 +345,7 @@ final class TrackersViewController: UIViewController {
             print("Категория с названием \(categoryTitle) не найдена")
             return
         }
-            trackerStore.createTracker(with: tracker, in: trackerCategoryEntity)
+        trackerStore.createTracker(with: tracker, in: trackerCategoryEntity)
         print("Трекер \(tracker.title) добавлен в категорию \(categoryTitle)")
         self.updateCollectionView(with: FilterStore.selectedFilter)
     }
@@ -378,16 +379,7 @@ final class TrackersViewController: UIViewController {
         print("Запись трекера \(tracker.title) выполнена")
     }
     
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let bottomOffset = scrollView.contentOffset.y + scrollView.frame.size.height
-//        if bottomOffset >= scrollView.contentSize.height {
-//            filterButton.isHidden = true // Скрыть кнопку "Фильтры" в конце списка
-//        } else {
-//            filterButton.isHidden = false // Показать кнопку, если до конца списка не доскроллили
-//        }
-//    }
 }
-
 
 extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDataSource
@@ -518,12 +510,10 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
             return nil
         }
 
-        // Настраиваем параметры анимации подсветки
         let parameters = UIPreviewParameters()
-        parameters.backgroundColor = .clear // Прозрачный фон для подсветки
+        parameters.backgroundColor = .clear
         parameters.visiblePath = UIBezierPath(roundedRect: cell.getCellColorRectView().bounds, cornerRadius: 16)
         
-        // Возвращаем зону подсветки для ячейки
         return UITargetedPreview(view: cell, parameters: parameters)
     }
     
@@ -533,7 +523,6 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
             return nil
         }
 
-        // Возвращаем зону подсветки для ячейки при закрытии меню
         return UITargetedPreview(view: cell)
     }
 }
@@ -541,7 +530,6 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
 //MARK: UISearchBarDelegate
 extension TrackersViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Вызываем метод для поиска трекеров с введенным названием
         trackers = trackerStore.searchTracker(with: searchText)
         updateUI()
         collectionView.reloadData()

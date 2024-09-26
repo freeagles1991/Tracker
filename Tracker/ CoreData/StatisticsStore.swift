@@ -179,7 +179,7 @@ final class StatisticsStore {
         let totalRecordsCount = fetchAllRecordsCount()
         
         let daysCount = dates.count
-        guard daysCount > 0 else { return 0 } // Защита от деления на ноль
+        guard daysCount > 0 else { return 0 }
         
         let averageTrackersPerDay = Double(totalRecordsCount) / Double(daysCount)
         

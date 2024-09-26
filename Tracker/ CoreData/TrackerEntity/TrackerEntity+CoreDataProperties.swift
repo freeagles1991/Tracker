@@ -26,10 +26,8 @@ extension TrackerEntity {
     @NSManaged public var records: NSSet?
     
     
-    // Computed property для работы с schedule как с [Weekday]
     public var scheduleArray: [Weekday]? {
         get {
-            // Декодируем строку JSON в массив Weekday
             guard let schedule = schedule else { return [] }
             let decoder = JSONDecoder()
             if let data = schedule.data(using: .utf8),

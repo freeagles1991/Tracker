@@ -135,7 +135,6 @@ final class TrackerRecordStore: NSObject {
     }
     
     public func fetchEarliestTrackerRecord() -> TrackerRecord? {
-        // Создаем предикат для всех трекеров
         let predicate = NSPredicate(format: "TRUEPREDICATE")
         self.setupFetchedResultsController(predicate)
         
@@ -143,7 +142,6 @@ final class TrackerRecordStore: NSObject {
             return nil
         }
         
-        // Сортируем записи по дате, чтобы найти самую раннюю
         let earliestEntity = fetchedObjects
             .compactMap { entity -> TrackerRecord? in
                 guard let date = entity.date, let trackerEntity = entity.tracker, let id = trackerEntity.id else {
@@ -151,9 +149,8 @@ final class TrackerRecordStore: NSObject {
                 }
                 return TrackerRecord(trackerID: id, date: date)
             }
-            .sorted { $0.date < $1.date } // Сортируем по дате
+            .sorted { $0.date < $1.date }
         
-        // Возвращаем самую раннюю запись
         return earliestEntity.first
     }
 }
