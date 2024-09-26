@@ -24,11 +24,32 @@ final class TrackerStore: NSObject {
         appDelegate.persistentContainer.viewContext
     }
     
-    var trackersVC: TrackersViewController?
     var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
     private var lastUsedPredicate: NSPredicate = NSPredicate()
     
-    // Настраиваем FRC
+    //MARK: Public
+    var numberOfSections: Int {
+        fetchedResultsController?.sections?.count ?? 0
+       }
+    
+    func numberOfRowsInSection(_ section: Int) -> Int {
+        
+        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
+    }
+
+    func object(at indexPath: IndexPath) -> Tracker? {
+        guard let fetchedResultsController else { return Tracker.defaultTracker }
+        let trackerEntity = fetchedResultsController.object(at: indexPath)
+        return convertEntityToTracker(trackerEntity)
+    }
+    
+    func header(at indexPath: IndexPath) -> String? {
+        guard let fetchedResultsController else { return "NoName" }
+        let trackerEntity = fetchedResultsController.object(at: indexPath)
+        return trackerEntity.pinnedOrCategory
+    }
+    
+    //MARK: Настраиваем FRC
     func setupFetchedResultsController(_ predicate: NSPredicate, with trackerTitlePredicate: NSPredicate? = nil) {
         let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
         
@@ -62,6 +83,7 @@ final class TrackerStore: NSObject {
         }
     }
     
+    //MARK: Поиск трекеров
     func searchTracker(with title: String) -> [Tracker]? {
         let titlePredicate = NSPredicate(format: "title CONTAINS[cd] %@", title)
         
@@ -82,27 +104,7 @@ final class TrackerStore: NSObject {
         return trackers
     }
     
-    var numberOfSections: Int {
-        fetchedResultsController?.sections?.count ?? 0
-       }
-    
-    func numberOfRowsInSection(_ section: Int) -> Int {
-        
-        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
-    }
-
-    func object(at indexPath: IndexPath) -> Tracker? {
-        guard let fetchedResultsController else { return Tracker.defaultTracker }
-        let trackerEntity = fetchedResultsController.object(at: indexPath)
-        return convertEntityToTracker(trackerEntity)
-    }
-    
-    func header(at indexPath: IndexPath) -> String? {
-        guard let fetchedResultsController else { return "NoName" }
-        let trackerEntity = fetchedResultsController.object(at: indexPath)
-        return trackerEntity.pinnedOrCategory
-    }
-    
+    //MARK: TrackerEntity to Tracker
     private func convertEntityToTracker(_ trackerEntity: TrackerEntity) -> Tracker? {
         guard
             let id = trackerEntity.id,
@@ -117,6 +119,7 @@ final class TrackerStore: NSObject {
         return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule, isPinned: trackerEntity.isPinned)
     }
     
+    //MARK: Все трекеры
     public func fetchTrackers() -> [Tracker]? {
         let predicate = NSPredicate(value: true)
         
@@ -131,6 +134,7 @@ final class TrackerStore: NSObject {
         }
     }
     
+    //MARK: Фильтруем трекеры по дате
     public func fetchTrackers(by date: Date) -> [Tracker]? {
         guard let selectedWeekday = Weekday.fromDate(date) else { return [] }
         
@@ -200,6 +204,7 @@ final class TrackerStore: NSObject {
         }
     }
     
+    //MARK: Получаем TrackerEntity
     public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         
@@ -215,6 +220,7 @@ final class TrackerStore: NSObject {
 
     }
     
+    //MARK: Создаем трекер
     public func createTracker(with tracker: Tracker, in category: TrackerCategoryEntity) {
         guard let trackerEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerEntity", in: context) else {
             print("Failed to make trackerEntityDescription")
@@ -235,6 +241,7 @@ final class TrackerStore: NSObject {
         appDelegate.saveContext()
     }
     
+    //MARK: Обновляем трекер
     func updateTracker(for tracker: Tracker, to newCategory: TrackerCategoryEntity? = nil) {
         let predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
         
@@ -263,7 +270,8 @@ final class TrackerStore: NSObject {
         
         appDelegate.saveContext()
     }
-
+    
+    //MARK: Удаляем трекер
     public func removeTracker(with id: UUID) {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         

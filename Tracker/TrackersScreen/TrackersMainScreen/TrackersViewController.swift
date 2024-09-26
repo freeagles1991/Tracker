@@ -83,7 +83,6 @@ final class TrackersViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "white")
         
-        trackerStore.trackersVC = self
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -307,7 +306,8 @@ final class TrackersViewController: UIViewController {
     private func updateCollectionView(with filter: FilterType) {
         switch filter {
         case .allTrackers:
-            trackers = trackerStore.fetchTrackers()
+            guard let selectedDate else { return }
+            trackers = trackerStore.fetchTrackers(by: selectedDate)
         case .todayTrackers:
             let date = Date()
             datePicker.date = date
