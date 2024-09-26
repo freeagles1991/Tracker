@@ -42,6 +42,7 @@
 
 "CategoryScreen_addCategoryButtonString" = "Add Category";
 "CategoryScreen_screenTitleString" = "Category";
+"CategoryScreen_emptyStateString" = "Habits and events \ncan be grouped by meaning";
 
 "CreateNewCategory_screenTitleString" = "New Category";
 "CreateNewCategory_categoryNamePlaceholderString" = "Enter category name";

@@ -42,6 +42,7 @@
 
 "CategoryScreen_addCategoryButtonString" = "Добавить категорию";
 "CategoryScreen_screenTitleString" = "Категория";
+"CategoryScreen_emptyStateString" = "Привычки и события можно \nобъединить по смыслу";
 
 "CreateNewCategory_screenTitleString" = "Новая категория";
 "CreateNewCategory_categoryNamePlaceholderString" = "Введите название категории";
