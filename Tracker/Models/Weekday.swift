@@ -21,25 +21,38 @@ public enum Weekday: String, CaseIterable, Codable {
     }
     
     static func fromDate(_ date: Date) -> Weekday? {
-            let calendar = Calendar.current
-            let weekdayIndex = calendar.component(.weekday, from: date)
-            
-            let firstWeekday = calendar.firstWeekday
-
-            let adjustedIndex = (weekdayIndex - firstWeekday + 7) % 7
-            
-            let weekdays: [Weekday] = [
-                .monday,
-                .tuesday,
-                .wednesday,
-                .thursday,
-                .friday,
-                .saturday,
-                .sunday
-            ]
-            
-            return weekdays[adjustedIndex]
+        let calendar = Calendar.current
+        let weekdayIndex = calendar.component(.weekday, from: date)
+        let firstWeekday = calendar.firstWeekday
+        
+        let mondayFirstWeekdays: [Weekday] = [
+            .monday,
+            .tuesday,
+            .wednesday,
+            .thursday,
+            .friday,
+            .saturday,
+            .sunday
+        ]
+        
+        let sundayFirstWeekdays: [Weekday] = [
+            .sunday,
+            .monday,
+            .tuesday,
+            .wednesday,
+            .thursday,
+            .friday,
+            .saturday
+        ]
+        
+        let weekdaysArray = firstWeekday == 1 ? sundayFirstWeekdays : mondayFirstWeekdays
+        var adjustedIndex = weekdayIndex - firstWeekday
+        if adjustedIndex < 0 {
+            adjustedIndex += 7
         }
+        
+        return weekdaysArray[adjustedIndex]
+    }
 }
 
 extension Set where Element == Weekday {
