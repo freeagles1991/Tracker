@@ -24,20 +24,20 @@ final class ColorCollectionViewDataSourceDelegate: NSObject, UICollectionViewDat
     }
     /// Количество элементов в секци
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let count = createNewTrackerVC?.colors.count else {return 0}
+        let count = CreateNewTrackerViewController.Constants.colors.count
         return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as? ColorCell else { return ColorCell() }
-        guard let colorHex = createNewTrackerVC?.colors[indexPath.row] else { return cell }
+        let colorHex = CreateNewTrackerViewController.Constants.colors[indexPath.row]
         cell.configure(with: UIColor(hexString: colorHex) ?? .black)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "ColorHeader", for: indexPath) as? ColorHeaderView else { return ColorCell() }
-        headerView.label.text = createNewTrackerVC?.colorHeaderString
+        headerView.label.text = CreateNewTrackerViewController.Constants.colorHeaderString
         return headerView
     }
     

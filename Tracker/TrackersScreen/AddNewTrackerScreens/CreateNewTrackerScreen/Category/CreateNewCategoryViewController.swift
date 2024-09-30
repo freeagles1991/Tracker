@@ -13,13 +13,13 @@ final class CreateNewCategoryViewController: UIViewController {
     weak var delegate: ChooseCategoryViewModel?
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Новая категория"
+    private let screenTitleString: String = NSLocalizedString("CreateNewCategory_screenTitleString", comment: "Новая категория")
     
     private var categoryNameTextField = UITextField()
-    private let categoryNamePlaceholderString: String = "Введите название категории"
+    private let categoryNamePlaceholderString: String = NSLocalizedString("CreateNewCategory_categoryNamePlaceholderString", comment: "Введите название категории")
     
     private var doneButton = UIButton()
-    private let doneButtonString: String = "Готово"
+    private let doneButtonString: String = NSLocalizedString("CreateNewCategory_doneButtonString", comment: "Готово")
     
     init(viewModel: CreateNewCategoryViewModel) {
         self.viewModel = viewModel
@@ -32,7 +32,7 @@ final class CreateNewCategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         view.addTapGestureToHideKeyboard()
         
         setupScreenTitle()
@@ -131,7 +131,7 @@ final class CreateNewCategoryViewController: UIViewController {
         doneButton.setTitle(doneButtonString, for: .normal)
         doneButton.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         doneButton.backgroundColor = .black
-        doneButton.setTitleColor(.white, for: .normal)
+        doneButton.setTitleColor(UIColor(named: "white"), for: .normal)
         doneButton.layer.cornerRadius = 16
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         

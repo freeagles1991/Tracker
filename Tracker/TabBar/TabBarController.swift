@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 final class TabBarController: UITabBarController {
-    private let trackersTabBarTitle = "Трекеры"
-    private let statisticsTabBarTitle = "Статистика"
+    private let trackersTabBarTitle = NSLocalizedString("TabBar_trackersTabBarTitle", comment: "Трекеры")
+    private let statisticsTabBarTitle = NSLocalizedString("TabBar_statisticsTabBarTitle", comment: "Статистика")
     private let customTabBarHeight: CGFloat = 90.0
 
     override func viewDidLoad() {
@@ -29,15 +29,17 @@ final class TabBarController: UITabBarController {
     }
     
     private func setupViewControllers() {
-        let trackersViewController = TrackersViewController()
-        let statisticsViewController = StatisticsViewController()
+        let trackersViewController = TrackersViewController(analiticsService: AnalyticsService())
+        let statisticsViewController = StatisticsViewController(statisticStore: StatisticsStore())
         
         trackersViewController.tabBarItem = UITabBarItem(title: trackersTabBarTitle, image: UIImage(systemName: "record.circle.fill"), tag: 0)
         statisticsViewController.tabBarItem = UITabBarItem(title: statisticsTabBarTitle, image: UIImage(systemName: "hare"), tag: 1)
         
-        let navigationController = UINavigationController(rootViewController: trackersViewController)
+        let navigationControllerTrackers = UINavigationController(rootViewController: trackersViewController)
+        let navigationControllerStatistics = UINavigationController(rootViewController: statisticsViewController)
         
-        viewControllers = [navigationController, statisticsViewController]
+        
+        viewControllers = [navigationControllerTrackers, navigationControllerStatistics]
     }
     
     private func setupTabBarAppearance() {

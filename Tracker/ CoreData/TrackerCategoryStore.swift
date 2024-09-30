@@ -52,6 +52,7 @@ final class TrackerCategoryStore: NSObject {
             print("Failed to fetch data: \(error)")
         }
     }
+
     
     var categories: [TrackerCategory] {
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
@@ -93,8 +94,6 @@ final class TrackerCategoryStore: NSObject {
         
         return TrackerCategory(title: title, trackers: trackers)
     }
-    
-
     
     public func createCategory(with category: TrackerCategory) {
         guard let categoryEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerCategoryEntity", in: context) else {

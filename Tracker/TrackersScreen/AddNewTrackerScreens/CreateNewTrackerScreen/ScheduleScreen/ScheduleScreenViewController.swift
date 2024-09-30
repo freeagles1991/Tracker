@@ -9,30 +9,37 @@ import Foundation
 import UIKit
 
 final class ScheduleScreenViewController: UIViewController {
-    private var viewModel: ScheduleScreenViewModel
+    var viewModel: ScheduleScreenViewModel
     
     weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Расписание"
+    private let screenTitleString: String = NSLocalizedString("ScheduleScreen_screenTitleString", comment: "Расписание")
     
     private let tableView = UITableView()
     private let tableContainerView = UIView()
     private let daysOfWeek = Weekday.allCases
     
     private let doneButton = UIButton()
-    private var doneButtonString = "Готово"
-    
+    private var doneButtonString = NSLocalizedString("ScheduleScreen_doneButtonString", comment: "Готово")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         setupScreenTitle()
         setupDoneButton()
         setupTableView()
         
         bindViewModel()
         viewModel.updateDoneButtonState()
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        if !viewModel.selectedWeekdays.isEmpty {
+            viewModel.initialSelectedWeekdays(viewModel.selectedWeekdays)
+        }
     }
     
     init(viewModel: ScheduleScreenViewModel) {
@@ -103,8 +110,8 @@ final class ScheduleScreenViewController: UIViewController {
     private func setupDoneButton(){
         doneButton.setTitle(doneButtonString, for: .normal)
         doneButton.backgroundColor = .black
-        doneButton.setTitleColor(.white, for: .normal)
-        doneButton.layer.cornerRadius = 8
+        doneButton.setTitleColor(UIColor(named: "white"), for: .normal)
+        doneButton.layer.cornerRadius = 16
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.addTarget(self, action: #selector(doneButtonTapped(_:)), for: .touchUpInside)
         
@@ -134,7 +141,8 @@ extension ScheduleScreenViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let weekday = daysOfWeek[indexPath.row]
-        cell.textLabel?.text = weekday.rawValue
+        cell.textLabel?.text = weekday.localized
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
         cell.backgroundColor = UIColor(named: "background")
         
         let switchView = UISwitch(frame: .zero)

@@ -1,0 +1,73 @@
+/*
+  Localizable.strings
+  Tracker
+
+  Created by Дима on 13.09.2024.
+  
+*/
+
+"monday" = "Monday";
+"tuesday" = "Tuesday";
+"wednesday" = "Wednesday";
+"thursday" = "Thursday";
+"friday" = "Friday";
+"saturday" = "Saturday";
+"sunday" = "Sunday";
+
+"TrackersMainScreen_NavBarTitle" = "Trackers";
+"TrackersMainScreen_EmptyStateView" = "What do we want to track?";
+"TrackersMainScreen_SearchBarPlaceholder" = "Search";
+"TrackersMainScreen_FiltersButton" = "Filters";
+"TrackersMainScreen_PinnedSection" = "Pinned";
+"TrackersMainScreen_NothingFound" = "Nothing found";
+
+"TrackerContextMenu_PinTracker" = "Pin";
+"TrackerContextMenu_UnpinTracker" = "Unpin";
+"TrackerContextMenu_EditTracker" = "Edit";
+"TrackerContextMenu_DeleteTracker" = "Delete";
+
+"ChooseTrackerType_eventButtonText" = "Irregular Event";
+"ChooseTrackerType_habitButtonText" = "Habit";
+"ChooseTrackerType_screenTitleString" = "Create Tracker";
+
+"ScheduleScreen_doneButtonString" = "Done";
+"ScheduleScreen_screenTitleString" = "Schedule";
+
+"onboardingDoneButtonString" = "What a technology!";
+"screen1LabelString" = "Track only what you want";
+"screen2LabelString" = "Even if it's not liters of water and yoga";
+
+"TabBar_trackersTabBarTitle" = "Trackers";
+"TabBar_statisticsTabBarTitle" = "Statistics";
+
+"CategoryScreen_addCategoryButtonString" = "Add Category";
+"CategoryScreen_screenTitleString" = "Category";
+"CategoryScreen_emptyStateString" = "Habits and events \ncan be grouped by meaning";
+
+"CreateNewCategory_screenTitleString" = "New Category";
+"CreateNewCategory_categoryNamePlaceholderString" = "Enter category name";
+"CreateNewCategory_doneButtonString" = "Done";
+
+"CreateNewTracker_createScreenTitleString" = "New Habit";
+"CreateNewTracker_editScreenTitleString" = "Edit Habit";
+"CreateNewTracker_trackerNameTextFieldString" = "Enter tracker name";
+"CreateNewTracker_categoryButtonString" = "Category";
+"CreateNewTracker_scheduleButtonString" = "Schedule";
+"CreateNewTracker_emojiHeaderString" = "Emoji";
+"CreateNewTracker_colorHeaderString" = "Color";
+"CreateNewTracker_cancelButtonString" = "Cancel";
+"CreateNewTracker_createButtonString" = "Create";
+"CreateNewTracker_saveButtonString" = "Save";
+
+"FilterTrackersScreen_Title" = "Filters";
+"FilterTrackersScreen_AllTrackers" = "All Trackers";
+"FilterTrackersScreen_TodayTrackers" = "Today's Trackers";
+"FilterTrackersScreen_CompletedTrackers" = "Completed";
+"FilterTrackersScreen_UncompletedTrackers" = "Uncompleted";
+
+"StatisticsScreen_best_period" = "Best Period";
+"StatisticsScreen_perfect_days" = "Perfect Days";
+"StatisticsScreen_trackers_complete" = "Trackers Complete";
+"StatisticsScreen_average" = "Average";
+"StatisticsScreen_title" = "Statistics";
+"StatisticsScreen_emptyState" = "Nothing to analyze yet";

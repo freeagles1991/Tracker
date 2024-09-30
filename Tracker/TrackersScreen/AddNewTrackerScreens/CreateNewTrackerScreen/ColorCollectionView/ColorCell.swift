@@ -70,6 +70,7 @@ final class ColorCell: UICollectionViewCell {
     func configure(with color: UIColor) {
         self.color = color
         colorView.backgroundColor = color
+        updateSelectionAppearance()
     }
 }
 

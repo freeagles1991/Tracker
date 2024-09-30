@@ -11,13 +11,13 @@ import UIKit
 final class  OnboardingScreenViewController: UIViewController {
     private let backgroundImageString: String?
     
-    private let doneButtonString: String = "Вот это технологии!"
+    private let doneButtonString = NSLocalizedString("onboardingDoneButtonString", comment: "Вот это технологии!")
     private var doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         button.backgroundColor = .black
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "white"), for: .normal)
         button.layer.cornerRadius = 16
         return button
     } ()

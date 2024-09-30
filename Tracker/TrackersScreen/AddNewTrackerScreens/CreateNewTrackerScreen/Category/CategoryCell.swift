@@ -20,6 +20,7 @@ final class CategoryCell: UITableViewCell {
     
     private func setupCell() {
         backgroundColor = UIColor(named: "background")
+        textLabel?.font = UIFont.systemFont(ofSize: 17)
     }
     
     func configure(with title: String, isSelected: Bool) {

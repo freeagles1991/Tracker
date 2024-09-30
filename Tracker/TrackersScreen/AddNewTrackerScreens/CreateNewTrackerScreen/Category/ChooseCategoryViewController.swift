@@ -9,20 +9,23 @@ import Foundation
 import UIKit
 
 final class ChooseCategoryViewController: UIViewController {
-    private var viewModel: ChooseCategoryViewModel
+    var viewModel: ChooseCategoryViewModel
     
     weak var delegate: CreateNewTrackerViewController?
     
     private var screenTitle = UILabel()
-    private let screenTitleString: String = "Категория"
     
+    private let screenTitleString = NSLocalizedString("CategoryScreen_screenTitleString", comment: "Категория")
+    private let emptyStateString = NSLocalizedString("CategoryScreen_emptyStateString", comment: "Привычки и события можно объединить по смыслу")
+    private let addCategoryButtonString = NSLocalizedString("CategoryScreen_addCategoryButtonString", comment: "Добавить категорию")
+    
+    private lazy var emptyStateView = UIView()
     let tableView = UITableView()
     private let tableContainerView = UIView()
     private var tableContainerViewHeightConstraint = NSLayoutConstraint()
     private var selectedIndexPath: IndexPath?
     
     private var addCategoryButton = UIButton()
-    private let addCategoryButtonString: String = "Добавить категорию"
     
     private var cellHeight: CGFloat = 75
     private var cellCount: Int = 0
@@ -39,21 +42,41 @@ final class ChooseCategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "white")
         
         setupScreenTitle()
         setupAddCategoryButton()
         setupTableView()
+        setupEmptyStateView()
         
         bindViewModel()
         viewModel.loadCategories()
+        
     }
-
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        if let selectedCategory = viewModel.selectedCategory,
+           let index = viewModel.categories.firstIndex(where: { $0.title == selectedCategory.title }) {
+            let indexPath = IndexPath(row: index, section: 0)
+            selectedIndexPath = indexPath
+            tableView.reloadData()
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        }
+    }
+    
     private func bindViewModel() {
         viewModel.onCategoriesUpdated = { [weak self] categories in
-            self?.cellCount = categories.count
-            self?.tableView.reloadData()
-            self?.adjustTableViewHeight()
+            let isCategoryListEmpty = categories.isEmpty
+            if isCategoryListEmpty {
+                self?.updateUI(isCategoryListEmpty)
+            } else {
+                self?.updateUI(isCategoryListEmpty)
+                self?.cellCount = categories.count
+                self?.tableView.reloadData()
+                self?.adjustTableViewHeight()
+            }
         }
         
         viewModel.onCategorySelected = { [weak self] selectedCategory in
@@ -77,6 +100,49 @@ final class ChooseCategoryViewController: UIViewController {
         label.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.06).isActive = true
         
         self.screenTitle = label
+    }
+    
+    private func setupEmptyStateView() {
+        let emptyStateView = UIView()
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyStateView)
+        
+        let imageView = UIImageView(image: UIImage(named: "emptyTrackersIcon"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateView.addSubview(imageView)
+        
+        let label = UILabel()
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 9
+
+        let attributedString = NSMutableAttributedString(string: emptyStateString)
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+
+        label.attributedText = attributedString
+        
+        label.font = UIFont(name: "SFProText-Medium", size: 12)
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateView.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            imageView.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: emptyStateView.topAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 80),
+            imageView.heightAnchor.constraint(equalToConstant: 80),
+            
+            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            label.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
+            label.bottomAnchor.constraint(equalTo: emptyStateView.bottomAnchor)
+        ])
+        
+        self.emptyStateView = emptyStateView
     }
     
     private func setupTableView() {
@@ -112,7 +178,7 @@ final class ChooseCategoryViewController: UIViewController {
         addCategoryButton.setTitle(addCategoryButtonString, for: .normal)
         addCategoryButton.titleLabel?.font = UIFont(name: "SFProText-Medium", size: 16)
         addCategoryButton.backgroundColor = .black
-        addCategoryButton.setTitleColor(.white, for: .normal)
+        addCategoryButton.setTitleColor(UIColor(named: "white"), for: .normal)
         addCategoryButton.layer.cornerRadius = 16
         addCategoryButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -136,17 +202,21 @@ final class ChooseCategoryViewController: UIViewController {
     
     private func adjustTableViewHeight() {
         tableView.layoutIfNeeded()
-
+        
         let tableHeight = cellHeight * CGFloat(cellCount)
         let finalHeight = min(tableHeight, maxTableHeight)
-
+        
         tableContainerViewHeightConstraint.constant = finalHeight
         
         UIView.animate(withDuration: 0.1) {
             self.view.layoutIfNeeded()
         }
     }
-
+    
+    private func updateUI(_ isCategoryListEmpty: Bool) {
+        tableContainerView.isHidden = isCategoryListEmpty ? true : false
+        emptyStateView.isHidden = isCategoryListEmpty ? false : true
+    }
 }
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
@@ -164,9 +234,16 @@ extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let previousIndexPath = selectedIndexPath
         viewModel.selectCategory(at: indexPath.row)
         selectedIndexPath = indexPath
-        tableView.reloadData()
+        
+        var indexPathsToReload: [IndexPath] = [indexPath]
+        if let previousIndexPath = previousIndexPath {
+            indexPathsToReload.append(previousIndexPath)
+        }
+        
+        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

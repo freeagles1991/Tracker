@@ -21,13 +21,13 @@ extension TrackerEntity {
     @NSManaged public var id: UUID?
     @NSManaged public var schedule: String?
     @NSManaged public var title: String?
+    @NSManaged public var isPinned: Bool
     @NSManaged public var category: TrackerCategoryEntity?
     @NSManaged public var records: NSSet?
     
-    // Computed property для работы с schedule как с [Weekday]
+    
     public var scheduleArray: [Weekday]? {
         get {
-            // Декодируем строку JSON в массив Weekday
             guard let schedule = schedule else { return [] }
             let decoder = JSONDecoder()
             if let data = schedule.data(using: .utf8),
@@ -43,6 +43,10 @@ extension TrackerEntity {
                 schedule = String(data: data, encoding: .utf8)
             }
         }
+    }
+    
+    @objc var pinnedOrCategory: String {
+        return isPinned ? TrackersViewController.TrackersMainScreenConst.pinnedSectionString : (category?.title ?? "No Category")
     }
 
 }

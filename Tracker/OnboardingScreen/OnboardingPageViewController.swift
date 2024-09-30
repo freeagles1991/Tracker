@@ -10,15 +10,15 @@ import UIKit
 
 final class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     // MARK: - Properties
-    private let screen1LabelString = "Отслеживайте только то, что хотите"
-    private let screen2LabelString = "Даже если это не литры воды и йога"
-    private let screen1BackImageString = "onboardingBack1"
-    private let screen2BackImageString = "onboardingBack2"
+    private let screen1LabelString = NSLocalizedString("screen1LabelString", comment: "Отслеживайте только то, что хотите")
+    private let screen2LabelString = NSLocalizedString("screen2LabelString", comment: "Даже если это не литры воды и йога")
+    private let screen1BackImageName = "onboardingBack1"
+    private let screen2BackImageName = "onboardingBack2"
     
     private lazy var pages: [UIViewController] = {
-        let screen1 = OnboardingScreenViewController(backgroundImageString: screen1BackImageString, screenTextString: screen1LabelString)
+        let screen1 = OnboardingScreenViewController(backgroundImageString: screen1BackImageName, screenTextString: screen1LabelString)
         
-        let screen2 = OnboardingScreenViewController(backgroundImageString: screen2BackImageString, screenTextString: screen2LabelString)
+        let screen2 = OnboardingScreenViewController(backgroundImageString: screen2BackImageName, screenTextString: screen2LabelString)
         
         return [screen1, screen2]
     }()
@@ -29,7 +29,7 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         pageControl.currentPage = 0
         
         pageControl.currentPageIndicatorTintColor = UIColor(named: "black")
-        pageControl.pageIndicatorTintColor = UIColor(named: "black_alpha30")
+        pageControl.pageIndicatorTintColor = UIColor(named: "pageIndicatorTintColor")
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl

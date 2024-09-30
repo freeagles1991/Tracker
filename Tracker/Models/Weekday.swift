@@ -8,28 +8,65 @@
 import Foundation
 
 public enum Weekday: String, CaseIterable, Codable {
-    case monday = "Понедельник"
-    case tuesday = "Вторник"
-    case wednesday = "Среда"
-    case thursday = "Четверг"
-    case friday = "Пятница"
-    case saturday = "Суббота"
-    case sunday = "Воскресенье"
+    case monday = "monday"
+    case tuesday = "tuesday"
+    case wednesday = "wednesday"
+    case thursday = "thursday"
+    case friday = "friday"
+    case saturday = "saturday"
+    case sunday = "sunday"
+    
+    var localized: String {
+        return NSLocalizedString(self.rawValue, comment: "Weekday name")
+    }
     
     static func fromDate(_ date: Date) -> Weekday? {
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
+        let firstWeekday = calendar.firstWeekday
         
-        let weekdays = [
-            Weekday.sunday,
-            Weekday.monday,
-            Weekday.tuesday,
-            Weekday.wednesday,
-            Weekday.thursday,
-            Weekday.friday,
-            Weekday.saturday
+        let mondayFirstWeekdays: [Weekday] = [
+            .monday,
+            .tuesday,
+            .wednesday,
+            .thursday,
+            .friday,
+            .saturday,
+            .sunday
         ]
         
-        return weekdays[weekdayIndex - 1]
+        let sundayFirstWeekdays: [Weekday] = [
+            .sunday,
+            .monday,
+            .tuesday,
+            .wednesday,
+            .thursday,
+            .friday,
+            .saturday
+        ]
+        
+        let weekdaysArray = firstWeekday == 1 ? sundayFirstWeekdays : mondayFirstWeekdays
+        var adjustedIndex = weekdayIndex - firstWeekday
+        if adjustedIndex < 0 {
+            adjustedIndex += 7
+        }
+        
+        return weekdaysArray[adjustedIndex]
+    }
+}
+
+extension Set where Element == Weekday {
+    func toString() -> String {
+        let abbreviations: [Weekday: String] = [
+            .monday: "Пн",
+            .tuesday: "Вт",
+            .wednesday: "Ср",
+            .thursday: "Чт",
+            .friday: "Пт",
+            .saturday: "Сб",
+            .sunday: "Вс"
+        ]
+        let abbreviationsArray = self.compactMap { abbreviations[$0] }
+        return abbreviationsArray.joined(separator: ", ")
     }
 }

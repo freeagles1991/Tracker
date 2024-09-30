@@ -20,39 +20,20 @@ final class TrackerStore: NSObject {
         return delegate
     }
     
-    var trackersVC: TrackersViewController?
-    var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
-    
-    // Настраиваем FRC
-    func setupFetchedResultsController(_ predicate: NSPredicate) {
-        let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        fetchRequest.predicate = predicate
-        
-        fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: "category.title",
-            cacheName: nil
-        )
-        guard let fetchedResultsController else { return }
-        
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            print("Failed to fetch data: \(error)")
-        }
-    }
-    
     private var context: NSManagedObjectContext {
         appDelegate.persistentContainer.viewContext
     }
     
+    var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
+    private var lastUsedPredicate: NSPredicate = NSPredicate()
+    
+    //MARK: Public
     var numberOfSections: Int {
         fetchedResultsController?.sections?.count ?? 0
        }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
+        
         fetchedResultsController?.sections?[section].numberOfObjects ?? 0
     }
 
@@ -65,9 +46,65 @@ final class TrackerStore: NSObject {
     func header(at indexPath: IndexPath) -> String? {
         guard let fetchedResultsController else { return "NoName" }
         let trackerEntity = fetchedResultsController.object(at: indexPath)
-        return trackerEntity.category?.title
+        return trackerEntity.pinnedOrCategory
     }
     
+    //MARK: Настраиваем FRC
+    func setupFetchedResultsController(_ predicate: NSPredicate, with trackerTitlePredicate: NSPredicate? = nil) {
+        let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
+        
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "isPinned", ascending: false),
+            NSSortDescriptor(key: "category.title", ascending: true),
+            NSSortDescriptor(key: "title", ascending: true)
+        ]
+        
+        lastUsedPredicate = predicate
+        if let titlePredicate = trackerTitlePredicate {
+            let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, titlePredicate])
+            fetchRequest.predicate = combinedPredicate
+        } else {
+            fetchRequest.predicate = predicate
+        }
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: "pinnedOrCategory",
+            cacheName: nil
+        )
+        
+        guard let fetchedResultsController else { return }
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("Failed to fetch data: \(error)")
+        }
+    }
+    
+    //MARK: Поиск трекеров
+    func searchTracker(with title: String) -> [Tracker]? {
+        let titlePredicate = NSPredicate(format: "title CONTAINS[cd] %@", title)
+        
+        if title != "" {
+            setupFetchedResultsController(lastUsedPredicate, with: titlePredicate)
+        } else {
+            setupFetchedResultsController(lastUsedPredicate)
+        }
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        let trackers = fetchedObjects.compactMap { trackerEntity in
+            return convertEntityToTracker(trackerEntity)
+        }
+        
+        return trackers
+    }
+    
+    //MARK: TrackerEntity to Tracker
     private func convertEntityToTracker(_ trackerEntity: TrackerEntity) -> Tracker? {
         guard
             let id = trackerEntity.id,
@@ -79,9 +116,25 @@ final class TrackerStore: NSObject {
             return nil
         }
 
-        return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule)
+        return Tracker(id: id, title: title, color: color, emoji: emoji, schedule: schedule, isPinned: trackerEntity.isPinned)
     }
     
+    //MARK: Все трекеры
+    public func fetchTrackers() -> [Tracker]? {
+        let predicate = NSPredicate(value: true)
+        
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { trackerEntity in
+            convertEntityToTracker(trackerEntity)
+        }
+    }
+    
+    //MARK: Фильтруем трекеры по дате
     public func fetchTrackers(by date: Date) -> [Tracker]? {
         guard let selectedWeekday = Weekday.fromDate(date) else { return [] }
         
@@ -97,7 +150,61 @@ final class TrackerStore: NSObject {
             convertEntityToTracker(trackerEntity)
         }
     }
-
+    //MARK: Завершенные трекеры
+    public func fetchCompleteTrackers(by date: Date) -> [Tracker]? {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        let hasRecordForExactDatePredicate = NSPredicate(format: "SUBQUERY(records, $record, $record.date >= %@ AND $record.date < %@).@count > 0", startOfDay as NSDate, endOfDay as NSDate)
+        
+        guard let selectedWeekday = Weekday.fromDate(date) else {
+            return []
+        }
+        
+        let scheduledOnDayPredicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
+        
+        let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [hasRecordForExactDatePredicate, scheduledOnDayPredicate])
+        
+        self.setupFetchedResultsController(combinedPredicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { trackerEntity in
+            convertEntityToTracker(trackerEntity)
+        }
+    }
+    
+    //MARK: Незавершенные трекеры
+    public func fetchIncompleteTrackers(by date: Date) -> [Tracker]? {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        let noRecordForDatePredicate = NSPredicate(format: "SUBQUERY(records, $record, $record.date >= %@ AND $record.date < %@).@count == 0", startOfDay as NSDate, endOfDay as NSDate)
+        
+        guard let selectedWeekday = Weekday.fromDate(date) else {
+            return []
+        }
+        
+        let scheduledOnDayPredicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
+        
+        let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [noRecordForDatePredicate, scheduledOnDayPredicate])
+        
+        self.setupFetchedResultsController(combinedPredicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return []
+        }
+        
+        return fetchedObjects.compactMap { trackerEntity in
+            convertEntityToTracker(trackerEntity)
+        }
+    }
+    
+    //MARK: Получаем TrackerEntity
     public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         
@@ -113,6 +220,7 @@ final class TrackerStore: NSObject {
 
     }
     
+    //MARK: Создаем трекер
     public func createTracker(with tracker: Tracker, in category: TrackerCategoryEntity) {
         guard let trackerEntityDescription = NSEntityDescription.entity(forEntityName: "TrackerEntity", in: context) else {
             print("Failed to make trackerEntityDescription")
@@ -125,6 +233,7 @@ final class TrackerStore: NSObject {
         trackerEntity.emoji = tracker.emoji
         trackerEntity.scheduleArray = tracker.schedule
         trackerEntity.color = tracker.color
+        trackerEntity.isPinned = tracker.isPinned
         
         trackerEntity.category = category
         category.addToTrackers(trackerEntity)
@@ -132,25 +241,49 @@ final class TrackerStore: NSObject {
         appDelegate.saveContext()
     }
     
-    public func removeTracker(with id: UUID) {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerEntity")
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+    //MARK: Обновляем трекер
+    func updateTracker(for tracker: Tracker, to newCategory: TrackerCategoryEntity? = nil) {
+        let predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
         
-        do {
-            guard let trackers = try context.fetch(fetchRequest) as? [NSManagedObject],
-                  let trackerToDelete = trackers.first else {
-                print("Трекер не найден")
-                return
-            }
-            
-            context.delete(trackerToDelete)
-            
-            try context.save()
-            print("Трекер успешно удален")
-            
-        } catch {
-            print("Ошибка при удалении трекера: \(error.localizedDescription)")
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects,
+              let trackerEntity = fetchedObjects.first else {
+            print("Tracker not found")
+            return
         }
+        
+        trackerEntity.title = tracker.title
+        trackerEntity.emoji = tracker.emoji
+        trackerEntity.scheduleArray = tracker.schedule
+        trackerEntity.color = tracker.color
+        trackerEntity.isPinned = tracker.isPinned
+        
+        if let newCategory = newCategory {
+            if let oldCategory = trackerEntity.category {
+                oldCategory.removeFromTrackers(trackerEntity)
+            }
+
+            trackerEntity.category = newCategory
+            newCategory.addToTrackers(trackerEntity)
+        }
+        
+        appDelegate.saveContext()
+    }
+    
+    //MARK: Удаляем трекер
+    public func removeTracker(with id: UUID) {
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        self.setupFetchedResultsController(predicate)
+        
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects,
+                let trackerEntity = fetchedObjects.first else {
+            return
+        }
+
+        context.delete(trackerEntity)
+        appDelegate.saveContext()
     }
     
 }

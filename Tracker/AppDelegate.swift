@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import AppMetricaCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -41,8 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        //deleteCoreDataStore()
-        //resetPersistentStore()
+        let configuration = AppMetricaConfiguration(apiKey: "")
+            AppMetrica.activate(with: configuration!)
         return true
     }
 
@@ -59,18 +60,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        let analyticsService = AnalyticsService()
+        let analyticsEvent = AnalyticsEvent(
+            eventType: .close,
+            screen: "Main",
+            item: nil
+        )
+        analyticsService.sendEvent(analyticsEvent)
+    }
 
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {
-            let container = NSPersistentContainer(name: "TrackersData")
-            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-                if let error = error as NSError? {
-                    print("persistentContainer loaing error")
-                }
-            })
-            return container
-        }()
+        let container = NSPersistentContainer(name: "TrackersData")
+        let description = container.persistentStoreDescriptions.first
+        description?.shouldMigrateStoreAutomatically = true
+        description?.shouldInferMappingModelAutomatically = true
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                print("persistentContainer loaing error")
+            }
+        })
+        return container
+    }()
 
     // MARK: - Core Data Saving support
 
