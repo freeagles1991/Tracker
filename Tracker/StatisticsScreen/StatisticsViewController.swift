@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class StatisticsViewController: UIViewController {
-    private let trackersStore = TrackerStore.shared
+    private let trackerStore: TrackerStore
     private let trackerRecordStore = TrackerRecordStore.shared
     private let statisticsStore: StatisticsStore
     
@@ -39,8 +39,9 @@ final class StatisticsViewController: UIViewController {
         }
     }
     
-    init(statisticStore: StatisticsStore) {
+    init(trackerStore: TrackerStore, statisticStore: StatisticsStore) {
         self.statisticsStore = statisticStore
+        self.trackerStore = trackerStore
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -124,7 +125,7 @@ final class StatisticsViewController: UIViewController {
     
     private func getStatisticsData() {
         guard let erliestRecord = trackerRecordStore.fetchEarliestTrackerRecord()?.date else { return }
-        statisticsStore.updateStatistics(with: erliestRecord)
+        statisticsStore.updateStatistics(with: erliestRecord, trackerStore: self.trackerStore)
     }
     
     private func updateUI() {

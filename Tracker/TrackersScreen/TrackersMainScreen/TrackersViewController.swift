@@ -10,7 +10,7 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     let analiticsService: AnalyticsService
-    let trackerStore = TrackerStore.shared
+    let trackerStore: TrackerStore
     private var trackers: [Tracker]?
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
@@ -70,8 +70,9 @@ final class TrackersViewController: UIViewController {
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
     
-    init(analiticsService: AnalyticsService) {
+    init(trackerStore: TrackerStore, analiticsService: AnalyticsService) {
         self.analiticsService = analiticsService
+        self.trackerStore = trackerStore
         super.init(nibName: nil, bundle: nil)
     }
     

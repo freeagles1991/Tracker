@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 class CreateNewTrackerViewController: UIViewController {
-    private let trackerStore = TrackerStore.shared
     private let trackerCategoryStore = TrackerCategoryStore.shared
     weak var trackersVC: TrackersViewController?
     
@@ -192,7 +191,7 @@ class CreateNewTrackerViewController: UIViewController {
         if isEditingTracker {
             let label = UILabel()
             let font = UIFont(name: "SFProText-Bold", size: 32)
-            let count = trackerStore.fetchTrackerEntity(editableTracker.id)?.records?.count
+            let count = trackersVC?.trackerStore.fetchTrackerEntity(editableTracker.id)?.records?.count
             label.text = String.localizedStringWithFormat(
                 NSLocalizedString("daysCount", comment: "Количество дней"), count ?? 0)
             label.textColor = .black
@@ -559,7 +558,7 @@ class CreateNewTrackerViewController: UIViewController {
         }
         self.selectedWeekdays = Set(tracker.schedule)
         
-        if let trackerEntity = trackerStore.fetchTrackerEntity(tracker.id), let categoryTitle = trackerEntity.category?.title {
+        if let trackerEntity = trackersVC?.trackerStore.fetchTrackerEntity(tracker.id), let categoryTitle = trackerEntity.category?.title {
             let trackerCategory = TrackerCategory(title: categoryTitle, trackers: [])
             self.selectedCategory = trackerCategory
             updateCategoryButton(with: trackerCategory.title)
@@ -617,7 +616,7 @@ class CreateNewTrackerViewController: UIViewController {
               let selectedCategory
         else { return }
         let categoryEntity = trackerCategoryStore.fetchCategoryEntity(byTitle: selectedCategory.title)
-        trackerStore.updateTracker(for: updatedTracker, to: categoryEntity)
+        trackersVC.trackerStore.updateTracker(for: updatedTracker, to: categoryEntity)
         trackersVC.updateCollectionView()
         print("Обновили трекер")
         

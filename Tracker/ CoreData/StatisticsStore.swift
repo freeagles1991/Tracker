@@ -11,7 +11,6 @@ import UIKit
 
 final class StatisticsStore {
     var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
-    private let trackerStore = TrackerStore.shared
     
     public var perfectDaysCount: Int {
         get {
@@ -124,7 +123,7 @@ final class StatisticsStore {
     }
     
     //MARK: Идеальные дни
-    public func fetchPerfectDaysCount(from earliestDate: Date) -> Int {
+    public func fetchPerfectDaysCount(from earliestDate: Date, trackerStore: TrackerStore) -> Int {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         
@@ -189,7 +188,7 @@ final class StatisticsStore {
     }
     
     //MARK: Лучший период
-    public func fetchBestPeriod(from earliestDate: Date) -> Int {
+    public func fetchBestPeriod(from earliestDate: Date, trackerStore: TrackerStore) -> Int {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         
@@ -234,10 +233,10 @@ final class StatisticsStore {
     
     //MARK: Public
     
-    public func updateStatistics(with erliestRecordDate: Date) {
-        perfectDaysCount = self.fetchPerfectDaysCount(from: erliestRecordDate)
+    public func updateStatistics(with erliestRecordDate: Date, trackerStore: TrackerStore) {
+        perfectDaysCount = self.fetchPerfectDaysCount(from: erliestRecordDate, trackerStore: trackerStore)
         averageCount = self.fetchAverageTrackersPerDay(from: erliestRecordDate)
-        bestPeriodCount = self.fetchBestPeriod(from: erliestRecordDate)
+        bestPeriodCount = self.fetchBestPeriod(from: erliestRecordDate, trackerStore: trackerStore)
         trackersCompleteCount = self.fetchAllRecordsCount()
     }
     
