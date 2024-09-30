@@ -77,6 +77,8 @@ final class StatisticsStore {
         let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
         
         fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "isPinned", ascending: false),
+            NSSortDescriptor(key: "category.title", ascending: true),
             NSSortDescriptor(key: "title", ascending: true)
         ]
         
