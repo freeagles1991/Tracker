@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 class CreateNewTrackerViewController: UIViewController {
-    private let trackerCategoryStore = TrackerCategoryStore.shared
     weak var trackersVC: TrackersViewController?
+    weak var trackerCategoryStore: TrackerCategoryStore?
     
     enum Constants {
         static let emojies: [String] = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -124,6 +124,7 @@ class CreateNewTrackerViewController: UIViewController {
         closeChooseCategoryScreen()
         
         chooseCategoryVC.delegate = self
+        chooseCategoryVC.viewModel.trackersCategoryStore = self.trackerCategoryStore
         scheduleScreenVC.delegate = self
         
         setupScreenTitle()
@@ -613,7 +614,8 @@ class CreateNewTrackerViewController: UIViewController {
         guard let newTracker = createNewTracker(),
               let updatedTracker = updateTracker(with: newTracker),
               let trackersVC,
-              let selectedCategory
+              let selectedCategory,
+              let trackerCategoryStore
         else { return }
         let categoryEntity = trackerCategoryStore.fetchCategoryEntity(byTitle: selectedCategory.title)
         trackersVC.trackerStore.updateTracker(for: updatedTracker, to: categoryEntity)

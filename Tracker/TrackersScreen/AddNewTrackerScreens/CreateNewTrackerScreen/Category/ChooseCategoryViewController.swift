@@ -197,6 +197,7 @@ final class ChooseCategoryViewController: UIViewController {
     @objc private func addCategoryButtonTapped(_ sender: UIButton) {
         let createNewCategoryVC = CreateNewCategoryViewController(viewModel: CreateNewCategoryViewModel())
         createNewCategoryVC.delegate = viewModel
+        createNewCategoryVC.viewModel.trackersCategoryStore = self.viewModel.trackersCategoryStore
         present(createNewCategoryVC, animated: true)
     }
     

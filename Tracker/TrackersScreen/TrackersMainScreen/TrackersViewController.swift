@@ -11,10 +11,10 @@ import UIKit
 final class TrackersViewController: UIViewController {
     let analiticsService: AnalyticsService
     let trackerStore: TrackerStore
-    private var trackers: [Tracker]?
-    private let trackerCategoryStore = TrackerCategoryStore.shared
+    private let trackerCategoryStore: TrackerCategoryStore
     private let trackerRecordStore = TrackerRecordStore.shared
-    private let chooseTrackerTypeVC =  ChooseTrackerTypeViewController()
+    private var trackers: [Tracker]?
+    private let chooseTrackerTypeVC = ChooseTrackerTypeViewController()
     private let filterTrackersVC = FilterTrackersViewController()
     
     private var datePicker = UIDatePicker()
@@ -70,9 +70,10 @@ final class TrackersViewController: UIViewController {
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
     
-    init(trackerStore: TrackerStore, analiticsService: AnalyticsService) {
+    init(trackerStore: TrackerStore, trackerCatergoryStore: TrackerCategoryStore, analiticsService: AnalyticsService) {
         self.analiticsService = analiticsService
         self.trackerStore = trackerStore
+        self.trackerCategoryStore = trackerCatergoryStore
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -261,6 +262,7 @@ final class TrackersViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: chooseTrackerTypeVC)
         navigationController.setNavigationBarHidden(true, animated: false)
         chooseTrackerTypeVC.trackersVC = self
+        chooseTrackerTypeVC.trackerCategoryStore = self.trackerCategoryStore
         
         let analyticsEvent = AnalyticsEvent(
             eventType: .click,
@@ -451,7 +453,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let config = UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { _ in
             guard let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell,
-                  let tracker = cell.getTracker() else { return nil }
+                  let tracker = cell.getTracker() else { return UIMenu(title: "", children: [])}
             
             let pinTracker = UIAction(
                 title: self.isTrackerPinned(tracker) ?
@@ -472,6 +474,8 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                 
                 let editTrackerVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: true, editableTracker: tracker)
                 editTrackerVC.trackersVC = self
+                editTrackerVC.trackerCategoryStore = self.trackerCategoryStore
+                
                 self.present(editTrackerVC, animated: true)
 
             }

@@ -10,6 +10,7 @@ import UIKit
 
 final class  ChooseTrackerTypeViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
+    weak var trackerCategoryStore: TrackerCategoryStore?
     
     private var screenTitle: UILabel?
     private let screenTitleString = NSLocalizedString("ChooseTrackerType_screenTitleString", comment: "Создание трекера")
@@ -98,8 +99,10 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     @objc private func habitButtonTapped(_ sender: UIButton) {
         if let navigationController = self.navigationController {
+            guard let trackerCategoryStore else { return }
             let createNewHabitVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: false)
             createNewHabitVC.trackersVC = self.trackersVC
+            createNewHabitVC.trackerCategoryStore = self.trackerCategoryStore
             
             navigationController.pushViewController(createNewHabitVC, animated: true)
         }
@@ -107,8 +110,11 @@ final class  ChooseTrackerTypeViewController: UIViewController {
     
     @objc private func eventButtonTapped(_ sender: UIButton) {
         if let navigationController = self.navigationController {
-            let createNewEventVC = CreateNewTrackerViewController(isRegularEvent: false, isEditingTracker: false)
+            guard let trackerCategoryStore else { return }
+            let createNewEventVC =
+            CreateNewTrackerViewController(isRegularEvent: false, isEditingTracker: false)
             createNewEventVC.trackersVC = self.trackersVC
+            createNewEventVC.trackerCategoryStore = self.trackerCategoryStore
             
             navigationController.pushViewController(createNewEventVC, animated: true)
         }

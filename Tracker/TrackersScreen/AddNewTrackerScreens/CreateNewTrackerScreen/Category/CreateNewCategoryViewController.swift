@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 final class CreateNewCategoryViewController: UIViewController {
-    private var viewModel: CreateNewCategoryViewModel
+    var viewModel: CreateNewCategoryViewModel
     
     weak var delegate: ChooseCategoryViewModel?
     

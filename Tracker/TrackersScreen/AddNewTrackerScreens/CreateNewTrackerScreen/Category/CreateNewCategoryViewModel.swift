@@ -8,7 +8,7 @@
 import Foundation
 
 final class CreateNewCategoryViewModel {
-    private let trackersCategoryStore = TrackerCategoryStore.shared
+    weak var trackersCategoryStore: TrackerCategoryStore?
     
     var categoryName: String = "" {
         didSet {
@@ -26,7 +26,7 @@ final class CreateNewCategoryViewModel {
     func createNewCategory() {
         guard !categoryName.isEmpty else { return }
         let newCategory = TrackerCategory(title: categoryName, trackers: [])
-        trackersCategoryStore.createCategory(with: newCategory)
+        trackersCategoryStore?.createCategory(with: newCategory)
     }
     
     func updateDoneButtonState() {

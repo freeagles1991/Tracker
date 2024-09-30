@@ -11,12 +11,13 @@ final class ChooseCategoryViewModel {
     var categories: [TrackerCategory] = []
     var selectedCategory: TrackerCategory?
     
-    private let trackersCategoryStore = TrackerCategoryStore.shared
+    weak var trackersCategoryStore: TrackerCategoryStore?
     
     var onCategoriesUpdated: Binding<[TrackerCategory]>?
     var onCategorySelected: Binding<TrackerCategory?>?
     
     func loadCategories() {
+        guard let trackersCategoryStore else { return} 
         categories = trackersCategoryStore.categories
         onCategoriesUpdated?(categories)
     }

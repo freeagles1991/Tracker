@@ -10,8 +10,7 @@ import CoreData
 import UIKit
 
 final class TrackerCategoryStore: NSObject {
-    static let shared = TrackerCategoryStore()
-    private override init() {
+    override init() {
         super.init()
         setupFetchedResultsController()
     }
