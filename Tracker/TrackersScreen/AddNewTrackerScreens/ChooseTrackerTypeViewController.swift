@@ -10,6 +10,7 @@ import UIKit
 
 final class  ChooseTrackerTypeViewController: UIViewController {
     weak var trackersVC: TrackersViewController?
+    weak var trackerStore: TrackerStore?
     weak var trackerCategoryStore: TrackerCategoryStore?
     
     private var screenTitle: UILabel?
@@ -102,6 +103,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
             guard let trackerCategoryStore else { return }
             let createNewHabitVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: false)
             createNewHabitVC.trackersVC = self.trackersVC
+            createNewHabitVC.trackerStore = self.trackerStore
             createNewHabitVC.trackerCategoryStore = self.trackerCategoryStore
             
             navigationController.pushViewController(createNewHabitVC, animated: true)
@@ -114,6 +116,7 @@ final class  ChooseTrackerTypeViewController: UIViewController {
             let createNewEventVC =
             CreateNewTrackerViewController(isRegularEvent: false, isEditingTracker: false)
             createNewEventVC.trackersVC = self.trackersVC
+            createNewEventVC.trackerStore = self.trackerStore
             createNewEventVC.trackerCategoryStore = self.trackerCategoryStore
             
             navigationController.pushViewController(createNewEventVC, animated: true)

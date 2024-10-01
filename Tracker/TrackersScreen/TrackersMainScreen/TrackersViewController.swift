@@ -10,7 +10,7 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     let analiticsService: AnalyticsService
-    let trackerStore: TrackerStore
+    private let trackerStore: TrackerStore
     private let trackerCategoryStore: TrackerCategoryStore
     private let trackerRecordStore = TrackerRecordStore.shared
     private var trackers: [Tracker]?
@@ -262,6 +262,7 @@ final class TrackersViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: chooseTrackerTypeVC)
         navigationController.setNavigationBarHidden(true, animated: false)
         chooseTrackerTypeVC.trackersVC = self
+        chooseTrackerTypeVC.trackerStore = self.trackerStore
         chooseTrackerTypeVC.trackerCategoryStore = self.trackerCategoryStore
         
         let analyticsEvent = AnalyticsEvent(
@@ -474,6 +475,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                 
                 let editTrackerVC = CreateNewTrackerViewController(isRegularEvent: true, isEditingTracker: true, editableTracker: tracker)
                 editTrackerVC.trackersVC = self
+                editTrackerVC.trackerStore = self.trackerStore
                 editTrackerVC.trackerCategoryStore = self.trackerCategoryStore
                 
                 self.present(editTrackerVC, animated: true)
