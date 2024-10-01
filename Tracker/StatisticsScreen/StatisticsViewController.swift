@@ -10,7 +10,7 @@ import UIKit
 
 final class StatisticsViewController: UIViewController {
     private let trackerStore: TrackerStore
-    private let trackerRecordStore = TrackerRecordStore.shared
+    private let trackerRecordStore: TrackerRecordStore
     private let statisticsStore: StatisticsStore
     
     private let screenTitleString = NSLocalizedString("StatisticsScreen_title", comment: "Статистика")
@@ -39,9 +39,12 @@ final class StatisticsViewController: UIViewController {
         }
     }
     
-    init(trackerStore: TrackerStore, statisticStore: StatisticsStore) {
+    init(trackerStore: TrackerStore,
+         trackerRecordStore: TrackerRecordStore,
+         statisticStore: StatisticsStore) {
         self.statisticsStore = statisticStore
         self.trackerStore = trackerStore
+        self.trackerRecordStore = trackerRecordStore
         super.init(nibName: nil, bundle: nil)
     }
     

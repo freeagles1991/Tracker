@@ -12,7 +12,7 @@ import UIKit
 
 final class TrackerCell: UICollectionViewCell {
     weak var trackersVC: TrackersViewController?
-    private let trackerRecordStore = TrackerRecordStore.shared
+    weak var trackerRecordStore: TrackerRecordStore?
     private var tracker: Tracker?
     
     private let emojiLabel = UILabel()
@@ -202,12 +202,12 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func isTrackerCompleted(_ tracker: Tracker, on date: Date) -> Bool {
-        let records = trackerRecordStore.fetchTrackerRecords(byID: tracker.id, on: date)
+        guard let records = trackerRecordStore?.fetchTrackerRecords(byID: tracker.id, on: date) else { return false }
         return !records.isEmpty
     }
     
     private func numberOfRecords(for tracker: Tracker) -> Int {
-        let records = trackerRecordStore.fetchTrackerRecords(byID: tracker.id)
+        guard let records = trackerRecordStore?.fetchTrackerRecords(byID: tracker.id) else { return 0 }
         return records.count
         
     }

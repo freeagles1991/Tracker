@@ -10,9 +10,6 @@ import CoreData
 import UIKit
 
 final class TrackerRecordStore: NSObject {
-    static let shared = TrackerRecordStore()
-    private override init() {}
-    
     private var appDelegate: AppDelegate {
         guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
             fatalError("UIApplication.shared.delegate is not of type AppDelegate")

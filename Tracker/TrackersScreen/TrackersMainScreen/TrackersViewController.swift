@@ -12,7 +12,7 @@ final class TrackersViewController: UIViewController {
     let analiticsService: AnalyticsService
     private let trackerStore: TrackerStore
     private let trackerCategoryStore: TrackerCategoryStore
-    private let trackerRecordStore = TrackerRecordStore.shared
+    private let trackerRecordStore: TrackerRecordStore
     private var trackers: [Tracker]?
     private let chooseTrackerTypeVC = ChooseTrackerTypeViewController()
     private let filterTrackersVC = FilterTrackersViewController()
@@ -70,11 +70,15 @@ final class TrackersViewController: UIViewController {
     let sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     let interItemSpacing: CGFloat = 9
     
-    init(trackerStore: TrackerStore, trackerCatergoryStore: TrackerCategoryStore, analiticsService: AnalyticsService) {
-        self.analiticsService = analiticsService
-        self.trackerStore = trackerStore
-        self.trackerCategoryStore = trackerCatergoryStore
-        super.init(nibName: nil, bundle: nil)
+    init(trackerStore: TrackerStore,
+         trackerCatergoryStore: TrackerCategoryStore,
+         trackerRecordStore: TrackerRecordStore,
+         analiticsService: AnalyticsService) {
+            self.analiticsService = analiticsService
+            self.trackerStore = trackerStore
+            self.trackerCategoryStore = trackerCatergoryStore
+            self.trackerRecordStore = trackerRecordStore
+            super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -408,6 +412,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         else { return cell}
         cell.configure(with: tracker, on: selectedDate)
         cell.trackersVC = self
+        cell.trackerRecordStore = self.trackerRecordStore
         return cell
     }
     

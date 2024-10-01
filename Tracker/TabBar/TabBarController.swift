@@ -31,8 +31,11 @@ final class TabBarController: UITabBarController {
     private func setupViewControllers() {
         let trackerStore = TrackerStore()
         let trackerCategoryStore = TrackerCategoryStore()
-        let trackersViewController = TrackersViewController(trackerStore: trackerStore, trackerCatergoryStore: trackerCategoryStore, analiticsService: AnalyticsService())
-        let statisticsViewController = StatisticsViewController(trackerStore: trackerStore, statisticStore: StatisticsStore())
+        let trackerRecordStore = TrackerRecordStore()
+        
+        let trackersViewController = TrackersViewController(trackerStore: trackerStore, trackerCatergoryStore: trackerCategoryStore, trackerRecordStore: trackerRecordStore, analiticsService: AnalyticsService())
+        
+        let statisticsViewController = StatisticsViewController(trackerStore: trackerStore, trackerRecordStore: trackerRecordStore, statisticStore: StatisticsStore())
         
         trackersViewController.tabBarItem = UITabBarItem(title: trackersTabBarTitle, image: UIImage(systemName: "record.circle.fill"), tag: 0)
         statisticsViewController.tabBarItem = UITabBarItem(title: statisticsTabBarTitle, image: UIImage(systemName: "hare"), tag: 1)
