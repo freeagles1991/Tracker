@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class TrackersViewController: UIViewController {
+final class TrackersViewController: UIViewController, TrackersViewControllerProtocol {
     let analiticsService: AnalyticsService
     private let trackerStore: TrackerStore
     private let trackerCategoryStore: TrackerCategoryStore
@@ -91,6 +91,7 @@ final class TrackersViewController: UIViewController {
         
         collectionView.dataSource = self
         collectionView.delegate = self
+        trackerStore.trackersVC = self
         
         setupNavigationBar()
         setupSearchBar()
@@ -410,9 +411,9 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
             let selectedDate = selectedDate,
             let tracker = trackerStore.object(at: indexPath)
         else { return cell}
-        cell.configure(with: tracker, on: selectedDate)
         cell.trackersVC = self
         cell.trackerRecordStore = self.trackerRecordStore
+        cell.configure(with: tracker, on: selectedDate)
         return cell
     }
     
@@ -545,7 +546,6 @@ extension TrackersViewController: UISearchBarDelegate {
         trackers = trackerStore.searchTracker(with: searchText)
         updateUI()
         collectionView.reloadData()
-        
     }
 }
 

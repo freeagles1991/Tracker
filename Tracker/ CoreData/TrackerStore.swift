@@ -23,6 +23,7 @@ final class TrackerStore: NSObject {
     }
     
     var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
+    weak var trackersVC: TrackersViewControllerProtocol?
     private var lastUsedPredicate: NSPredicate = NSPredicate()
     
     //MARK: Public
@@ -47,8 +48,14 @@ final class TrackerStore: NSObject {
         return trackerEntity.pinnedOrCategory
     }
     
-    //MARK: Настраиваем FRC
-    func setupFetchedResultsController(_ predicate: NSPredicate, with trackerTitlePredicate: NSPredicate? = nil) {
+    override init() {
+        super.init()
+        let predicate = NSPredicate(value: true)
+        setupFetchedResultsController(predicate)
+    }
+    
+    // MARK: Настраиваем FRC
+    func setupFetchedResultsController(_ predicate: NSPredicate) {
         let fetchRequest: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
         
         fetchRequest.sortDescriptors = [
@@ -58,12 +65,8 @@ final class TrackerStore: NSObject {
         ]
         
         lastUsedPredicate = predicate
-        if let titlePredicate = trackerTitlePredicate {
-            let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, titlePredicate])
-            fetchRequest.predicate = combinedPredicate
-        } else {
-            fetchRequest.predicate = predicate
-        }
+        
+        fetchRequest.predicate = predicate
         
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -72,12 +75,35 @@ final class TrackerStore: NSObject {
             cacheName: nil
         )
         
-        guard let fetchedResultsController else { return }
+        do {
+            try fetchedResultsController?.performFetch()
+        } catch {
+            print("Не удалось выполнить выборку данных: \(error)")
+        }
+    }
+    
+    // MARK: Обновляем предикат в FRC
+    func updateFetchedResultsController(with predicate: NSPredicate, trackerTitlePredicate: NSPredicate? = nil) {
+        
+        lastUsedPredicate = predicate
+
+        let combinedPredicate = combinePredicates(basePredicate: predicate, titlePredicate: trackerTitlePredicate)
+
+        fetchedResultsController?.fetchRequest.predicate = combinedPredicate
         
         do {
-            try fetchedResultsController.performFetch()
+            try fetchedResultsController?.performFetch()
         } catch {
-            print("Failed to fetch data: \(error)")
+            print("Ошибка при выполнении выборки: \(error)")
+        }
+    }
+    
+    // MARK: Объединяем предикаты
+    private func combinePredicates(basePredicate: NSPredicate, titlePredicate: NSPredicate?) -> NSPredicate {
+        if let titlePredicate = titlePredicate {
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [basePredicate, titlePredicate])
+        } else {
+            return basePredicate
         }
     }
     
@@ -86,9 +112,9 @@ final class TrackerStore: NSObject {
         let titlePredicate = NSPredicate(format: "title CONTAINS[cd] %@", title)
         
         if title != "" {
-            setupFetchedResultsController(lastUsedPredicate, with: titlePredicate)
+            updateFetchedResultsController(with: lastUsedPredicate, trackerTitlePredicate: titlePredicate)
         } else {
-            setupFetchedResultsController(lastUsedPredicate)
+            updateFetchedResultsController(with: lastUsedPredicate)
         }
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
@@ -121,7 +147,7 @@ final class TrackerStore: NSObject {
     public func fetchTrackers() -> [Tracker]? {
         let predicate = NSPredicate(value: true)
         
-        self.setupFetchedResultsController(predicate)
+        self.updateFetchedResultsController(with: predicate)
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return []
@@ -138,7 +164,7 @@ final class TrackerStore: NSObject {
         
         let predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", selectedWeekday.rawValue)
         
-        self.setupFetchedResultsController(predicate)
+        self.updateFetchedResultsController(with: predicate)
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return []
@@ -164,7 +190,7 @@ final class TrackerStore: NSObject {
         
         let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [hasRecordForExactDatePredicate, scheduledOnDayPredicate])
         
-        self.setupFetchedResultsController(combinedPredicate)
+        self.updateFetchedResultsController(with: combinedPredicate)
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return []
@@ -191,7 +217,7 @@ final class TrackerStore: NSObject {
         
         let combinedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [noRecordForDatePredicate, scheduledOnDayPredicate])
         
-        self.setupFetchedResultsController(combinedPredicate)
+        self.updateFetchedResultsController(with: combinedPredicate)
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return []
@@ -206,7 +232,7 @@ final class TrackerStore: NSObject {
     public func fetchTrackerEntity(_ id: UUID) -> TrackerEntity? {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         
-        self.setupFetchedResultsController(predicate)
+        self.updateFetchedResultsController(with: predicate)
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return TrackerEntity()
@@ -243,7 +269,7 @@ final class TrackerStore: NSObject {
     func updateTracker(for tracker: Tracker, to newCategory: TrackerCategoryEntity? = nil) {
         let predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
         
-        self.setupFetchedResultsController(predicate)
+        self.updateFetchedResultsController(with: predicate)
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects,
               let trackerEntity = fetchedObjects.first else {
@@ -273,7 +299,7 @@ final class TrackerStore: NSObject {
     public func removeTracker(with id: UUID) {
         let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         
-        self.setupFetchedResultsController(predicate)
+        self.updateFetchedResultsController(with: predicate)
         
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects,
                 let trackerEntity = fetchedObjects.first else {
